@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Such-Abo löschen | {{ super() }}{% endblock %}
+{% block og_title %}Such-Abo löschen | {{ super() }}{% endblock %}
+
+{% block subscription %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Such-Abo löschen</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <p>Möchten Sie das folgende Such-Abo wirklich löschen?</p>
+            {% if search_subscription.search_string %}<p>Suchbegriff: {{ search_subscription.search_string }}{% endif %}
+            {% if search_subscription.body %}<p>Körperschaft: {% for body in search_subscription.body %}{{ body.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+            {% if search_subscription.location %}<p>Ort: {{ search_subscription.location }}</p>{% endif %}
+            {% if search_subscription.paperType %}<p>Typ: {% for paper_type in search_subscription.paperType %}{{ paper_type }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+        </div>
+    </div>
+    <form id="sd-search-subscribe" method="post" action="/account/search-subscription/{{ search_subscription.id }}/delete">
+        <div class="row">
+            {{ form_field(form.submit, 12, 'input-submit') }}
+        </div>
+    {{ form.csrf_token }}
+    </form>
+{% endblock %}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Politik bei uns{% endblock %}</title>
+    {% block head %}
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta name="description" content="{% block meta_description %}{% endblock %}"/>
+        <meta name="publisher" content="chargepayment.org"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta property="og:title" content="{% block og_title %}Politik bei uns{% endblock %}">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ config['PROJECT_URL'] }}{{ request.path }}">
+        <meta property="og:image" content="{% block og_image %}{{ config['PROJECT_URL'] }}/static/images/politik-bei-uns-logo-og.png{% endblock %}">
+        <meta property="og:description" content='{% block og_description %}Im Stadt- oder Landrat werden Entscheidungen getroffen, die Sie ganz direkt betreffen. "Politik bei uns" macht diese Entscheidungen transparent, so dass Sie besser informiert sind und so besser mitbestimmen können. Für eine lebendige, faktenbasierte Demokratie.{% endblock %}'>
+
+        <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    {% endblock %}
+
+    {% block styles %}
+        <link rel="stylesheet" href="/static/css/webapp.min.css?v={{ config['PROJECT_VERSION'] }}">
+    {% endblock %}
+</head>
+<body class="{% block bodyclass %}default{% endblock %}">
+<div id="header-wrapper" class="main-wrapper">
+    {% block header %}
+        <div id="header" class="container">
+            <nav class="navbar navbar-expand-md navbar-light">
+                <a class="navbar-brand" href="/"><img src="/static/images/politik-bei-uns-logo-wide.png" alt="Politik bei uns Logo"></a>
+
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                        data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbar-header">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ratsdokumente">Ratsdokumente</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                            <div class="dropdown-menu" aria-labelledby="account-dropdown">
+                                {% if not current_user.is_authenticated %}
+                                    <a class="dropdown-item" href="/login">Login</a>{% endif %}
+                                {% if not current_user.is_authenticated %}
+                                    <a class="dropdown-item" href="/register">Registrieren</a>{% endif %}
+                                {% if current_user.is_authenticated %}
+                                    <a class="dropdown-item" href="/account/search-subscriptions">Such-Abos</a>{% endif %}
+                                {% if current_user.is_authenticated %}
+                                    <a class="dropdown-item" href="/account/password">Passwort ändern</a>{% endif %}
+                                {% if current_user.is_authenticated %}
+                                    <a class="dropdown-item" href="/logout">Logout</a>{% endif %}
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informationen</a>
+                            <div class="dropdown-menu" aria-labelledby="account-dropdown">
+                                <a class="dropdown-item" href="/info/das-projekt">Das Projekt</a>
+                                <a class="dropdown-item" href="/info/ueber-uns">Über uns</a>
+                                <a class="dropdown-item" href="/info/mitmachen">Mitmachen</a>
+                                <a class="dropdown-item" href="/info/hilfe">Hilfe</a>
+                                <a class="dropdown-item" href="/info/daten">Daten</a>
+                                <a class="dropdown-item" href="/info/schnittstelle">Schnittstelle</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    {% endblock %}
+</div>
+<div id="statement-wrapper" class="main-wrapper">
+    <div id="statement" class="container">
+        {% block statement %}
+        {% endblock %}
+    </div>
+</div>
+<div id="content-wrapper" class="main-wrapper">
+    <div id="content" class="container">
+        {% include "messages.html" %}
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+<div id="footer-wrapper" class="main-wrapper">
+    {% block footer %}
+        <div id="footer" class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Über uns</h3>
+                    <p>Wir machen Deutschlands Kommunalpolitik durchsuchbar und sorgen so für mehr Transparenz und Mitbestimmung.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>Wichtige Links</h3>
+                    <ul>
+                        <li><a href="/contact">Kontakt</a></li>
+                        <li><a href="/impressum">Impressum</a></li>
+                        <li><a href="/datenschutz">Datenschutz</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>Betreiber</h3>
+                    <p>
+                        <img src="/static/images/okf-de-logo-small.png" alt="OKF Deutschland e.V. Logo" class="img-fluid">
+                    </p>
+                    <p>
+                        E-Mail: <a href="mailto:kontakt@politik-bei-uns.de">kontakt@politik-bei-uns.de</a><br>
+                        Web: <a href="https://okfn.de">okfn.de</a><br>
+                        Adresse: Singerstraße 109, 10179 Berlin
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</div>
+{% block scripts %}
+    <script type="text/javascript" src="/static/js/webapp.min.js?v={{ config['PROJECT_VERSION'] }}"></script>
+{% endblock %}
+{% if config.PIWIK_HOST and config.PIWIK_ID %}
+    <!-- Piwik -->
+    <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(["setDomains", ["*.{{ config.APP_DOMAIN }}"]]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//{{ config.PIWIK_HOST }}/";
+            _paq.push(['setTrackerUrl', u + 'piwik.php']);
+            _paq.push(['setSiteId', {{ config.PIWIK_ID }}]);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript';
+            g.async = true;
+            g.defer = true;
+            g.src = u + 'piwik.js';
+            s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <noscript><p><img src="//{{ config.PIWIK_HOST }}/piwik.php?idsite={{ config.PIWIK_ID }}" style="border:0;" alt=""/>
+    </p></noscript>
+    <!-- End Piwik Code -->
+{% endif %}
+</body>
+</html>

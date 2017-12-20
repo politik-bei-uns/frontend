@@ -1,0 +1,12 @@
+Flask
+Flask-Script
+Flask-Elasticsearch
+Flask-mongoengine
+Flask-Login
+Flask-Mail
+Flask-WTF
+pytz
+gunicorn
+passlib
+python-dateutil
+bcrypt

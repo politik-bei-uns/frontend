@@ -1,0 +1,10 @@
+Sehr geehrte Mitarbeiter der Kommune {{ file.body.name }}, sehr geehrtes Politik bei Uns Team,
+
+{{ name }} mit der E-Mail {{ email }} hat soeben folgende Datei gemeldet:
+Kommune: {{ file.body.name }}
+Datei: {{ file.name }}
+Link: {{ config['PROJECT_URL'] }}/file/{{ file.id }}
+
+Grund für die Meldung ist "{{ reason }}". Details:
+
+{{ details }}

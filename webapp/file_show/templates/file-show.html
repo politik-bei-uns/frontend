@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% from "macros.html" import thumbnail_show with context %}
+
+{% block title %}Datei aus {{ file.body.name }}: {{ file.name }} | {{ super() }}{% endblock %}
+{% block og_title %}Datei aus {{ file.body.name }}: {{ file.name }} | {{ super() }}{% endblock %}
+
+{% block bodyclass %}file-single{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ file.name }}</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row gap-after">
+        <div class="col-md-6">
+            <h3>Daten</h3>
+            <div class="container nogutter gap-after">
+                <div class="row">
+                    <div class="col-md-6">Kommune</div>
+                    <div class="col-md-6">{{ file.body.name }}</div>
+                </div>
+                {% if file.fileName %}
+                    <div class="row">
+                        <div class="col-md-6">Dateiname</div>
+                        <div class="col-md-6">{{ meeting.fileName }}</div>
+                    </div>
+                {% endif %}
+                {% if file.fileName %}
+                    <div class="row">
+                        <div class="col-md-6">Dateiname</div>
+                        <div class="col-md-6">{{ file.fileName }}</div>
+                    </div>
+                {% endif %}
+                {% if file.size %}
+                    <div class="row">
+                        <div class="col-md-6">Größe</div>
+                        <div class="col-md-6">{{ file.size|filesize }}</div>
+                    </div>
+                {% endif %}
+                {% if file.date %}
+                    <div class="row">
+                        <div class="col-md-6">Datum</div>
+                        <div class="col-md-6">{{ file.date|datetime(format='fulldate') }}</div>
+                    </div>
+                {% endif %}
+                {% if file.created %}
+                    <div class="row">
+                        <div class="col-md-6">Erstellt</div>
+                        <div class="col-md-6">{{ file.created|datetime }}</div>
+                    </div>
+                {% endif %}
+                {% if file.modified %}
+                    <div class="row">
+                        <div class="col-md-6">Verändert</div>
+                        <div class="col-md-6">{{ file.modified|datetime }}</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>Stichworte</h3>
+            <div id="file-keywords" class="gap-after">
+                {% if file.keyword or file.keyword_usergenerated %}
+                    <div class="gap-after">
+                        {% if file.keyword %}
+                            {% for keyword in paper.keyword %}
+                                {{ keyword }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if file.keyword and file.keyword_usergenerated %}, {% endif %}
+                        {% if file.keyword_usergenerated %}
+                            {% for keyword in file.keyword_usergenerated %}
+                                {{ keyword.keyword }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                    <form id="keyword-form" action="/file/{{ file.id }}" method="POST">{{ form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ form.submit(class_='btn') }}{{ form.csrf_token }}</form>
+                {% else %}
+                    <a href="/login?redirect_to=/file/{{ file.id }}">Neues Stichwort (login erforderlich)</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row gap-before">
+        <div class="col-md-12">
+            {{ thumbnail_show(file, details_button=False) }}
+        </div>
+    </div>
+    <div class="row gap-before">
+        <div class="col-md-12">
+            <h3>Inhalt der Datei</h3>
+            <div id="file-text-raw">
+                {{ file.text }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

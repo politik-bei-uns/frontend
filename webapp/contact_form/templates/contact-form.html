@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Kontakt | {{ super() }}{% endblock %}
+{% block og_title %}Kontakt | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Kontakt</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="/contact">
+        <div class="row">
+            <div class="col-md-12">
+                <p>Wir freuen uns über Anregungen, Verbesserungsvorschläge, Hinweise auf weitere Kommunen mit OParl-Schnittstelle und mehr! Statt dem Kontaktformular können Sie uns auch eine E-Mail an <a href="mailto:kontakt@politik-bei-uns.de">kontakt@politik-bei-uns.de</a> senden.</p>
+                <p>Wenn Sie ein Problem mit den Inhalten einer Datei melden möchten, nutzen Sie bitte die "melden"-Buttons bei der Datei. Diese generieren Mails, welche dann direkt an die Stadt gesendet werden. Dies garantiert eine zügige Beantwortung Ihrer Meldung.</p>
+                <p>Name und E-Mail sind lediglich für Rückfragen da und werden nicht veröffentlicht.</p>
+            </div>
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.name, 6) }}
+            {{ form_field(form.email, 6) }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.message, 12) }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.submit, 12, 'input-submit') }}
+        </div>
+        {{ form.csrf_token }}
+    </form>
+{% endblock %}

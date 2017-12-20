@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}Startseite | {{ super() }}{% endblock %}
+{% block og_title %}Startseite | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Was macht Ihre Politik vor Ort?</h1>
+            <form id="front-search-form" action="/ratsdokumente" method="get">
+                <input type="text" id="front-search-text">
+                <input type="submit" value="suchen" id="front-search-submit" class="btn">
+            </form>
+            <p>Suchen Sie zum Beispiel nach: <a href="/ratsdokumente?text=Stadtwerke">Stadtwerke</a></p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Unser Ziel: Politik vor Ort für Sie transparent machen.</h2>
+            <p>Im Stadt- oder Landrat werden Entscheidungen getroffen, die Sie ganz direkt betreffen. "Politik bei uns" macht diese Entscheidungen transparent, so dass Sie besser informiert sind und so besser mitbestimmen können. Für eine lebendige, faktenbasierte Demokratie.</p>
+            <h2>Woher kommen die Daten?</h2>
+            <p>Wir nutzen die <a href="/info/schnittstelle">OParl-Schnittstelle</a> der bestehenden Ratsinformationssysteme, um die darin befindlichen öffentlichen - und nur die öffentlichen - Daten der Kommune abzurufen und aufzubereiten.</p>
+            <h2>Meine Stadt auf "Politik bei uns" &amp; Daten verbessern</h2>
+            <p>Wir nehmen jede Stadt auf, welche über eine OParl-Schnittstelle verfügt, und wir freuen uns über die Verbesserung der Daten. <a href="/info/mitmachen">Mehr Informationen gibt es auf einer eigenen Seite.</a></p>
+        </div>
+        <div class="col-md-6">
+            <h2>Aktuelle Dokumente</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Kommunen auf Politik bei uns</h2>
+            <div id="overview-map"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        config = {
+            mapbox_token: '{{ config['MAPBOX_TOKEN'] }}'
+        };
+    </script>
+    {{ super() }}
+{% endblock %}

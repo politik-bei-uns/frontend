@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Das Projekt | {{ super() }}{% endblock %}
+{% block og_title %}Das Projekt | {{ super() }}{% endblock %}
+{% block og_description %}Politik bei uns hat sich zum Ziel gesetzt, Politik vor Ort transparent zu machen.{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Das Projekt</h1>
+            <p>Politik bei uns hat sich zum Ziel gesetzt, Politik vor Ort transparent zu machen.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Die Herausforderung</h2>
+            <p>Um Politik mitgestalten zu können, hilft es sehr, wenn man gut informiert ist. All die Informationen über politische Entscheidungen in einer Kommune liegen in sogenannten Ratsinformationssystemen (oder kurz: RIS), und ein ganz großer Teil dieser Daten ist seit jeher öffentlich.</p>
+            <p>Das Problem ist nur, dass die Ratsinformationssysteme Arbeitswerkzeuge für die Ratsmitglieder und die Verwaltung sind. Der öffentliche Teil für Bürgerinnen und Bürger ist damit nicht der Fokus. Und genau das möchten wir fixen.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Die Herangehensweise</h2>
+            <p>Die Menschen in einer Stadt denken nicht so sehr in Gremien und Antragstypen, sondern in geographischen Orten und Stichworten. Zum Beispiel hat man eben eher die ungefähre Adresse und den Namen eines Spielplatzes im Kopf, nicht so sehr das zuständige Amt und die Legislaturperiode, in der der Spielplatz gebaut wurde.</p>
+            <p>Um eine die Darstellung der politischen Entscheidungen in einer Kommune nun also für Bürgerinnen und Bürger zu optimieren, braucht man die Daten in einer strukturierten Form. Zu diesem Zweck haben wir den Industriestandard OParl entwickelt, welcher von der Mehrheit der Ratsinformationssystem-Hersteller nun auch angeboten wird.</p>
+            <p>Mit den Daten im OParl-Format kann man nun ganz neue Darstellungenn bauen. Helfen tun dabei moderne Webtechnologien wie Suchserver und das Verschneiden der Daten mit Geodaten von OpenStreetMap.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Die Geschichte</h2>
+            <p>Angefangen hat alles mit dem Portal offeneskoeln.de, mit dem der Entwickler Marian Steinbach Anfang 2012 gezeigt hat, dass eine neue Ansicht der kommunalen Entscheidungen machbar und sinnvoll ist. Das Projekt hat weit über Köln heraus Aufmerksamkeit erzeugt.</p>
+            <p>Im Jahr 2013 hat Ernesto Ruge offeneskoeln.de unter dem Namen OpenRuhr:RIS für mehrere Städte aus dem mittleren NRW adaptiert und erweitert, so dass der Fokus nun zunehmend auf einem Portal mit kommunal übergreifender Suche lag.</p>
+            <p>Parallel dazu wurde die Entwicklung von OParl begonnen. Die Portale offeneskoeln.de und OpenRuhr:RIS basierten auf Scrapern, und diese machten pro Stadt einen hohen Aufwand. Es war also absehbar, dass man eine fest definierte Schnittstelle bräuchte, wenn man das Thema richtig angehen will.</p>
+            <p>Anfang 2015 wurde offeneskoeln.de und OpenRuhr:RIS unter dem heutigen Namen Politik bei uns relaunched. Im selben Jahr hat eine Stadt ihre Ratsinformationssystem-Daten erstmalig explizit unter einer freien Lizenz veröffentlicht: die Stadt Moers.</p>
+            <p>Es war jedoch klar, dass über kurz oder lang eine vollständige Neuentwicklung auf Basis von OParl nötig werden würde. Ebenfalls klar war aber auch, dass ein Projekt dieser Größe nicht mehr rein ehrenamtlich entwickelt werden konnte, so dass nach einer Finanzierung gesucht wurde. Dies wurde um so deutlicher, als im Sommer 2016 OParl 1.0 veröffentlicht wurde.</p>
+            <p>Im Frühjahr 2017 hat das Land NRW eine Förderung ausgeschrieben, die perfekt zu der Idee passte. Zentraler Treiber neben der OKFN war das kommunale Rechenzentrum KRZN, welches über 20 Kommunen gleich mitgebracht hat. Nach einer kurzen Bewerbungsphase kam die Finanzierung, und die Neuentwicklung wurde so möglich. Ebenfalls möglich wurde ein erheblicher Boost bei der Anschaffung von OParl-Schnittstellen.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Die Aussichten</h2>
+            <p>Bei dem Stand zum Ende des NRW-Projektes soll es nicht bleiben, denn wir haben noch viel vor. Die Weiterentwicklung soll vor allem in den folgenden drei Bereichen stattfinden:</p>
+            <p>Wir wollen mehr Kommunen auf Politik bei uns bringen. Dies hängt elementar mit der Verbreitung der OParl-Schnittstelle zusammen, denn nur Kommunen mit einer OParl-Schnittstelle können in Politik bei uns integriert werden. Mehr Informationen dazu <a href="/info/mitmachen">finden Sie im Bereich mitmachen</a>.</p>
+            <p>Wir wollen die Darstellung der Daten und die dahinter stehende automatisierte Datenveredlung verbessern sowie mehr Rückmeldemöglichkeiten für Nutzerinnen und Nutzer schaffen. Hier sind auch Ihre Ideen gefragt: welche Features fänden Sie praktisch? <a href="/kontakt">Schreiben Sie uns</a> - <a href="/info/mitmachen">oder programmieren Sie direkt mit</a>.</p>
+            <p>Nicht zuletzt wollen wir aber auch die Struktur dahinter, den Industriestandard OParl, weiter verbessern. Dieser ist aktuell noch sehr auf den reinen Datenabruf ausgelegt. Da ginge noch mehr, sei es das Thema Vereinheitlichung von Daten, sei es das Thema Suchoperationen. Auch wenn dieser Teil der Weiterentwicklung nicht so cool aussieht, so ist er doch Grundlage für alles andere und darf daher nicht vernachlässigt werden.</p>
+        </div>
+    </div>
+{% endblock %}

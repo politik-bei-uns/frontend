@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}OParl-Schnittstelle | {{ super() }}{% endblock %}
+{% block og_title %}OParl-Schnittstelle | {{ super() }}{% endblock %}
+{% block og_description %}Wie man an die Daten von Politik bei uns kommt.{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>OParl-Schnittstelle</h1>
+            <p>Wie man an die Daten von Politik bei uns kommt.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <p>Politik bei uns basiert auf der Schnittstelle (oder kurz API) OParl. Dieser Industriestandard für Ratsinformationssystem-Daten ermöglicht es uns, Daten unabhängig von der Software der Kommune einzusammeln und aufzubereiten.</p>
+            <h2>Abruf der Rohdaten via OParl-Mirror</h2>
+            <p>Das OParl-Projekt sammelt die Daten aller Kommunen mit OParl-Schnittstelle ein, korrigiert eine Hand voll Fehler und stellt sie auf einem schnellen Server wieder zur Verfügung.</p>
+            <p>Der System-Endpunkt des Mirrors lautet wie folgt:</p>
+            <pre><code>https://mirror.oparl.org/system</code></pre>
+            <h2>Aufbereitete Daten</h2>
+            <p>Politik bei uns bereitet die Daten auf vielfältige Weise auf:</p>
+            <ul>
+                <li>Automatisierte Georeferenzierung auf Basis von OpenStreetMap-Daten</li>
+                <li>Extrahieren aller Texte aus den PDFs</li>
+                <li>OCR-Behandlung der PDFs falls notwendig</li>
+                <li>Thumbnail-Generierung in verschiedenen Größen</li>
+            </ul>
+            <p>Diese aufbereiteten OParl-Daten können wieder via OParl abgerufen werden. Der System-Endpunkt lautet:</p>
+            <pre><code>https://oparl.politik-bei-uns.de/system</code></pre>
+        </div>
+    </div>
+{% endblock %}

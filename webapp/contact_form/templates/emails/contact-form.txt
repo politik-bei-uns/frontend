@@ -1,0 +1,5 @@
+Sehr geehrtes Politik bei Uns Team,
+
+{{ name }} mit der E-Mail {{ email }} hat soeben folgende Anfrage geschickt:
+
+{{ message }}

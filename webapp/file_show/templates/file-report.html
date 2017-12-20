@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Datei melden | {{ super() }}{% endblock %}
+{% block og_title %}Datei melden | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Datei melden</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="/file/{{ file.id }}/report">
+        <div class="row">
+            <div class="col-md-12">
+                <p>In Einzelfällen kann es vorkommen, dass in der öffentlichen Dokumentation einer Stadt Dokumente zu finden sind, die dort nichts zu suchen haben. Klassisches Beispiel ist urheberrechtlich geschütztes Material oder personenbezogene Daten.</p>
+                <p>Der Fehler liegt in diesem Fall allerdings nicht bei Politik bei uns, sondern bereits in dem Ratsinformationssystem der Stadt: auch dort sind die Daten dann öffentlich abrufbar.</p>
+                <p>Um diesem Problem zu begegnen, können Sie mit dem unten stehenden Formular eine Datei melden. Die Meldung geht nicht nur zu uns, sondern auch an die Stadt, welche die Dokumente wie oben beschrieben ursprünglich veröffentlicht hat. Nur so kann garantiert werden, dass die Datei dauerhaft offline genommen werden kann.</p>
+                <p>Name und E-Mail werden nicht veröffentlicht und dienen lediglich zu Rückfragen.</p>
+            </div>
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.name, 6) }}
+            {{ form_field(form.email, 6) }}
+        </div>
+        <div class="row row-form">
+            <div class="col-md-12">
+                Zu meldende Datei<br>
+                <a href="/file/{{ file.id }}">{{ file.name }} aus {{ file.body.name }}</a>
+            </div>
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.reason, 12) }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.details, 12) }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.submit, 12, 'input-submit') }}
+        </div>
+        {{ form.csrf_token }}
+    </form>
+{% endblock %}

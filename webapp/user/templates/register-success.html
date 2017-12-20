@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}E-Mail-Aktivierung erforderlich | {{ super() }}{% endblock %}
+{% block og_title %}E-Mail-Aktivierung erforderlich | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>E-Mail-Aktivierung erforderlich</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <p>Bitte schauen Sie in Ihr E-Mail-Postfach, um Ihr Konto zu aktivieren.</p>
+        </div>
+    </div>
+{% endblock %}

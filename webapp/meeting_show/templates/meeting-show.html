@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+{% from "macros.html" import thumbnail_show with context %}
+
+{% block title %}Sitzung aus {{ meeting.body.name }}: {{ meeting.name }} | {{ super() }}{% endblock %}
+{% block og_title %}Sitzung aus {{ meeting.body.name }}: {{ meeting.name }} | {{ super() }}{% endblock %}
+
+{% block bodyclass %}paper-single{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ meeting.name }}</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if meeting.invitation %}
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Einladung: {{ meeting.invitation.name }}</h3>
+                {{ thumbnail_show(meeting.invitation) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if meeting.resultsProtocol %}
+        <div class="row gap-before">
+            <div class="col-md-12">
+                <h3>Ergebnisprotokoll: {{ meeting.resultsProtocol.name }}</h3>
+                {{ thumbnail_show(meeting.resultsProtocol) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if meeting.verbatimProtocol %}
+        <div class="row gap-before">
+            <div class="col-md-12">
+                <h3>Gesamtprotokoll: {{ meeting.verbatimProtocol.name }}</h3>
+                {{ thumbnail_show(meeting.verbatimProtocol) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if meeting.auxiliaryFile %}
+        {% for auxiliaryFile in meeting.auxiliaryFile %}
+            <div class="row gap-before">
+                <div class="col-md-12">
+                    <h3>Weitere Datei: {{ auxiliaryFile.name }}</h3>
+                    {{ thumbnail_show(auxiliaryFile) }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="row gap-before gap-after">
+        <div class="col-md-6">
+            <h3>Daten</h3>
+            <div class="container nogutter">
+                <div class="row">
+                    <div class="col-md-6">Kommune</div>
+                    <div class="col-md-6">{{ meeting.body.name }}</div>
+                </div>
+                {% if 'meetingState' in meeting %}
+                    <div class="row">
+                        <div class="col-md-6">Status</div>
+                        <div class="col-md-6">{{ meeting.meetingState }}</div>
+                    </div>
+                {% endif %}
+                {% if 'cancelled' in meeting %}
+                    <div class="row">
+                        <div class="col-md-6">Status</div>
+                        <div class="col-md-6">{{ meeting.meetingState }}</div>
+                    </div>
+                {% endif %}
+                {% if 'start' in meeting %}
+                    <div class="row">
+                        <div class="col-md-6">Beginn</div>
+                        <div class="col-md-6">{{ meeting.start|datetime }}</div>
+                    </div>
+                {% endif %}
+                {% if 'end' in meeting %}
+                    <div class="row">
+                        <div class="col-md-6">Ende</div>
+                        <div class="col-md-6">{{ meeting.end|datetime }}</div>
+                    </div>
+                {% endif %}
+                {% if 'created' in meeting %}
+                    <div class="row">
+                        <div class="col-md-6">Erstellt</div>
+                        <div class="col-md-6">{{ meeting.created|datetime }}</div>
+                    </div>
+                {% endif %}
+                {% if 'modified' in meeting %}
+                    <div class="row">
+                        <div class="col-md-6">Verändert</div>
+                        <div class="col-md-6">{{ meeting.modified|datetime }}</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>Stichworte</h3>
+            <div id="meeting-keywords" class="gap-after">
+                {% if meeting.keyword or meeting.keyword_usergenerated %}
+                    <div class="gap-after">
+                        {% if meeting.keyword %}
+                            {% for keyword in meeting.keyword %}
+                                {{ keyword }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if meeting.keyword and meeting.keyword_usergenerated %}, {% endif %}
+                        {% if meeting.keyword_usergenerated %}
+                            {% for keyword in meeting.keyword_usergenerated %}
+                                {{ keyword.keyword }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                    <form id="keyword-form" action="/meeting/{{ meeting.id }}" method="POST">{{ form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ form.submit(class_='btn') }}{{ form.csrf_token }}</form>
+                {% else %}
+                    <a href="/login?redirect_to=/meeting/{{ meeting.id }}">Neues Stichwort (login erforderlich)</a>
+                {% endif %}
+            </div>
+
+
+
+            <!--div id="meeting-keywords">
+                {% if meeting.keyword %}
+                    {% for keyword in meeting.keyword %}
+                        <span>{{ keyword }}</span>
+                    {% endfor %}
+                {% endif %}
+                <span id="meeting-keyword-new">Neues Stichwort</span>
+            </div-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Tagesordnungspunkte</h3>
+            {% for agenda_item in meeting.agendaItem %}
+                <div>
+                    <h4>{% if agenda_item.number %}{{ agenda_item.number }} {% endif %}{{ agenda_item.name }}</h4>
+                    {% if agenda_item.result %}<p>Ergebnis: {{ agenda_item.result }}</p>{% endif %}
+                    {% if agenda_item.resolutionText %}<p>{{ agenda_item.resolutionText }}</p>{% endif %}
+                    {% if agenda_item.consultation %}
+                        {% if agenda_item.consultation.paper %}
+                            <p>Bearbeitetes Dokument: <a href="/document/{{ agenda_item.consultation.paper.id }}">{{ agenda_item.consultation.paper.name }}</a></p>
+                        {% endif %}
+                    {% endif %}
+                    {% if agenda_item.keyword %}
+                        {% for keyword in agenda_item.keyword %}
+                            <span>{{ keyword }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {% if agenda_item.resolutionFile %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>Ergebnisprotokoll: {{ agenda_item.resolutionFile.name }}</h5>
+                                {{ thumbnail_show(agenda_item.resolutionFile) }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if agenda_item.auxiliaryFile %}
+                        {% for auxiliaryFile in meeting.auxiliaryFile %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Weitere Datei: {{ auxiliaryFile.name }}</h5>
+                                    {{ thumbnail_show(auxiliaryFile) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

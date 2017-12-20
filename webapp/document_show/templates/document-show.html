@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% from "macros.html" import thumbnail_show with context %}
+
+{% block title %}Dokument aus {{ paper.body.name }}: {{ paper.name }} | {{ super() }}{% endblock %}
+{% block og_title %}Dokument aus {{ paper.body.name }}: {{ paper.name }} | {{ super() }}{% endblock %}
+
+{% block bodyclass %}paper-single{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ paper.name }}</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row gap-after">
+        <div class="col-md-6">
+            <h3>Daten</h3>
+            <div class="container nogutter gap-after">
+                <div class="row">
+                    <div class="col-md-6">Kommune</div>
+                    <div class="col-md-6">{{ paper.body.name }}</div>
+                </div>
+                {% if 'reference' in paper %}
+                    <div class="row">
+                        <div class="col-md-6">Referenz</div>
+                        <div class="col-md-6">{{ paper.reference }}</div>
+                    </div>
+                {% endif %}
+                {% if 'paperType' in paper %}
+                    <div class="row">
+                        <div class="col-md-6">Typus</div>
+                        <div class="col-md-6">{{ paper.paperType }}</div>
+                    </div>
+                {% endif %}
+                {% if 'created' in paper %}
+                    <div class="row">
+                        <div class="col-md-6">Erstellt</div>
+                        <div class="col-md-6">{{ paper.created|datetime }}</div>
+                    </div>
+                {% endif %}
+                {% if 'modified' in paper %}
+                    <div class="row">
+                        <div class="col-md-6">Verändert</div>
+                        <div class="col-md-6">{{ paper.modified|datetime }}</div>
+                    </div>
+                {% endif %}
+            </div>
+            <h3>Damit verbundene Sitzungen</h3>
+            {% for consultation in paper.consultation %}
+                {% if consultation.meeting and consultation.agendaItem %}
+                    <h4>
+                        <a href="/meeting/{{ consultation.meeting.id }}#agendaItem-{{ consultation.agendaItem.id }}">
+                            {% if consultation.meeting.name %}{{ consultation.meeting.name }}{% else %}Ohne Name{% endif %}
+                        </a>
+                    </h4>
+                {% endif %}
+                <p>{% if consultation.agendaItem %}
+                    Tagesordnungspunkt: {% if consultation.agendaItem.name %}{{ consultation.agendaItem.name }}{% else %}ohne Name{% endif %}</p>
+                {% endif %}
+                {% if consultation.meeting.start %}<p>Datum &amp; Uhrzeit: {{ consultation.meeting.start|datetime }}</p>{% endif %}
+                {% if consultation.agendaItem.result %}Ergebnis{% if consultation.role %} der {{ consultation.role }}{% endif %}: {{ consultation.agendaItem.result }}{% endif %}
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <h3>Stichworte</h3>
+            <div id="paper-keywords" class="gap-after">
+                {% if paper.keyword or paper.keyword_usergenerated %}
+                    <div class="gap-after">
+                        {% if paper.keyword %}
+                            {% for keyword in paper.keyword %}
+                                {{ keyword }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if paper.keyword and paper.keyword_usergenerated %}, {% endif %}
+                        {% if paper.keyword_usergenerated %}
+                            {% for keyword in paper.keyword_usergenerated %}
+                                {{ keyword.keyword }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                    <form id="keyword-form" action="/document/{{ paper.id }}" method="POST">{{ form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ form.submit(class_='btn') }}{{ form.csrf_token }}</form>
+                {% else %}
+                    <a href="/login?redirect_to=/document/{{ paper.id }}">Neues Stichwort (login erforderlich)</a>
+                {% endif %}
+            </div>
+            {% if paper.location|length %}
+            <h3>Orte</h3>
+            <div id="paper-map"></div>
+            {% endif %}
+        </div>
+    </div>
+    {% if paper.mainFile %}
+    <div class="row gap-before">
+        <div class="col-md-12">
+            <h3>Hauptdatei: {{ paper.mainFile.name }}</h3>
+            {{ thumbnail_show(paper.mainFile) }}
+        </div>
+    </div>
+    {% endif %}
+    {% if paper.auxiliaryFile %}
+        {% for auxiliaryFile in paper.auxiliaryFile %}
+            <div class="row gap-before">
+                <div class="col-md-12">
+                    <h3>Weitere Datei: {{ auxiliaryFile.name }}</h3>
+                    {{ thumbnail_show(auxiliaryFile) }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        config = {
+            mapbox_token: '{{ config['MAPBOX_TOKEN'] }}',
+            geojson: {{ generated_geojson|safe }}
+        };
+    </script>
+    {{ super() }}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Such-Abos | {{ super() }}{% endblock %}
+{% block og_title %}Such-Abos | {{ super() }}{% endblock %}
+{% block og_description %}Ihre abbonierten Themen, zu denen sie bei neuen Dokumenten informiert werden möchten.{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Such-Abos</h1>
+            <p>Ihre abbonierten Themen, zu denen sie bei neuen Dokumenten informiert werden möchten.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <td>Suchbegriff</td>
+                    <td>Körperschaft</td>
+                    <td>Ort</td>
+                    <td>Dokumententyp</td>
+                    <td>Aktionen</td>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <td>Suchbegriff</td>
+                    <td>Körperschaft</td>
+                    <td>Ort</td>
+                    <td>Dokumententyp</td>
+                    <td>Aktionen</td>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for search_subscription in search_subscriptions %}
+                    <tr>
+                        <td>{% if search_subscription.search_string %}{{ search_subscription.search_string }}{% else %}
+                            -{% endif %}</td>
+                        <td>{% if search_subscription.body %}{% for body in search_subscription.body %}{{ body.name }}
+                            {% if not loop.last %}, {% endif %}{% endfor %}{% else %}-{% endif %}</td>
+                        <td>{% if search_subscription.location %}{{ search_subscription.location }}{% else %}
+                            -{% endif %}</td>
+                        <td>{% if search_subscription.paperType %}{% for paper_type in search_subscription.paperType %}
+                            {{ paper_type }}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}-{% endif %}</td>
+                        <td><a href="/account/search-subscription/{{ search_subscription.id }}/delete" class="btn btn-danger">löschen</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Login | {{ super() }}{% endblock %}
+{% block og_title %}Login | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Login</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="/login{% if redirect_to %}?redirect_to={{ redirect_to }}{% endif %}">
+        <div class="row">
+            <div class="col-md-12">
+                <p>Falls Sie noch keinen Account bei uns haben, <a href="/register{% if redirect_to %}?redirect={{ redirect_to }}{% endif %}">können Sie sich hier registrieren</a>.</p>
+            </div>
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.email, 6) }}
+            {{ form_field(form.password, 6) }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.remember_me, 12, 'input-checkbox') }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.submit, 12, 'input-submit') }}
+        </div>
+        {{ form.csrf_token }}
+    </form>
+{% endblock %}

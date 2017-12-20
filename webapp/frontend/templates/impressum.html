@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}Impressum | {{ super() }}{% endblock %}
+{% block og_title %}Impressum | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Impressum</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Angaben gemäß § 5 TMG</h4>
+            <p>
+                Open Knowledge Foundation Deutschland e.V.<br>
+                Singerstraße 109<br>
+                10179 Berlin
+            </p>
+            <h4>Kontakt:</h4>
+            <p>
+                Telefon: <a href="tel:+4930577036660">+49 30 57703666-0</a><br>
+                E-Mail: <a href="mailto:kontakt@politik-bei-uns.de">kontakt@politik-bei-uns.de</a><br>
+                Anfragen bitte via Mail senden.
+            </p>
+            <h4>Registereintrag:</h4>
+            <p>
+                Eintragung im Vereinsregister.<br>
+                Registergericht:  Amtsgericht Charlottenburg<br>
+                Registernummer: VR 30468 B
+            </p>
+            <h4>Konzept- und Softwareentwicklung</h4>
+            <p>
+                Ernesto Ruge<br>
+                Am Hertinger Tor 1<br>
+                59423 Unna
+            </p>
+            <p>
+                E-Mail: <a href="mailto:mail@ernestoruge.de">mail@ernestoruge.de</a><br>
+                Web: <a href="https://binary-butterfly.de/">binary-butterfly.de</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

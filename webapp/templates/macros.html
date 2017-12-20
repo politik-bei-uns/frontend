@@ -1,0 +1,47 @@
+{% macro form_field(field, box_width=12, form_type='input-text', unit=None, extra_classes=None) -%}
+    <div class="col-md-{{ box_width }}{% if field.errors %} error{% endif %}">
+        {% if form_type == 'input-text' %}
+            {{ field.label }}
+            {% if unit %}
+                <span class="unit unit-{{ unit }}">{% endif %}{{ field(class="form-control" + (' ' + ' '.join(extra_classes) if extra_classes else '')) }}
+        {% if unit %}</span>{% endif %}
+        {% elif form_type == 'input-checkbox' %}
+            <label>{{ field(class="") }} {{ field.label.text }}</label>
+        {% elif form_type == 'input-submit' %}
+            {{ field(class="form-control") }}
+        {% endif %}
+        {% if field.description %}
+            <p>{{ field.description|safe }}</p>
+        {% endif %}
+        {% if field.errors %}
+            <p class="text-danger">
+                {% for error in field.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+        {% endif %}
+    </div>
+{%- endmacro %}
+
+{% macro thumbnail_show(file, details_button=True) %}
+    {% if file %}
+        <div>
+            {% if file.pages %}
+                {% for i in range(1, file.pages + 1) %}
+                    <a href="{{ config['PROJECT_CDN_URL'] }}/file-thumbnails/{{ file.body.id }}/{{ file.id }}/1200/{{ i }}.jpg"
+                       data-toggle="lightbox" data-gallery="{{ file.id }}">
+                        <img src="{{ config['PROJECT_CDN_URL'] }}/file-thumbnails/{{ file.body.id }}/{{ file.id }}/300/{{ i }}.jpg"
+                             alt="{% if file.name %}{{ file.name }}{% endif %}">
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <p class="file-actions">
+            {% if details_button %}<a href="/file/{{ file.id }}" class="btn btn-info">Details</a>{% endif %}
+            <a href="{{ config['PROJECT_CDN_URL'] }}/files/{{ file.body.id }}/{{ file.id }}/show" class="btn btn-primary">öffnen</a>
+            <a href="{{ config['PROJECT_CDN_URL'] }}/files/{{ file.body.id }}/{{ file.id }}/download" class="btn btn-success">download</a>
+            <a href="/file/{{ file.id }}/report" class="btn btn-danger">melden</a>
+        </p>
+        <p class="file-meta">{% if file.size %}<br>Dateigröße: {{ file.size|filesize }}{% endif %}</p>
+    {% endif %}
+{%- endmacro %}

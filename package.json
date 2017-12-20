@@ -1,0 +1,37 @@
+{
+  "name": "flask-boilerplate",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ernesto Ruge",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "es6-promise": "^4.1.1",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-rimraf": "^0.2.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-watch": "^4.3.11",
+    "gulp-google-webfonts": "^0.0.14",
+    
+    "jquery": "~3",
+    "normalize.css": "~7",
+    "popper.js": "~1",
+    "bootstrap": "~4.0.0-beta",
+    "font-awesome": "~4",
+    "mapbox-gl": "~0.39",
+    "bootstrap-multiselect": "~0.9",
+    "bootstrap-datepicker": "~1.7",
+    "bootstrap-slider": "~9.9",
+    "ekko-lightbox": "~5.3"
+  }
+}
