@@ -4,14 +4,6 @@ body {
   padding-top: 85px;
 }
 
-a, a:visited, a:active {
-  color: #1e7e34;
-}
-
-a:hover {
-  color: #28a745;
-  text-decoration: none;
-}
 
 .main-wrapper {
 
@@ -45,6 +37,19 @@ a:hover {
   padding-bottom: 40px;
 }
 
+#content a, #content a:visited, #content a:active {
+  color: #1e7e34;
+}
+
+#content a:hover {
+  color: #28a745;
+  text-decoration: none;
+}
+
+#content a.btn, #content a.btn:visited, #content a.btn:active, #content a.btn:hover {
+  color: #FFF;
+}
+
 #flash-messages {
   list-style: none;
   padding: 0;
@@ -58,6 +63,16 @@ a:hover {
   padding-top: 40px;
   padding-bottom: 10px;
 }
+
+#footer a, #footer a:visited, #footer a:active {
+  color: #333;
+}
+
+#footer a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
 
 .nogutter {
   padding-left: 0;

@@ -36,6 +36,7 @@ def document_search_api():
     order_by = request.form.get('o', 'random')
     fq = json.loads(request.form.get('fq', '{}'))
     start = request.form.get('f', 0, type=int)
+    size = request.form.get('s', 10, type=int)
     date = json.loads(request.form.get('date', '{}'))
     random_seed = request.form.get('rs', False)
 
@@ -139,7 +140,7 @@ def document_search_api():
         index='paper-latest',
         doc_type='paper',
         body=query,
-        size=10,
+        size=size,
         from_=start,
         sort=order_by
     )

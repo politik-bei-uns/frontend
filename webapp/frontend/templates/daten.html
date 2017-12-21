@@ -2,7 +2,8 @@
 
 {% block title %}Daten | {{ super() }}{% endblock %}
 {% block og_title %}Daten | {{ super() }}{% endblock %}
-{% block og_description %}Wie wir an die Daten der politischen Entscheidungen kommen und Statistiken über diese Daten.{% endblock %}
+{% block og_description %}Wie wir an die Daten der politischen Entscheidungen kommen und Statistiken über diese
+    Daten.{% endblock %}
 
 {% block statement %}
     <div class="row">
@@ -17,64 +18,72 @@
     <div class="row">
         <div class="col-md-12">
             <h2>Datenquellen</h2>
-            <p>Sofern nicht anders ausgezeichnet, basieren sämtliche auf Politik bei uns präsentierten Daten auf Basis der öffentlichen Dokumentation im Ratsinformationssystem, welche von der Stadt via OParl-Schnittstelle bereitgestellt wurden. Das bedeutet insbesondere auch, dass auf Poltik bei uns keine Daten aus nichtöffentlichen Sitzungen zu finden sind.</p>
-            <p>Diese Daten wurden mit Daten von OpenStreetMap verschnitten und verarbeitet, um sie in bürgerfreundlich präsentieren zu können. Die Konzepte dahinter <a href="/info/das-projekt">werden im Bereich "Das Projekt" beschrieben</a>.</p>
-            <p>Speziell markiert liegen noch die öffentlichen Informationen des alten Politik bei Uns in der Version 1 vor. Diese wurden aus dem öffentlichen Bereich der Ratsinformationssysteme der jeweiligen Städte zusammengesammelt (via Scraping). Da dies nicht sehr zuverlässig ist, können die Daten Fehler aufweisen.</p>
+            <p>Sofern nicht anders ausgezeichnet, basieren sämtliche auf "Politik bei uns" präsentierten Daten auf den
+                öffentlich verfügbaren Informationen im Ratsinformationssystem, welche von der Stadt via
+                OParl-Schnittstelle bereitgestellt wurden. Das bedeutet insbesondere auch, dass auf Poltik bei uns keine
+                Daten aus nichtöffentlichen Sitzungen zu finden sind.</p>
+            <p>Diese Daten wurden mit Daten von OpenStreetMap verschnitten und verarbeitet, um sie in bürgerfreundlich
+                präsentieren zu können. Die Konzepte dahinter <a href="/info/das-projekt">werden im Bereich "Das
+                    Projekt" beschrieben</a>.</p>
+            <p>Speziell markiert liegen noch die öffentlichen Informationen des alten "Politik bei uns" in der Version 1
+                vor. Diese wurden aus dem öffentlichen Bereich der Ratsinformationssysteme der jeweiligen Städte
+                zusammengesammelt (via Scraping). Da dies nicht sehr zuverlässig ist, können die Daten Fehler
+                aufweisen.</p>
             <h2>Statistiken</h2>
             <p>Auf Politik bei uns liegen zur Zeit {{ all|dottify }} Objekte vor. Im Einzelnen:</p>
             <table class="table table-striped" id="data-statistics">
-			<thead>
-				<tr>
-					<th>Stadt</th>
+                <thead>
+                <tr>
+                    <th>Stadt</th>
                     <th>Wahlperioden</th>
-					<th>Organisationen</th>
-					<th>Personen</th>
+                    <th>Organisationen</th>
+                    <th>Personen</th>
                     <th>Mitgliedschaften</th>
-					<th>Sitzungen</th>
-					<th>Tagesordnungspunkte</th>
-					<th>Vorlagen</th>
+                    <th>Sitzungen</th>
+                    <th>Tagesordnungspunkte</th>
+                    <th>Vorlagen</th>
                     <th>Beratungen</th>
-					<th>Dateien</th>
+                    <th>Dateien</th>
                     <th>Orte</th>
-				</tr>
-			</thead>
-			<tfoot>
-				<tr>
-					<th>Gesamt</th>
-					<th>{{ body_summary['legislative_term']|dottify }}</th>
-					<th>{{ body_summary['organization']|dottify }}</th>
-					<th>{{ body_summary['person']|dottify }}</th>
-					<th>{{ body_summary['membership']|dottify }}</th>
-					<th>{{ body_summary['meeting']|dottify }}</th>
-					<th>{{ body_summary['agenda_item']|dottify }}</th>
-					<th>{{ body_summary['paper']|dottify }}</th>
-					<th>{{ body_summary['consultation']|dottify }}</th>
-					<th>{{ body_summary['file']|dottify }}</th>
-					<th>{{ body_summary['location']|dottify }}</th>
-				</tr>
-			</tfoot>
-			<tbody>
-				{% for body in bodies %}
-				<tr>
-					<td>{{ body.name }}</td>
-                    {% if body.statistics %}
-                        <td>{{ body.statistics['objects']['legislative_term'] }}</td>
-                        <td>{{ body.statistics['objects']['organization'] }}</td>
-                        <td>{{ body.statistics['objects']['person'] }}</td>
-                        <td>{{ body.statistics['objects']['membership'] }}</td>
-                        <td>{{ body.statistics['objects']['meeting'] }}</td>
-                        <td>{{ body.statistics['objects']['agenda_item'] }}</td>
-                        <td>{{ body.statistics['objects']['paper'] }}</td>
-                        <td>{{ body.statistics['objects']['consultation'] }}</td>
-                        <td>{{ body.statistics['objects']['file'] }}</td>
-                        <td>{{ body.statistics['objects']['location'] }}</td>
-                    {% else %}
-                        <td colspan="10">Keine Statistik verfügbar.</td>
-                    {% endif %}
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Gesamt</th>
+                    <th>{{ body_summary['legislative_term']|dottify }}</th>
+                    <th>{{ body_summary['organization']|dottify }}</th>
+                    <th>{{ body_summary['person']|dottify }}</th>
+                    <th>{{ body_summary['membership']|dottify }}</th>
+                    <th>{{ body_summary['meeting']|dottify }}</th>
+                    <th>{{ body_summary['agenda_item']|dottify }}</th>
+                    <th>{{ body_summary['paper']|dottify }}</th>
+                    <th>{{ body_summary['consultation']|dottify }}</th>
+                    <th>{{ body_summary['file']|dottify }}</th>
+                    <th>{{ body_summary['location']|dottify }}</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for body in bodies %}
+                    <tr>
+                        <td>{{ body.name }}</td>
+                        {% if body.statistics %}
+                            <td>{{ body.statistics['objects']['legislative_term'] }}</td>
+                            <td>{{ body.statistics['objects']['organization'] }}</td>
+                            <td>{{ body.statistics['objects']['person'] }}</td>
+                            <td>{{ body.statistics['objects']['membership'] }}</td>
+                            <td>{{ body.statistics['objects']['meeting'] }}</td>
+                            <td>{{ body.statistics['objects']['agenda_item'] }}</td>
+                            <td>{{ body.statistics['objects']['paper'] }}</td>
+                            <td>{{ body.statistics['objects']['consultation'] }}</td>
+                            <td>{{ body.statistics['objects']['file'] }}</td>
+                            <td>{{ body.statistics['objects']['location'] }}</td>
+                        {% else %}
+                            <td colspan="10">Keine Statistik verfügbar.</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}
