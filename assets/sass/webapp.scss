@@ -4,9 +4,14 @@ body {
   padding-top: 85px;
 }
 
+@media only screen and (max-width: 500px) {
+  #header-wrapper .navbar-brand {
+    margin-right: 0;
+  }
 
-.main-wrapper {
-
+  #header-wrapper .navbar-brand img {
+    width: 220px;
+  }
 }
 
 #header-wrapper {
@@ -172,9 +177,19 @@ a.btn-default {
   display: block;
 }
 
+#statement .bootstrap-multiselect a {
+  color: #000;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+}
+
 .multiselect-container.dropdown-menu {
   right: 0;
   z-index: 3000;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .multiselect-container.dropdown-menu li {
@@ -326,4 +341,90 @@ a.btn-default {
 
 #file-text-raw {
   white-space: pre-wrap;
+}
+
+#region-label {
+  margin-bottom: 0.5rem;
+}
+
+#region-label span {
+  cursor: pointer;
+}
+
+#region-box {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+#region-current, #region-parent, .region-child {
+  padding: 0.5rem 0.75rem;
+}
+
+#region-current {
+  cursor: pointer;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  line-height: 1.25;
+  background: #FFF;
+}
+
+#region-box-inner {
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+#region-parent, .region-child {
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+#region-box-inner {
+  display: none;
+  position: absolute;
+  max-height: 300px;
+  overflow-y: auto;
+  left: 0;
+  right: 0;
+  z-index: 5000;
+  background-color: #FFF;
+}
+
+#region-parent, .region-child {
+  cursor: pointer;
+}
+
+#region-parent {
+  border-bottom: 1px solid #ced4da;
+}
+
+#region-parent:before, .region-child:before {
+  font-family: FontAwesome;
+  position: absolute;
+  left: 0.5rem;
+}
+
+#region-parent:before {
+  content: '\f0a8\00a0';
+}
+
+.region-child:before {
+  content: '\f0a9\00a0';
+}
+
+.region-inactive {
+  color: #999999;
+}
+
+.modal-dialog {
+  margin-top: 80px;
+}
+
+#region-overview h5 {
+  cursor: pointer;
+}
+
+.region-arrow {
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
 }

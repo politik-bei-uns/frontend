@@ -24,9 +24,36 @@ document_search = Blueprint('document_search', __name__, template_folder='templa
 @document_search.route('/ratsdokumente')
 def document_search_main():
     bodies = Body.objects.order_by('name').all()
-    regions = Region.objects.all()
     form = SearchSubscribeForm()
+
+    regions = []
+    for region_raw in Region.objects(parent__exists=False).all():
+        regions.append({
+            'id': str(region_raw.id),
+            'name': region_raw.name,
+            'rgs': region_raw.rgs,
+            'level': region_raw.level,
+            'children': region_get_children(region_raw.id)
+        })
     return render_template('document-search.html', bodies=bodies, regions=regions, form=form)
+
+def region_get_children(region_id):
+    regions = []
+    for region_raw in Region.objects(parent=region_id).all():
+        region = {
+            'id': str(region_raw.id),
+            'name': region_raw.name,
+            'rgs': region_raw.rgs,
+            'level': region_raw.level,
+            'body': []
+        }
+        for body in region_raw.body:
+            region['body'].append(str(body.id))
+        children = region_get_children(region_raw.id)
+        if len(children):
+            region['children'] = children
+        regions.append(region)
+    return regions
 
 
 @document_search.route('/api/search', methods=['POST'])
@@ -153,7 +180,13 @@ def document_search_api():
                     'terms': {
                         'field': 'paperType',
                         'missing': 'keine Angabe',
-                        'size': 128
+                        'size': 1024
+                    }
+                },
+                'body': {
+                    'terms': {
+                        'field': 'body',
+                        'size': 1024
                     }
                 }
             }
@@ -169,7 +202,8 @@ def document_search_api():
         'count': result_raw['hits']['total'],
         'status': 0,
         'aggs': {
-            'paperType': result_raw_aggs['aggregations']['paperType']['buckets']
+            'paperType': result_raw_aggs['aggregations']['paperType']['buckets'],
+            'body': result_raw_aggs['aggregations']['body']['buckets']
         }
     }
     return json_response(result)

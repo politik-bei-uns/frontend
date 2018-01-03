@@ -12,9 +12,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label for="sd-fulltext">Volltext-Suche</label>
                 <input id="sd-fulltext" name="sd-fulltext" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-md-6">
+                <label for="sd-body">Körperschaft</label>
+                <div id="region-box" data-expanded="0">
+                    <div id="region-current" data-id="root">Weltweit</div>
+                    <div id="region-box-inner">
+                        <div id="region-parent" class="region-inactive">Eine Ebene hoch</div>
+                        <div id="region-children"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -44,17 +54,9 @@
         </div>
         <div id="sd-geo-parts">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label for="sd-location">Ort</label>
                     <input id="sd-location" name="sd-location" class="form-control">
-                </div>
-                <div class="col-md-6">
-                    <label for="sd-body">Körperschaft</label>
-                    <select id="sd-body" name="sd-body" class="form-control" multiple>
-                        {% for body in bodies %}
-                            <option value="{{ body.id }}" data-rgs="{{ body.rgs }}">{{ body.name }}</option>
-                        {% endfor %}
-                    </select>
                 </div>
             </div>
             <div class="col-md-12">
@@ -109,10 +111,8 @@
     <script>
         config = {
             mapbox_token: '{{ config['MAPBOX_TOKEN'] }}',
-            regions: {
-                {% for region in regions %}"{{ region.rgs }}": {{ region.bounds }}{% if not loop.last %}, {% endif %}{% endfor %}
-            }
-        };
+            regions: {{ regions|safe }}
+        }
     </script>
     {{ super() }}
 {% endblock %}
