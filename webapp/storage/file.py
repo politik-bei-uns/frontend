@@ -54,6 +54,7 @@ class File(Document, OParlDocument):
 
     # Politik bei Uns Felder
     downloaded = BooleanField(vendor_attribute=True)
+    legacy = BooleanField(vendor_attribute=True)
     originalId = StringField(vendor_attribute=True)
     storedAtMirror = BooleanField(vendor_attribute=True)
     mirrorDownloadUrl = StringField(vendor_attribute=True)

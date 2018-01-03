@@ -632,10 +632,11 @@ function set_url(params) {
         url.push('f=' + params.f)
     }
     if (params.fq) {
-        if (params.fq.body) {
-            delete(params.fq.body);
+        fq = JSON.parse(JSON.stringify(params.fq));
+        if (fq.body) {
+            delete(fq.body);
         }
-        url.push('fq=' + encodeURI(JSON.stringify(params.fq)));
+        url.push('fq=' + encodeURI(JSON.stringify(fq)));
     }
     if (params.date) {
         url.push('date=' + encodeURI(params.date));
