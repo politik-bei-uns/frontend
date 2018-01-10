@@ -96,7 +96,7 @@
         <div class="col-md-12">
             <h3>Inhalt der Datei</h3>
             <div id="file-text-raw">
-                {{ file.text }}
+                {% if file.text %}{{ file.text }}{% endif %}
             </div>
         </div>
     </div>

@@ -5,8 +5,10 @@ Flask-mongoengine
 Flask-Login
 Flask-Mail
 Flask-WTF
+Flask-Cache
 pytz
 gunicorn
 passlib
 python-dateutil
 bcrypt
+python-memcached

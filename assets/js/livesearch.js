@@ -1,3 +1,13 @@
+/*
+Copyright (c) 2007, Ernesto Ruge
+All rights reserved.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 jQuery.live_search = {
     // settings template
     'settings_template': {
@@ -8,8 +18,12 @@ jQuery.live_search = {
         process_result_line: function (result) {
             return ('<li></li>');
         },
-        after_submit: function () {
-        }
+        after_submit: function () {},
+        select_data: function (data) {
+            return data;
+        },
+        reset_data: function () {},
+        extend_params: function() {}
     },
     // array to static settings
     'settings': {},
@@ -18,7 +32,7 @@ jQuery.live_search = {
     // array to store current timer
     'timer': {},
     'global': {
-        'first_run': true,
+        'first_run': true
     },
 
     // init operations
@@ -38,7 +52,7 @@ jQuery.live_search = {
         jQuery(jQuery.live_search.settings[instance]['input']).wrap('<div style="position: relative;"></div>').parent().append('<p id="' + jQuery.live_search.settings[instance]['live_box'].replace('#', '') + '" style="display: none;"></p>');
         jQuery(jQuery.live_search.settings[instance]['live_box']).attr({'class': 'live-search-list'});
         jQuery(jQuery.live_search.settings[instance]['input']).keyup(function (evt) {
-            if (jQuery(jQuery.live_search.settings[instance]['input']).val() != jQuery.live_search.previousValue[instance] && evt.keyCode != 13) {
+            if (jQuery(jQuery.live_search.settings[instance]['input']).val() !== jQuery.live_search.previousValue[instance] && evt.keyCode != 13) {
                 // reset old timer
                 jQuery.live_search.resetTimer(jQuery.live_search.timer[instance]);
                 // set new timeout
@@ -108,7 +122,6 @@ jQuery.live_search = {
         jQuery(jQuery.live_search.settings[instance].form).submit(function (evt) {
             evt.preventDefault();
             jQuery(jQuery.live_search.settings[instance].live_box).css({'display': 'none'});
-            //jQuery.live_search.settings[instance].after_submit();
         });
     },
     show_results: function (instance, result) {
@@ -142,18 +155,18 @@ jQuery.live_search = {
     },
     process: function (instance) {
         var path = jQuery.live_search.settings[instance].url.split('?');
-        var query = [jQuery.live_search.settings[instance].param, '=', jQuery(jQuery.live_search.settings[instance].input).val()].join('');
-        var base = path[0];
-        var params = path[1];
-        var query_string = query;
+        if (jQuery(jQuery.live_search.settings[instance].input).val().length < 2) {
+            jQuery.live_search.settings[instance].reset_data();
+            return;
+        }
+        var params = {};
+        params[jQuery.live_search.settings[instance].param] = jQuery(jQuery.live_search.settings[instance].input).val();
 
-        if (params)
-            query_string = [params.replace('&amp;', '&'), query].join('&');
-
-        jQuery.get([base, '?', query_string].join(''), function (data) {
-            jQuery.live_search.show_results(instance, data['response']);
+        params = jQuery.live_search.settings[instance].extend_params(params);
+        jQuery.post(jQuery.live_search.settings[instance].url, params, function (data) {
+            jQuery.live_search.show_results(instance, jQuery.live_search.settings[instance].select_data(data));
         });
-    },
+    }
 };
 
 jQuery.fn.live_search = function (config) {
@@ -163,4 +176,4 @@ jQuery.fn.live_search = function (config) {
         jQuery.live_search.init(instance);
     });
     return this;
-}
+};

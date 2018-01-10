@@ -34,8 +34,7 @@
                     <input type="text" class="input-sm form-control" name="sd-date-min" id="sd-date-min"
                            autocomplete="off">
                     <span class="input-group-addon">bis</span>
-                    <input type="text" class="input-sm form-control" name="sd-date-max" id="sd-date-max"
-                           autocomplete="off">
+                    <input type="text" class="input-sm form-control" name="sd-date-max" id="sd-date-max" autocomplete="off">
                 </div>
             </div>
             <div class="col-md-6">
@@ -52,6 +51,9 @@
                         id="sd-location-summary-text">nichts ausgewählt.</span></div>
             </div>
         </div>
+        <input type="submit" style="display: none;">
+    </form>
+    <form id="sd-form-geo" method="post">
         <div id="sd-geo-parts">
             <div class="row">
                 <div class="col-md-12">
@@ -59,8 +61,10 @@
                     <input id="sd-location" name="sd-location" class="form-control">
                 </div>
             </div>
-            <div class="col-md-12">
-                <div id="sd-map"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="sd-map"></div>
+                </div>
             </div>
         </div>
         <input type="submit" style="display: none;">

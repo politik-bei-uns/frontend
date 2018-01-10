@@ -83,6 +83,7 @@ gulp.task('concat-js', ['copy-assets-webapp-js'], function () {
         basePaths.temp + 'js/bootstrap-slider/bootstrap-slider.js',
         basePaths.temp + 'js/mapbox-gl/mapbox-gl-dev.js',
         basePaths.temp + 'js/ekko-lightbox/ekko-lightbox.js',
+        basePaths.temp + 'js/livesearch/livesearch.js',
         basePaths.temp + 'js/webapp/webapp.js'
     ])
         .pipe(concat('webapp.min.js'))

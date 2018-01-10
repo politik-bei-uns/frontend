@@ -17,7 +17,7 @@ from webapp import config as Config
 from .common import constants as COMMON_CONSTANTS
 from .common.filter import register_global_filters
 from .common.helpers import BSONObjectIdConverter
-from .extensions import db, es, login_manager, csrf, mail
+from .extensions import db, es, login_manager, csrf, mail, cache
 from .models import User
 
 # Blueprints
@@ -110,6 +110,8 @@ def configure_extensions(app):
     # flask-mail
     mail.init_app(app)
 
+    # flask-cache
+    cache.init_app(app)
 
 
 def configure_blueprints(app, blueprints):

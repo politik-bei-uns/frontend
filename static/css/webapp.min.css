@@ -9803,7 +9803,11 @@ a.btn-default {
   text-align: center;
   cursor: pointer; }
 
+#sd-location-live {
+  top: 37px; }
+
 #sd-map {
+  margin-top: 1rem;
   height: 450px; }
 
 #sd-map .mapboxgl-popup-close-button {

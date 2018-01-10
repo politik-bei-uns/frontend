@@ -13,11 +13,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import json
 
 from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from ..extensions import db, es, csrf
+from ..extensions import db, es, csrf, cache
 from ..common.response import json_response
 from ..models import Body, Region
-from .DocumentSearchForms import SearchSubscribeForm
 
+from .DocumentSearchForms import SearchSubscribeForm
 document_search = Blueprint('document_search', __name__, template_folder='templates')
 
 
@@ -26,6 +26,10 @@ def document_search_main():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
 
+    return render_template('document-search.html', bodies=bodies, regions=get_regions(), form=form)
+
+@cache.memoize(600)
+def get_regions():
     regions = []
     for region_raw in Region.objects(parent__exists=False).all():
         regions.append({
@@ -35,7 +39,7 @@ def document_search_main():
             'level': region_raw.level,
             'children': region_get_children(region_raw.id)
         })
-    return render_template('document-search.html', bodies=bodies, regions=regions, form=form)
+    return regions
 
 def region_get_children(region_id):
     regions = []
@@ -261,7 +265,7 @@ def document_geo_search_api():
             level = 4
         elif zoom < 8:
             level = 6
-        elif zoom < 11:
+        else:
             level = 8
 
         result_raw = es.search(
@@ -334,24 +338,54 @@ def document_geo_search_api():
     return json_response(result)
 
 
-@document_search.route('/api/search/street')
+@document_search.route('/api/search/street', methods=['POST'])
 @csrf.exempt
 def api_search_street():
     search_string = request.form.get('q', '')
-    result_raw = es.search(
-        index='paper-location-latest',
-        doc_type='location',
-        body={
-            'query': {},
-            'suggest': {
-                'autocomplete': {
-                    'text': search_string,
-                    'completion': {
-                        'field': 'autocomplete'
-                    }
+    fq = json.loads(request.form.get('fq', '{}'))
+    print(fq)
+    query_parts_must = []
+    if 'body' in fq:
+        if fq['body'] != '_all':
+            query_parts_must.append({
+                'terms': {
+                    'body': fq['body']
                 }
+            })
+
+    query_parts_must.append({
+        "match": {
+            "autocomplete": {
+                "query": search_string,
+                'operator': 'and'
             }
+        }})
+    print(query_parts_must)
+    result_raw = es.search(
+        index='street-latest',
+        doc_type='street',
+        body={
+            'query': {
+                'bool': {
+                    'must': query_parts_must
+                }
+            },
         },
-        fields='autocomplete,geojson'
+        _source='autocomplete,geojson',
+        size=5
     )
-    print(result_raw)
+    result = []
+    for item_raw in result_raw['hits']['hits']:
+        item = {
+            'id': item_raw['_id']
+        }
+        if 'autocomplete' in item_raw['_source']:
+            item['address'] = item_raw['_source']['autocomplete']
+        if 'geojson' in item_raw['_source']:
+            item['geojson'] = json.loads(item_raw['_source']['geojson'])
+        result.append(item)
+    result = {
+        'data': result,
+        'status': 0
+    }
+    return json_response(result)

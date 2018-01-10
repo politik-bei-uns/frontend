@@ -198,6 +198,7 @@ function overview_map_init() {
     });
 }
 
+
 function sd_init_forms() {
     // init date
     $('#sd-date').datepicker({
@@ -256,9 +257,7 @@ function sd_init_forms() {
             }
             storage.send_date_request = false;
         }, 50);
-
     });
-
 
     $('#sd-form').submit(function (e) {
         e.preventDefault();
@@ -282,6 +281,70 @@ function sd_init_forms() {
             $('#sd-form').trigger('submit');
         }
     });
+    $('#sd-location').val('');
+    $('#sd-location').live_search({
+        url: '/api/search/street',
+        form: '#sd-form-geo',
+        input: '#sd-location',
+        live_box: '#sd-location-live',
+        submit: '#sd-submit',
+        modify_params: function (instance, params) {
+            return params;
+        },
+        process_result_line: function (result) {
+            return '<li data-q="' + result.id + '" data-q-descr="' + result.address + '">' + result.address + '</li>';
+        },
+        after_submit: function () {
+            id = $('#sd-location').attr('data-q');
+            for (var i = 0; i < storage.location_data.length; i++) {
+                if (storage.location_data[i].id === id) {
+                    sd_show_geojson(storage.location_data[i].geojson);
+                    break;
+                }
+            }
+        },
+        select_data: function (data) {
+            storage.location_data = data.data;
+            return data.data;
+        },
+        reset_data: function() {
+            jQuery('#sd-location').attr('data-q', '');
+            jQuery('#sd-location').attr('data-q-descr', '');
+            storage.map.getSource('search-source').setData({
+                type: 'FeatureCollection',
+                features: []
+            });
+        },
+        extend_params: function(params) {
+            /*
+            var region_id = $('#region-current').data('id');
+            region = get_region_data(config.regions, region_id, 0);
+
+            regions = [];
+            if (region.children) {
+                 regions = regions.concat(get_children_regions(region.children));
+            }
+            if (region.id !== 'root' && region.id) {
+                regions.push(region.id);
+            }
+            fq = {
+                region: regions
+            };*/
+            new_params = generate_params();
+            params.fq = JSON.stringify({ body: new_params.fq.body });
+            return params;
+        }
+    });
+}
+
+function sd_show_geojson(geojson) {
+    storage.map.getSource('search-source').setData(geojson);
+    minmax = (new GeoMinMax()).get_minmax(geojson);
+    storage.map.fitBounds([
+        [minmax.lon.min, minmax.lat.min],
+        [minmax.lon.max, minmax.lat.max]
+    ]);
+
 }
 
 function generate_params() {
@@ -487,6 +550,57 @@ function sd_init_map_data(mapready, data) {
             'fill-outline-color': '#428238'
         }
     }, 200);
+    storage.map.addLayer({
+        id: 'data-layer-address',
+        type: 'circle',
+        source: 'data-source',
+        filter: ["==", "$type", "Point"],
+        paint: {
+            'circle-radius': 7,
+            'circle-color': '#428238'
+        }
+    }, 200);
+
+    storage.map.addSource('search-source', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: []
+        }
+    });
+
+    storage.map.addLayer({
+        id: 'search-layer-street',
+        type: 'line',
+        source: 'search-source',
+        filter: ["==", "$type", "LineString"],
+        paint: {
+            "line-color": "#A94739",
+            "line-width": 5,
+            "line-opacity": 0.5
+        }
+    }, 200);
+    storage.map.addLayer({
+        id: 'search-layer-address',
+        type: 'fill',
+        source: 'search-source',
+        filter: ["==", "$type", "Polygon"],
+        paint: {
+            'fill-color': '#A94739',
+            'fill-opacity': 0.5,
+            'fill-outline-color': '#A94739'
+        }
+    }, 200);
+    storage.map.addLayer({
+        id: 'search-layer-address',
+        type: 'circle',
+        source: 'search-source',
+        filter: ["==", "$type", "Point"],
+        paint: {
+            'circle-radius': 7,
+            'circle-color': '#A94739'
+        }
+    }, 200);
 
     storage.map.on('mouseenter', 'data-layer-street', function () {
         storage.map.getCanvasContainer().style.cursor = 'pointer';
@@ -655,35 +769,6 @@ function set_url(params) {
     history.pushState(null, 'Ratsdokumente | Politik bei Uns', '/ratsdokumente' + url)
 }
 
-function save_geo_min_max(geo) {
-    if (geo[0] < storage.geo_min_max.lon.min)
-        storage.geo_min_max.lon.min = geo[0];
-    if (geo[0] > storage.geo_min_max.lon.max)
-        storage.geo_min_max.lon.max = geo[0];
-    if (geo[1] < storage.geo_min_max.lat.min)
-        storage.geo_min_max.lat.min = geo[1];
-    if (geo[1] > storage.geo_min_max.lat.max)
-        storage.geo_min_max.lat.max = geo[1];
-}
-
-function iterate_geo(data, level) {
-    if (level > 0) {
-        for (var i = 0; i < data.length; i++) {
-            iterate_geo(data[i], level - 1);
-        }
-    }
-    else {
-        if (storage.geo_first) {
-            storage.geo_first = false;
-            storage.geo_min_max.lon.min = storage.geo_min_max.lon.max = data[0];
-            storage.geo_min_max.lat.min = storage.geo_min_max.lat.max = data[1];
-        }
-        else {
-            save_geo_min_max(data)
-        }
-    }
-}
-
 function ov_init_map_data(mapready, data) {
     storage.map.addSource('data-source', {
         type: 'geojson',
@@ -754,7 +839,6 @@ function home_show_latest_documents() {
     });
 
 }
-
 
 function update_region_overview() {
     region_list = '<h5 data-id="root">Weltweit</h5>';
@@ -855,6 +939,19 @@ function get_children_bodies(regions) {
     return(children);
 }
 
+function get_children_regions(regions) {
+    var children = [];
+    for (var i = 0; i < regions.length; i++) {
+        if (regions[i].body) {
+            children = children.concat(regions[i].id);
+        }
+        if (regions[i].children) {
+            children = children.concat(get_children_bodies(regions[i].children));
+        }
+    }
+    return(children);
+}
+
 function update_region_list_count(bodies) {
     $('.region-child, #region-parent').each(function () {
         region = get_region_data(config.regions, $(this).data('id'), 0);
@@ -894,3 +991,57 @@ function format_datetime(datetime, format) {
          return (day + '.' + month + '.' + year);
     }
 }
+
+
+var GeoMinMax = function() {
+    this.geo_first = true;
+    this.geo_min_max = {
+        lat: {
+            min: null,
+            max: null
+        },
+        lon: {
+            min: null,
+            max: null
+        }
+    };
+    
+    this.get_minmax = function(geojson) {
+        if (geojson.geometry.type === 'Polygon' || geojson.geometry.type === 'MultiLineString') {
+            this.iterate_geo(geojson.geometry.coordinates, 2);
+        }
+        else if (geojson.geometry.type === 'MultiPolygon') {
+            this.iterate_geo(geojson.geometry.coordinates, 3);
+        }
+        return this.geo_min_max;
+    };
+
+    this.save_geo_min_max = function(geo) {
+        if (geo[0] < this.geo_min_max.lon.min)
+            this.geo_min_max.lon.min = geo[0];
+        if (geo[0] > this.geo_min_max.lon.max)
+            this.geo_min_max.lon.max = geo[0];
+        if (geo[1] < this.geo_min_max.lat.min)
+            this.geo_min_max.lat.min = geo[1];
+        if (geo[1] > this.geo_min_max.lat.max)
+            this.geo_min_max.lat.max = geo[1];
+    };
+
+    this.iterate_geo = function(data, level) {
+        if (level > 0) {
+            for (var i = 0; i < data.length; i++) {
+                this.iterate_geo(data[i], level - 1);
+            }
+        }
+        else {
+            if (this.geo_first) {
+                this.geo_first = false;
+                this.geo_min_max.lon.min = this.geo_min_max.lon.max = data[0];
+                this.geo_min_max.lat.min = this.geo_min_max.lat.max = data[1];
+            }
+            else {
+                this.save_geo_min_max(data);
+            }
+        }
+    };
+};
