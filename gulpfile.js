@@ -65,7 +65,7 @@ gulp.task('concat-css', ['copy-assets-webapp-css', 'sass'], function () {
  */
 gulp.task('copy-assets-webapp-js', [], function () {
     // Own JS Assets
-    return gulp.src(basePaths.assets + 'js/webapp.js')
+    return gulp.src(basePaths.assets + 'js/*')
         .pipe(gulp.dest(basePaths.temp + 'js/webapp/'));
 });
 
@@ -84,7 +84,7 @@ gulp.task('concat-js', ['copy-assets-webapp-js'], function () {
         basePaths.temp + 'js/mapbox-gl/mapbox-gl-dev.js',
         basePaths.temp + 'js/ekko-lightbox/ekko-lightbox.js',
         basePaths.temp + 'js/livesearch/livesearch.js',
-        basePaths.temp + 'js/webapp/webapp.js'
+        basePaths.temp + 'js/webapp/*'
     ])
         .pipe(concat('webapp.min.js'))
         //.pipe(uglify()) // comment out for devel
@@ -136,7 +136,7 @@ gulp.task('copy-assets', function () {
         .pipe(gulp.dest(basePaths.temp + 'js/livesearch/'));
 
     // Own JS Assets
-    gulp.src(basePaths.assets + 'js/webapp.js')
+    gulp.src(basePaths.assets + 'js/*')
         .pipe(gulp.dest(basePaths.temp + 'js/webapp/'));
 
     /********** SASS **********/

@@ -20,7 +20,6 @@ es = FlaskElasticsearch()
 from flask_login import LoginManager
 login_manager = LoginManager()
 
-
 # Flask-WTF csrf protection
 from flask_wtf.csrf import CSRFProtect
 csrf = CSRFProtect()
