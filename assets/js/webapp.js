@@ -7,8 +7,15 @@ $(document).ready(function () {
     if ($('#sd-form').length) {
         modules.region = new Region();
         modules.region.init();
-        modules.document_search = new DocumentSearch;
+        modules.document_search = new PaperSearch();
         modules.document_search.init();
+    }
+    if ($('#paper-geo-form').length) {
+        modules.region = new Region();
+        modules.region.init();
+        modules.document_search = new PaperSearch();
+        modules.paper_geo = new PaperGeo();
+        modules.paper_geo.init();
     }
 
     if ($('#paper-map').length) {

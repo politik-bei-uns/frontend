@@ -23,7 +23,7 @@ jQuery.live_search = {
             return data;
         },
         reset_data: function () {},
-        extend_params: function() {}
+        extend_params: function(params) { return params; }
     },
     // array to static settings
     'settings': {},

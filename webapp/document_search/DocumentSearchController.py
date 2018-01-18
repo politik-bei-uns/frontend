@@ -21,12 +21,20 @@ from .DocumentSearchForms import SearchSubscribeForm
 document_search = Blueprint('document_search', __name__, template_folder='templates')
 
 
-@document_search.route('/ratsdokumente')
+@document_search.route('/ratsdokumente/suche')
 def document_search_main():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
+    return render_template('paper-search.html', bodies=bodies, regions=get_regions(), form=form)
 
-    return render_template('document-search.html', bodies=bodies, regions=get_regions(), form=form)
+
+
+@document_search.route('/ratsdokumente/karte')
+def document_search_map():
+    bodies = Body.objects.order_by('name').all()
+    form = SearchSubscribeForm()
+    return render_template('paper-geo.html', bodies=bodies, regions=get_regions(), form=form)
+
 
 @cache.memoize(600)
 def get_regions():
@@ -76,7 +84,8 @@ def document_search_api():
     if start < 0:
         abort(403)
     if not random_seed and order_by == 'random':
-        abort(500)
+        abort(403)
+
 
     query_parts_must = []
     if 'body' in fq:
@@ -210,6 +219,7 @@ def document_search_api():
             'body': result_raw_aggs['aggregations']['body']['buckets']
         }
     }
+
     return json_response(result)
 
 
@@ -283,6 +293,9 @@ def document_geo_search_api():
         )
         for item in result_raw['hits']['hits']:
             single = json.loads(item['_source']['geojson'])
+            if 'properties' not in single:
+                single['properties'] = {}
+            single['properties']['id'] = item['_id']
             result.append(single)
     else:
         query = {
@@ -307,7 +320,7 @@ def document_geo_search_api():
                 ]
             }
         }
-        if zoom < 16:
+        if zoom < 15:
             query['bool']['filter'].append({
                 'term': {
                     'geotype': 'MultiLineString'
@@ -343,7 +356,6 @@ def document_geo_search_api():
 def api_search_street():
     search_string = request.form.get('q', '')
     fq = json.loads(request.form.get('fq', '{}'))
-    print(fq)
     query_parts_must = []
     if 'body' in fq:
         if fq['body'] != '_all':
@@ -360,7 +372,6 @@ def api_search_street():
                 'operator': 'and'
             }
         }})
-    print(query_parts_must)
     result_raw = es.search(
         index='street-latest',
         doc_type='street',

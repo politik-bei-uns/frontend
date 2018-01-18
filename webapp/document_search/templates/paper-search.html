@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Suche | {{ super() }}{% endblock %}
+{% block og_title %}Suche | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <form id="sd-form" method="post">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Suche nach Ratsdokumenten</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="sd-fulltext">Volltext-Suche</label>
+                <input id="sd-fulltext" name="sd-fulltext" class="form-control" autocomplete="off">
+            </div>
+            <div class="col-md-6">
+                <label for="sd-body">Körperschaft</label>
+                <div id="region-box" data-expanded="0">
+                    <div id="region-current" data-id="root">Weltweit</div>
+                    <div id="region-box-inner">
+                        <div id="region-parent" class="region-inactive">Eine Ebene hoch</div>
+                        <div id="region-children"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="sd-date-min">Zeitraum</label>
+                <div class="input-daterange input-group" id="sd-date">
+                    <input type="text" class="input-sm form-control" name="sd-date-min" id="sd-date-min"
+                           autocomplete="off">
+                    <span class="input-group-addon">bis</span>
+                    <input type="text" class="input-sm form-control" name="sd-date-max" id="sd-date-max" autocomplete="off">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="sd-type">Typus</label>
+                <select id="sd-type" name="sd-type" class="form-control" multiple></select>
+            </div>
+        </div>
+        <input type="submit" style="display: none;">
+    </form>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h2 id="sd-results-summary">
+                <span id="sd-results-summary-count"></span>
+                Ergebnisse sortiert nach
+                <select id="order-by" name="order-by" class="form-control">
+                    <option value="random">Zufall</option>
+                    <option value="name.sort:asc">Name ▼ (a-z)</option>
+                    <option value="name.sort:desc">Name ▲ (z-a)</option>
+                    <option value="created:asc">Älteste Zuerst</option>
+                    <option value="created:desc">Neuste Zuerst</option>
+                    <option value="_score">Priorität</option>
+                </select>
+            </h2>
+        </div>
+        <div class="col-md-4">
+            <div id="pagination">
+                <div id="pagination-ll" class="pagination-page position-left inactive" data-page="1"><i class="fa fa-angle-double-left" aria-hidden="true"></i></div>
+                <div id="pagination-sl" class="pagination-page position-left inactive"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+                <div id="pagination-rr" class="pagination-page position-right inactive"><i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
+                <div id="pagination-sr" class="pagination-page position-right inactive"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                <div id="pagination-c" class="pagination-center-box"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters">
+        <div class="col-md-12">
+            <div id="sd-results" class="container"></div>
+        </div>
+    </div>
+
+    <form id="sd-search-subscribe" method="post">
+        <div class="row">
+            {{ form_field(form.submit, 12, 'input-submit', extra_classes=['btn', 'btn-success']) }}
+        </div>
+    {{ form.csrf_token }}
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        config = {
+            regions: {{ regions|safe }}
+        }
+    </script>
+    {{ super() }}
+{% endblock %}

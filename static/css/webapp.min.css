@@ -9808,7 +9808,7 @@ a.btn-default {
 
 #sd-map {
   margin-top: 1rem;
-  height: 450px; }
+  height: 600px; }
 
 #sd-map .mapboxgl-popup-close-button {
   font-size: 2rem; }
@@ -9837,9 +9837,6 @@ a.btn-default {
 #sd-radius-slider {
   margin: 0 20px; }
 
-#sd-geo-parts {
-  display: none; }
-
 #sd-radius-slider .slider-tick-label {
   -webkit-user-select: none;
   /* Chrome all / Safari all */
@@ -9852,6 +9849,9 @@ a.btn-default {
 
 .bootstrap-multiselect {
   display: block; }
+
+.wide-statement #statement {
+  max-width: none; }
 
 #statement .bootstrap-multiselect a {
   color: #000; }
