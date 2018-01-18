@@ -16,6 +16,19 @@ var GeoCommon = function () {
 
     };
 
+    this.get_minmax_center = function () {
+        return [
+            this.geo_min_max.lon.min + (this.geo_min_max.lon.max - this.geo_min_max.lon.min) / 2,
+            this.geo_min_max.lat.min + (this.geo_min_max.lat.max - this.geo_min_max.lat.min) / 2
+        ];
+    };
+
+    this.get_multi_minmax = function (geojson) {
+        for (var i = 0; i < geojson.features.length; i++) {
+            this.get_minmax(geojson.features[i]);
+        }
+    };
+
     this.get_minmax = function(geojson) {
         if (geojson.geometry.type === 'Polygon' || geojson.geometry.type === 'MultiLineString') {
             this.iterate_geo(geojson.geometry.coordinates, 2);

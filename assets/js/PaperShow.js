@@ -1,35 +1,13 @@
 var DocumentShow = function () {
-    this.geo_min_max = {
-        lat: {
-            min: null,
-            max: null
-        },
-        lon: {
-            min: null,
-            max: null
-        }
-    };
-    this.geo_first = true;
 
     this.init = function () {
+        this.geo_common = new GeoCommon();
         mapboxgl.accessToken = config.mapbox_token;
-
-        for (var i = 0; i < config.geojson.features.length; i++) {
-            if (config.geojson.features[i].geometry.type === 'Polygon' || config.geojson.features[i].geometry.type === 'MultiLineString') {
-                modules.geo_common.iterate_geo(config.geojson.features[i].geometry.coordinates, 2);
-            }
-            else if (config.geojson.features[i].geometry.type === 'MultiPolygon') {
-                modules.geo_common.iterate_geo(config.geojson.features[i].geometry.coordinates, 3);
-            }
-        }
-
+        this.geo_min_max = this.geo_common.get_multi_minmax(config.geojson);
         this.map = new mapboxgl.Map({
             container: 'paper-map',
             style: 'mapbox://styles/politik-bei-uns/cj7u916u61yey2rmwwl1wh1ik',
-            center: [
-                this.geo_min_max.lon.min + (this.geo_min_max.lon.max - this.geo_min_max.lon.min) / 2,
-                this.geo_min_max.lat.min + (this.geo_min_max.lat.max - this.geo_min_max.lat.min) / 2
-            ],
+            center: this.geo_common.get_minmax_center(),
             zoom: 6
         });
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
@@ -45,7 +23,7 @@ var DocumentShow = function () {
             data: config.geojson
         });
         this.map.addLayer({
-            id: 'data-layer-street',
+            id: 'data-layer-line-string',
             type: 'line',
             source: 'data-source',
             filter: ["==", "$type", "LineString"],
@@ -56,7 +34,7 @@ var DocumentShow = function () {
             }
         }, 200);
         this.map.addLayer({
-            id: 'data-layer-address',
+            id: 'data-layer-polygon',
             type: 'fill',
             source: 'data-source',
             filter: ["==", "$type", "Polygon"],
@@ -64,6 +42,16 @@ var DocumentShow = function () {
                 'fill-color': '#428238',
                 'fill-opacity': 0.5,
                 'fill-outline-color': '#428238'
+            }
+        }, 200);
+        this.map.addLayer({
+            id: 'data-layer-point',
+            type: 'circle',
+            source: 'data-source',
+            filter: ["==", "$type", "Point"],
+            paint: {
+                'circle-radius': 7,
+                'circle-color': '#428238'
             }
         }, 200);
         this.map.addLayer({
@@ -80,13 +68,13 @@ var DocumentShow = function () {
             }
         }, 200);
         this.map.fitBounds([[
-            this.geo_min_max.lon.min,
-            this.geo_min_max.lat.min
+            this.geo_common.geo_min_max.lon.min,
+            this.geo_common.geo_min_max.lat.min
         ], [
-            this.geo_min_max.lon.max,
-            this.geo_min_max.lat.max
+            this.geo_common.geo_min_max.lon.max,
+            this.geo_common.geo_min_max.lat.max
         ]], {
             padding: {top: 10, bottom: 30, left: 30, right: 30}
         });
     }
-}
+};
