@@ -126,7 +126,9 @@
             <h3>Tagesordnungspunkte</h3>
             {% for agenda_item in meeting.agendaItem %}
                 <div id="agendaItem-{{ agenda_item.id }}">
-                    <h4>{% if agenda_item.number %}{{ agenda_item.number }} {% endif %}{{ agenda_item.name }}</h4>
+                    {% if agenda_item.number %}<div class="agendaItem-number">{{ agenda_item.number }}</div>{% endif %}
+                    <div class="agendaItem-content">
+                    <h4>{{ agenda_item.name }}</h4>
                     {% if agenda_item.result %}<p>Ergebnis: {{ agenda_item.result }}</p>{% endif %}
                     {% if agenda_item.resolutionText %}<p>{{ agenda_item.resolutionText }}</p>{% endif %}
                     {% if agenda_item.consultation %}
@@ -157,6 +159,7 @@
                             </div>
                         {% endfor %}
                     {% endif %}
+                    </div>
                 </div>
             {% endfor %}
         </div>

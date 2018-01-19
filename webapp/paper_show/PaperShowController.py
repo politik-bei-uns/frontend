@@ -15,12 +15,12 @@ import json
 from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
 from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
 from ..models import Paper, KeywordUsergenerated
-from .DocumentShowForms import KeywordForm
+from .PaperShowForms import KeywordForm
 
-document_show = Blueprint('document_show', __name__, template_folder='templates')
+paper_show = Blueprint('paper_show', __name__, template_folder='templates')
 
 
-@document_show.route('/document/<ObjectId:document_id>', methods=['GET', 'POST'])
+@paper_show.route('/paper/<ObjectId:document_id>', methods=['GET', 'POST'])
 def document_show_main(document_id):
     paper = Paper.objects(id=document_id).first()
     if not paper:
@@ -50,5 +50,5 @@ def document_show_main(document_id):
         paper.save()
         
         flash('Stichwort erfolgreich gespeichert!', 'success')
-        return redirect('/document/%s' % document_id)
-    return render_template('document-show.html', paper=paper, generated_geojson=generated_geojson, form=form)
+        return redirect('/paper/%s' % document_id)
+    return render_template('paper-show.html', paper=paper, generated_geojson=generated_geojson, form=form)

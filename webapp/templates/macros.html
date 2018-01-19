@@ -41,7 +41,7 @@
             <a href="{% if file.storedAtMirror %}{{ file.mirrorAccessUrl }}{% else %}{{ config['PROJECT_CDN_URL'] }}/files/{{ file.body.id }}/{{ file.id }}/show{% endif %}" class="btn btn-primary">öffnen</a>
             <a href="{% if file.storedAtMirror %}{{ file.mirrorDownloadUrl }}{% else %}{{ config['PROJECT_CDN_URL'] }}/files/{{ file.body.id }}/{{ file.id }}/download{% endif %}" class="btn btn-success">download</a>
             <a href="/file/{{ file.id }}/report" class="btn btn-danger">melden</a>
+            {% if file.size %}Dateigröße: {{ file.size|filesize }}{% endif %}
         </p>
-        <p class="file-meta">{% if file.size %}<br>Dateigröße: {{ file.size|filesize }}{% endif %}</p>
     {% endif %}
 {%- endmacro %}

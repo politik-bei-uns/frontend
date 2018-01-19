@@ -10051,3 +10051,12 @@ a.btn-default {
   font-weight: bold;
   font-size: 1.5rem;
   line-height: 1.5rem; }
+
+.agendaItem-number {
+  float: left;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1; }
+
+.agendaItem-content {
+  margin-left: 50px; }

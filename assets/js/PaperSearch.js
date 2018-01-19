@@ -187,7 +187,7 @@ var PaperSearch = function () {
         data = data.data;
         for (var i = 0; i < data.length; i++) {
             html += '<div class="row' + ((i % 2 === 0) ? ' row-alt': '') + '">';
-            html += '<div class="col-md-8"><h4><a href="/document/' + data[i].id + '">' + data[i].name + '</a></h4></div>';
+            html += '<div class="col-md-8"><h4><a href="/paper/' + data[i].id + '">' + data[i].name + '</a></h4></div>';
             html_fragments = [];
             if (data[i].body_name)
                 html_fragments.push('Körperschaft: ' + data[i].body_name);
