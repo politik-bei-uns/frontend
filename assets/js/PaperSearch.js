@@ -320,7 +320,7 @@ var PaperSearch = function () {
         if (url) {
             url = '?' + url;
         }
-        history.pushState(null, 'Ratsdokumente | Politik bei Uns', '/ratsdokumente' + url)
+        history.pushState(null, 'Ratsdokumente | Politik bei Uns', '/ratsdokumente/suche' + url)
     };
 
 
