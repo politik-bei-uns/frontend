@@ -28,8 +28,8 @@ $(document).ready(function () {
     }
 
     if ($('#home-latest-documents').length) {
-        modules.home_documents = new HomeDocuments();
-        modules.home_documents.init();
+        modules.home_paper = new HomePaper();
+        modules.home_paper.init();
     }
 });
 

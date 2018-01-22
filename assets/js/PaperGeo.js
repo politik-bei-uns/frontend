@@ -41,6 +41,16 @@ var PaperGeo = function () {
                 });
             }
         });
+        $('.pagination-page').click(function (e) {
+            if ($(this).hasClass('active') && !modules.document_search.first_request) {
+                modules.document_search.page_change = true;
+                modules.document_search.page = parseInt($(this).attr('data-page'));
+                modules.paper_geo.search();
+            }
+        });
+        $('#order-by').change(function() {
+            modules.paper_geo.search();
+        });
     };
 
     this.init_map = function() {
@@ -94,11 +104,22 @@ var PaperGeo = function () {
             id: 'data-layer-polygon',
             type: 'fill',
             source: 'data-source',
-            filter: ["==", "$type", "Polygon"],
+            filter: ['all', ["==", "$type", "Polygon"], ['!=', 'legacy', true]],
             paint: {
                 'fill-color': '#428238',
                 'fill-opacity': 0.5,
                 'fill-outline-color': '#428238'
+            }
+        }, 200);
+        this.map.addLayer({
+            id: 'data-layer-polygon-legacy',
+            type: 'fill',
+            source: 'data-source',
+            filter: ['all', ["==", "$type", "Polygon"], ['==', 'legacy', true]],
+            paint: {
+                'fill-color': '#dcc400',
+                'fill-opacity': 0.5,
+                'fill-outline-color': '#dcc400'
             }
         }, 200);
         this.map.addLayer({
@@ -231,7 +252,7 @@ var PaperGeo = function () {
         });
         if (e.features[0].properties.rgs) {
             var params = this.generate_params();
-            params.fq.body = this.get_bodies_by_region(e.features[0].properties.id);
+            params.fq.region = e.features[0].properties.id;
             params.fq = JSON.stringify(params.fq);
             $.post('/api/search', params, function (data) {
                 $('.sd-map-popup-descr span').html(data.count);
@@ -256,7 +277,7 @@ var PaperGeo = function () {
             fq.location = [this.search_id]
         }
         else if (this.search_type === 'region') {
-            fq.body = this.get_bodies_by_region(this.search_id);
+            fq.region = this.search_id;
         }
         return {
             q: '',
@@ -265,18 +286,6 @@ var PaperGeo = function () {
             o: $('#order-by').val(),
             rs: modules.document_search.random_seed
         };
-    };
-
-    this.get_bodies_by_region = function (region_id) {
-        var region = modules.region.get_region_data(config.regions, region_id, 0);
-        var body = [];
-        if (region.children) {
-             body = body.concat(modules.region.get_children_bodies(region.children));
-        }
-        if (region.id !== 'root' && region.body) {
-            body = body.concat(region.body);
-        }
-        return body;
     };
 
     this.search = function () {

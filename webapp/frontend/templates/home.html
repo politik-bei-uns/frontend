@@ -8,10 +8,10 @@
         <div class="col-md-12">
             <h1>Was macht Ihre Politik vor Ort?</h1>
             <form id="front-search-form" action="/ratsdokumente" method="get">
-                <input type="text" id="front-search-text">
+                <input type="text" id="front-search-text" autocomplete="off">
                 <input type="submit" value="suchen" id="front-search-submit" class="btn btn-submit">
             </form>
-            <p>Suchen Sie zum Beispiel nach: <a href="/ratsdokumente?text=Stadtwerke">Stadtwerke</a></p>
+            <p>Suchen Sie zum Beispiel nach: <a href="/ratsdokumente/suche?text=Stadtwerke">Stadtwerke</a></p>
         </div>
     </div>
 {% endblock %}
@@ -34,7 +34,14 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>Kommunen auf Politik bei uns</h2>
+            <h2>
+                <select id="map-level">
+                    <option value="5">Bundesländer</option>
+                    <option value="7">Kreise &amp; Städte</option>
+                    <option selected value="9">Kommunen</option>
+                </select>
+                <span>auf Politik bei uns</span>
+            </h2>
             <div id="overview-map"></div>
         </div>
     </div>

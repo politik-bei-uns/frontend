@@ -10,7 +10,7 @@ var PaperSearch = function () {
     this.init = function () {
         window.addEventListener('popstate', function () {
             modules.document_search.browser_nav_action = true;
-            get_url();
+            modules.document_search.get_url();
         });
 
         this.set_random();
@@ -47,7 +47,6 @@ var PaperSearch = function () {
             orientation: 'bottom auto'
         });
 
-
         // init bodies
         $('#sd-type').multiselect({
             includeSelectAllOption: true,
@@ -58,10 +57,7 @@ var PaperSearch = function () {
             buttonContainer: '<div class="btn-group bootstrap-multiselect" />'
         });
 
-        $('#sd-type').change(function () {
-            $('#sd-form').submit();
-        });
-        $('#order-by').change(function() {
+        $('#sd-type, #order-by, #legacy').change(function () {
             $('#sd-form').submit();
         });
         $('#sd-date input').change(function () {
@@ -96,22 +92,18 @@ var PaperSearch = function () {
         var fq = {};
 
         // paperType
-        if ($('#sd-type').val().length === $('#sd-type option').length) {
-            fq.paperType = '_all';
-        }
-        else if ($('#sd-type').val().length) {
+        if ($('#sd-type').val().length && $('#sd-type').val().length !== $('#sd-type option').length) {
             fq['paperType'] = $('#sd-type').val();
         }
 
-        var region_id = $('#region-current').data('id');
-        var region = modules.region.get_region_data(config.regions, region_id, 0);
-
-        fq.body = [];
-        if (region.children) {
-             fq.body = fq.body.concat(modules.region.get_children_bodies(region.children));
+        var region = $('#region-current').data('id');
+        if (region !== 'root') {
+            fq.region = region;
         }
-        if (region.id !== 'root' && region.body) {
-            fq.body = fq.body.concat(region.body);
+
+        var legacy = $('#legacy').is(':checked');
+        if (legacy) {
+            fq.legacy = 1;
         }
 
         var params = {
@@ -122,9 +114,6 @@ var PaperSearch = function () {
             rs: this.random_seed
         };
 
-        if (region_id !== 'root') {
-            params.region = region_id;
-        }
         if ($('#sd-date-min').val() || $('#sd-date-max').val()) {
             try {
                 min = $('#sd-date-min').val();
@@ -169,9 +158,6 @@ var PaperSearch = function () {
         else
             this.set_url(params);
 
-        if (params.region) {
-            delete(params.region);
-        }
         params.fq = JSON.stringify(params.fq);
 
         $.post('/api/search', params, function (data) {
@@ -254,7 +240,7 @@ var PaperSearch = function () {
             modules.region.select_region(query_string.region);
         }
         if (query_string.text)
-            $('#sd-fulltext').val(decodeURI(query_string.text));
+            $('#sd-fulltext').val(decodeURIComponent(query_string.text));
         else
             $('#sd-fulltext').val('');
 
@@ -264,19 +250,26 @@ var PaperSearch = function () {
             this.page = 1;
 
         if (query_string.date) {
-            startend = JSON.parse(decodeURI(query_string.date));
+            startend = JSON.parse(decodeURIComponent(query_string.date));
             $('#sd-date-min').val(startend.min.substr(8, 2) + '-' + startend.min.substr(5, 2) + '-' + startend.min.substr(0, 4));
             $('#sd-date-max').val(startend.max.substr(8, 2) + '-' + startend.max.substr(5, 2) + '-' + startend.max.substr(0, 4));
         }
         if (query_string.fq) {
-            fq = JSON.parse(decodeURI(query_string.fq));
+            fq = JSON.parse(decodeURIComponent(query_string.fq));
             if (fq.paperType) {
-                if (fq.paperType === '_all') {
-                    $('#sd-type').multiselect('selectAll');
-                }
-                else {
-                    $('#sd-type').multiselect('deselectAll');
-                    $('#sd-type').multiselect('select', fq.paperType);
+                $('#sd-type').multiselect('deselectAll');
+                $('#sd-type').multiselect('select', fq.paperType);
+
+            }
+            else {
+                $('#sd-type').multiselect('selectAll');
+            }
+            if (fq.region) {
+                modules.region.select_region(fq.region);
+            }
+            if (fq.legacy) {
+                if (parseInt(fq.legacy) === 1) {
+                    $('#legacy').attr('checked', true);
                 }
             }
         }
@@ -294,26 +287,22 @@ var PaperSearch = function () {
     this.set_url = function (params) {
         url = [];
         if (params.q) {
-            url.push('text=' + encodeURI(params.q));
+            url.push('text=' + encodeURIComponent(params.q));
         }
         if (params.f) {
             url.push('f=' + params.f)
         }
         if (params.fq) {
-            fq = JSON.parse(JSON.stringify(params.fq));
-            if (fq.body) {
-                delete(fq.body);
+            var fq = JSON.stringify(params.fq);
+            if (fq !== '{}') {
+                url.push('fq=' + encodeURIComponent(fq));
             }
-            url.push('fq=' + encodeURI(JSON.stringify(fq)));
         }
         if (params.date) {
-            url.push('date=' + encodeURI(params.date));
+            url.push('date=' + encodeURIComponent(params.date));
         }
         if ((params.q && params.o !== '_score') || (!params.q && params.o !== 'random')) {
             url.push('order=' + params.o);
-        }
-        if (params.region) {
-            url.push('region=' + params.region)
         }
 
         url = url.join('&');

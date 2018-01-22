@@ -10,17 +10,13 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-from mongoengine import Document, BooleanField, ReferenceField, StringField, ListField, DecimalField, DictField, IntField
+from datetime import datetime
+from mongoengine import Document, BooleanField, ReferenceField, DateTimeField, StringField, ListField, \
+    DecimalField, EmailField, IntField, GeoJsonBaseField
 
 
-class Region(Document):
-    name = StringField()
-    rgs = StringField()
-    level = IntField()
-    level_min = IntField()
-    level_max = IntField()
-    legacy = BooleanField(default=False)
-    bounds = ListField(ListField())
-    geojson = DictField(geojson=True)
-    parent = ReferenceField('Region', deref_document=False)
-    body = ListField(ReferenceField('Body', deref_document=False), default=[])
+class Option(Document):
+    created = DateTimeField(default=datetime.utcnow())
+    modified = DateTimeField(default=datetime.utcnow())
+    key = StringField()
+    value = StringField()

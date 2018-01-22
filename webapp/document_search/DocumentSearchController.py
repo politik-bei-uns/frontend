@@ -15,7 +15,7 @@ import json
 from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
 from ..extensions import db, es, csrf, cache
 from ..common.response import json_response
-from ..models import Body, Region
+from ..models import Body, Option
 
 from .DocumentSearchForms import SearchSubscribeForm
 document_search = Blueprint('document_search', __name__, template_folder='templates')
@@ -25,7 +25,8 @@ document_search = Blueprint('document_search', __name__, template_folder='templa
 def document_search_main():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
-    return render_template('paper-search.html', bodies=bodies, regions=get_regions(), form=form)
+    regions = Option.objects(key='region_cache').first()
+    return render_template('paper-search.html', bodies=bodies, regions=regions.value, form=form)
 
 
 
@@ -33,39 +34,9 @@ def document_search_main():
 def document_search_map():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
-    return render_template('paper-geo.html', bodies=bodies, regions=get_regions(), form=form)
+    regions = Option.objects(key='region_cache').first()
+    return render_template('paper-geo.html', bodies=bodies, regions=regions.value, form=form)
 
-
-@cache.memoize(600)
-def get_regions():
-    regions = []
-    for region_raw in Region.objects(parent__exists=False).all():
-        regions.append({
-            'id': str(region_raw.id),
-            'name': region_raw.name,
-            'rgs': region_raw.rgs,
-            'level': region_raw.level,
-            'children': region_get_children(region_raw.id)
-        })
-    return regions
-
-def region_get_children(region_id):
-    regions = []
-    for region_raw in Region.objects(parent=region_id).all():
-        region = {
-            'id': str(region_raw.id),
-            'name': region_raw.name,
-            'rgs': region_raw.rgs,
-            'level': region_raw.level,
-            'body': []
-        }
-        for body in region_raw.body:
-            region['body'].append(str(body.id))
-        children = region_get_children(region_raw.id)
-        if len(children):
-            region['children'] = children
-        regions.append(region)
-    return regions
 
 
 @document_search.route('/api/search', methods=['POST'])
@@ -88,13 +59,32 @@ def document_search_api():
 
 
     query_parts_must = []
+
     if 'body' in fq:
-        if fq['body'] != '_all':
-            query_parts_must.append({
-                'terms': {
-                    'body': fq['body']
-                }
-            })
+        query_parts_must.append({
+            'terms': {
+                'body': fq['body']
+            }
+        })
+
+
+    if 'region' in fq:
+        query_parts_must.append({
+            'term': {
+                'region': fq['region']
+            }
+        })
+    
+    legacy = False
+    if 'legacy' in fq:
+        if int(fq['legacy']):
+            legacy = True
+    if not legacy:
+        query_parts_must.append({
+            'term': {
+                'legacy': False
+            }
+        })
 
     if 'location' in fq:
         query_parts_must.append({
@@ -103,12 +93,11 @@ def document_search_api():
             }
         })
     if 'paperType' in fq:
-        if fq['paperType'] != '_all':
-            query_parts_must.append({
-                'terms': {
-                    'paperType': fq['paperType']
-                }
-            })
+        query_parts_must.append({
+            'terms': {
+                'paperType': fq['paperType']
+            }
+        })
     if date:
         date_filter = {}
         if 'min' in date:
@@ -258,6 +247,7 @@ def document_geo_search_api():
     search_string = request.form.get('q', '')
     zoom = request.form.get('z', 5, type=float)
     bounds = request.form.get('geo', False)
+    body_count = request.form.get('bc', -1, type=int)
     if bounds:
         bounds = bounds.split(';')
         if len(bounds) != 4:
@@ -267,8 +257,6 @@ def document_geo_search_api():
                 [float(bounds[0]), float(bounds[1])],
                 [float(bounds[2]), float(bounds[3])],
             ]
-    #if zoom >= 6 and not bounds:
-    #    abort(403)
     result = []
     if zoom < 11:
         if zoom < 6:
@@ -278,16 +266,41 @@ def document_geo_search_api():
         else:
             level = 8
 
+        query = {
+            'query': {
+                'bool': {
+                    'filter': [
+                        {
+                            'range': {
+                                'level_min': {
+                                    'lte': level,
+                                }
+                            }
+                        },
+                        {
+                            'range': {
+                                'level_max': {
+                                    'gt': level,
+                                }
+                            }
+                        },
+                    ]
+                }
+            }
+        }
+        if body_count != -1:
+            query['query']['bool']['filter'].append({
+                'range': {
+                    'body_count': {
+                        'gte': body_count
+                    }
+                }
+            })
+
         result_raw = es.search(
             index='region-latest',
             doc_type='region',
-            body={
-                'query': {
-                    'term': {
-                        'level': level
-                    }
-                }
-            },
+            body=query,
             _source='geojson',
             size=10000
         )

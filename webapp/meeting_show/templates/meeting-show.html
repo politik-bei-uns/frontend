@@ -133,7 +133,7 @@
                     {% if agenda_item.resolutionText %}<p>{{ agenda_item.resolutionText }}</p>{% endif %}
                     {% if agenda_item.consultation %}
                         {% if agenda_item.consultation.paper %}
-                            <p>Bearbeitetes Dokument: <a href="/document/{{ agenda_item.consultation.paper.id }}">{{ agenda_item.consultation.paper.name }}</a></p>
+                            <p>Bearbeitetes Dokument: <a href="/paper/{{ agenda_item.consultation.paper.id }}">{{ agenda_item.consultation.paper.name }}</a></p>
                         {% endif %}
                     {% endif %}
                     {% if agenda_item.keyword %}

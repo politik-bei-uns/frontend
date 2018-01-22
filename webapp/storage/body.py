@@ -44,6 +44,7 @@ class Body(Document, OParlDocument):
     mirrorId = StringField(vendor_attribute=True)
     lastSync = DateTimeField(datetime_format='datetime')
     statistics = DictField(vendor_attribute=True)
+    region = ReferenceField('Region', vendor_attribute=True)
 
     # Felder zur Verarbeitung
     _object_db_name = 'body'
