@@ -180,6 +180,9 @@ var PaperGeo = function () {
         this.map.on('mouseenter', 'data-layer-polygon', function () {
             modules.paper_geo.map.getCanvasContainer().style.cursor = 'pointer';
         });
+        this.map.on('mouseenter', 'data-layer-polygon-legacy', function () {
+            modules.paper_geo.map.getCanvasContainer().style.cursor = 'pointer';
+        });
         this.map.on('mouseenter', 'data-layer-point', function () {
             modules.paper_geo.map.getCanvasContainer().style.cursor = 'pointer';
         });
@@ -189,6 +192,9 @@ var PaperGeo = function () {
         this.map.on('mouseleave', 'data-layer-polygon', function () {
             modules.paper_geo.map.getCanvasContainer().style.cursor = '';
         });
+        this.map.on('mouseleave', 'data-layer-polygon-legacy', function () {
+            modules.paper_geo.map.getCanvasContainer().style.cursor = '';
+        });
         this.map.on('mouseleave', 'data-layer-point', function () {
             modules.paper_geo.map.getCanvasContainer().style.cursor = '';
         });
@@ -196,6 +202,9 @@ var PaperGeo = function () {
             modules.paper_geo.show_map_popup(e);
         });
         this.map.on('click', 'data-layer-polygon', function (e) {
+            modules.paper_geo.show_map_popup(e);
+        });
+        this.map.on('click', 'data-layer-polygon-legacy', function (e) {
             modules.paper_geo.show_map_popup(e);
         });
         this.map.on('click', 'data-layer-point', function (e) {
