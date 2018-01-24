@@ -85,9 +85,9 @@
                     </div>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                    <form id="keyword-form" action="/document/{{ paper.id }}" method="POST">{{ form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ form.submit(class_='btn') }}{{ form.csrf_token }}</form>
+                    <form id="keyword-form" action="/paper/{{ paper.id }}" method="POST">{{ form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ form.submit(class_='btn') }}{{ form.csrf_token }}</form>
                 {% else %}
-                    <a href="/login?redirect_to=/document/{{ paper.id }}">Neues Stichwort (login erforderlich)</a>
+                    <a href="/login?redirect_to=/paper/{{ paper.id }}">Neues Stichwort (login erforderlich)</a>
                 {% endif %}
             </div>
             {% if paper.location|length %}
