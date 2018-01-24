@@ -29,7 +29,7 @@
         <div class="row row-form">
             <div class="col-md-12">
                 Zu meldende Datei<br>
-                <a href="/file/{{ file.id }}">{% if file.name %}{{ file.name }}{% elif file.fileName %}{{ file.fileName }}{% else %}{{ file.id }} aus {{ file.body.name }}</a>
+                <a href="/file/{{ file.id }}">{% if file.name %}{{ file.name }}{% elif file.fileName %}{{ file.fileName }}{% else %}{{ file.id }}{% endif %} aus {{ file.body.name }}</a>
             </div>
         </div>
         <div class="row row-form">
