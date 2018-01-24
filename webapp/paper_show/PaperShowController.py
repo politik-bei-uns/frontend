@@ -40,13 +40,12 @@ def document_show_main(document_id):
         keyword = KeywordUsergenerated()
         keyword.keyword = form.keyword.data
         keyword.user = current_user.id
+        keyword.paper = paper
+        keyword.save()
 
-        # why the hell is THIS necessary?!
-        keywords_usergenerated = []
-        for keyword_usergenerated in paper.keyword_usergenerated:
-            keywords_usergenerated.append(keyword_usergenerated)
-        keywords_usergenerated.append(keyword)
-        paper.keyword_usergenerated = keywords_usergenerated
+        if not paper.keyword_usergenerated:
+            paper.keyword_usergenerated = []
+        paper.keyword_usergenerated.append(keyword)
         paper.save()
         
         flash('Stichwort erfolgreich gespeichert!', 'success')

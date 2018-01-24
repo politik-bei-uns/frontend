@@ -1,6 +1,7 @@
 var PaperGeo = function () {
     this.init = function () {
         this.init_forms();
+        this.init_subscribe_form();
         this.init_map();
         modules.document_search.set_random();
         this.search();
@@ -50,6 +51,18 @@ var PaperGeo = function () {
         });
         $('#order-by').change(function() {
             modules.paper_geo.search();
+        });
+    };
+
+    this.init_subscribe_form = function () {
+        $('#sd-search-subscribe').submit(function (evt) {
+            evt.preventDefault();
+            params = modules.paper_geo.generate_params();
+            params.fq = JSON.stringify(params.fq);
+            params.csrf_token = $('#csrf_token').val();
+            $.post('/account/search-subscribe', params, function (data) {
+                window.location.href = data.redirect;
+            });
         });
     };
 
@@ -283,7 +296,7 @@ var PaperGeo = function () {
 
         // location
         if (this.search_type === 'location') {
-            fq.location = [this.search_id]
+            fq.location = this.search_id
         }
         else if (this.search_type === 'region') {
             fq.region = this.search_id;

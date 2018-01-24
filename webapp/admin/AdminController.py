@@ -11,12 +11,34 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 import json
-
 from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
+from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
 from ..extensions import db, es, csrf
 from ..common.response import json_response
-from ..models import Body, Region
-from .DocumentSearchForms import SearchSubscribeForm
+from ..models import User, KeywordUsergenerated
 
-admin_controller = Blueprint('admin_controller', __name__, template_folder='templates')
+admin = Blueprint('admin', __name__, template_folder='templates')
+
+@admin.route('/admin')
+@login_required
+def admin_overview():
+    if current_user.type != 'admin':
+        abort(403)
+    return render_template('dashboard.html')
+
+@admin.route('/admin/keywords')
+@login_required
+def admin_keywords():
+    if current_user.type != 'admin':
+        abort(403)
+    keywords = KeywordUsergenerated.objects.order_by('created', 'desc').all()
+    return render_template('keywords.html', keywords=keywords)
+
+@admin.route('/admin/users')
+def document_search_main():
+    if current_user.type != 'admin':
+        abort(403)
+    users = User.objects.order_by('email').all()
+    return render_template('users.html', users=users)
+
 

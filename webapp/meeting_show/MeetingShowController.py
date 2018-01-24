@@ -32,13 +32,12 @@ def meeting_show_main(meeting_id):
         keyword = KeywordUsergenerated()
         keyword.keyword = form.keyword.data
         keyword.user = current_user.id
+        keyword.meeting = meeting
+        keyword.save()
 
-        # why the hell is THIS necessary?!
-        keywords_usergenerated = []
-        for keyword_usergenerated in meeting.keyword_usergenerated:
-            keywords_usergenerated.append(keyword_usergenerated)
-        keywords_usergenerated.append(keyword)
-        meeting.keyword_usergenerated = keywords_usergenerated
+        if not meeting.keyword_usergenerated:
+            meeting.keyword_usergenerated = []
+        meeting.keyword_usergenerated.append(keyword)
         meeting.save()
 
         flash('Stichwort erfolgreich gespeichert!', 'success')

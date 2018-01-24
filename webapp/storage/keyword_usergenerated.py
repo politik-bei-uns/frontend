@@ -14,15 +14,18 @@ import datetime
 from mongoengine import Document, BooleanField, ReferenceField, DateTimeField, StringField, ListField, DecimalField, \
     EmbeddedDocument
 
-class KeywordUsergenerated(EmbeddedDocument):
+class KeywordUsergenerated(Document):
     keyword = StringField(fulltext=True)
     user = ReferenceField('User')
 
     created = DateTimeField(default=datetime.datetime.now())
     modified = DateTimeField(default=datetime.datetime.now())
 
+    paper = ReferenceField('Paper')
+    meeting = ReferenceField('Meeting')
+
     def __init__(self, *args, **kwargs):
-        super(EmbeddedDocument, self).__init__(*args, **kwargs)
+        super(Document, self).__init__(*args, **kwargs)
 
     def __repr__(self):
         return '<KeywordUsergenerated %r>' % self.keyword

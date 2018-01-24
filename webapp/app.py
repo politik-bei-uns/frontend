@@ -28,7 +28,8 @@ from .meeting_show import meeting_show
 from .user import user
 from .search_subscription import search_subscription
 from .contact_form import contact_form
-from .file_show import  file_show
+from .file_show import file_show
+from .admin import admin
 
 __all__ = ['launch']
 
@@ -40,7 +41,8 @@ DEFAULT_BLUEPRINTS = [
     user,
     search_subscription,
     contact_form,
-    file_show
+    file_show,
+    admin
 ]
 
 

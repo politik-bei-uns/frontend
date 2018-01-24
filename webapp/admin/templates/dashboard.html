@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Such-Abos | {{ super() }}{% endblock %}
+{% block og_title %}Such-Abos | {{ super() }}{% endblock %}
+{% block og_description %}Ihre abbonierten Themen, zu denen sie bei neuen Dokumenten informiert werden möchten.{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Admin Dashboard</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/admin/keywords" class="btn btn-info">Stichworte</a>
+            <a href="/admin/users" class="btn btn-info">Nutzer</a>
+        </div>
+    </div>
+{% endblock %}

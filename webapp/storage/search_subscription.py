@@ -21,7 +21,7 @@ class SearchSubscription(Document, OParlDocument):
 
     search_string = StringField()
     paperType = ListField(StringField())
-    body = ListField(ReferenceField('Body', dbref=False))
+    region = ReferenceField('Region', dbref=False)
     location = ReferenceField('Location', dbref=False)
 
     def __init__(self, *args, **kwargs):

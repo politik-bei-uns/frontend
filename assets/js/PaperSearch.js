@@ -15,17 +15,7 @@ var PaperSearch = function () {
 
         this.set_random();
         this.init_forms();
-
-
-        $('#sd-search-subscribe').submit(function (evt) {
-            evt.preventDefault();
-            params = modules.document_search.generate_params();
-            params.csrf_token = $('#csrf_token').val();
-            $.post('/account/search-subscribe', params, function (data) {
-                window.location.href = data.redirect;
-            });
-        });
-
+        this.init_subscribe_form();
         this.get_url();
         $('#sd-form').trigger('submit');
     };
@@ -84,6 +74,18 @@ var PaperSearch = function () {
                 modules.document_search.page = parseInt($(this).attr('data-page'));
                 $('#sd-form').trigger('submit');
             }
+        });
+    };
+
+    this.init_subscribe_form = function () {
+        $('#sd-search-subscribe').submit(function (evt) {
+            evt.preventDefault();
+            params = modules.document_search.generate_params();
+            params.fq = JSON.stringify(params.fq);
+            params.csrf_token = $('#csrf_token').val();
+            $.post('/account/search-subscribe', params, function (data) {
+                window.location.href = data.redirect;
+            });
         });
     };
 

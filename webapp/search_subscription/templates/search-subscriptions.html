@@ -21,8 +21,7 @@
                 <thead>
                 <tr>
                     <td>Suchbegriff</td>
-                    <td>Körperschaft</td>
-                    <td>Ort</td>
+                    <td>Region</td>
                     <td>Dokumententyp</td>
                     <td>Aktionen</td>
                 </tr>
@@ -30,8 +29,7 @@
                 <tfoot>
                 <tr>
                     <td>Suchbegriff</td>
-                    <td>Körperschaft</td>
-                    <td>Ort</td>
+                    <td>Region</td>
                     <td>Dokumententyp</td>
                     <td>Aktionen</td>
                 </tr>
@@ -41,10 +39,7 @@
                     <tr>
                         <td>{% if search_subscription.search_string %}{{ search_subscription.search_string }}{% else %}
                             -{% endif %}</td>
-                        <td>{% if search_subscription.body %}{% for body in search_subscription.body %}{{ body.name }}
-                            {% if not loop.last %}, {% endif %}{% endfor %}{% else %}-{% endif %}</td>
-                        <td>{% if search_subscription.location %}{{ search_subscription.location }}{% else %}
-                            -{% endif %}</td>
+                        <td>{% if search_subscription.region %}{{ search_subscription.region.name }}{% else %}-{% endif %}</td>
                         <td>{% if search_subscription.paperType %}{% for paper_type in search_subscription.paperType %}
                             {{ paper_type }}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}-{% endif %}</td>
                         <td><a href="/account/search-subscription/{{ search_subscription.id }}/delete" class="btn btn-danger">löschen</a></td>

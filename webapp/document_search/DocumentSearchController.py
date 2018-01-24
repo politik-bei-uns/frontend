@@ -28,16 +28,12 @@ def document_search_main():
     regions = Option.objects(key='region_cache').first()
     return render_template('paper-search.html', bodies=bodies, regions=regions.value, form=form)
 
-
-
 @document_search.route('/ratsdokumente/karte')
 def document_search_map():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
     regions = Option.objects(key='region_cache').first()
     return render_template('paper-geo.html', bodies=bodies, regions=regions.value, form=form)
-
-
 
 @document_search.route('/api/search', methods=['POST'])
 @csrf.exempt
@@ -88,7 +84,7 @@ def document_search_api():
 
     if 'location' in fq:
         query_parts_must.append({
-            'terms': {
+            'term': {
                 'location': fq['location']
             }
         })

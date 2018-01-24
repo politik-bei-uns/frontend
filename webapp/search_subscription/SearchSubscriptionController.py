@@ -16,7 +16,7 @@ from dateutil import parser as dateutil_parser
 from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
 from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
 
-from ..models import SearchSubscription, Body, Location
+from ..models import SearchSubscription, Body, Location, Region
 from ..common.response import json_response
 from .SearchSubscriptionForms import SearchSubscribeDeleteForm
 
@@ -43,16 +43,16 @@ def search_subscription_subscribe():
     search_subscription = SearchSubscription()
     if search_string:
         search_subscription.search_string = search_string
-
-    if 'body' in fq:
-        search_subscription.body = []
-        for body in fq['body']:
-            body = Body.objects(id=body).first()
-            search_subscription.body.append(body.id)
+    print(fq)
+    if 'region' in fq:
+        region = Region.objects(id=fq['region']).first()
+        if region:
+            search_subscription.region = region.id
 
     if 'location' in fq:
         location = Location.objects(id=fq['location']).first()
-        search_subscription.location = location.id
+        if location:
+            search_subscription.location = location.id
 
     if 'paperType' in fq:
         search_subscription.paperType = []

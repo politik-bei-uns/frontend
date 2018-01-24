@@ -9,7 +9,7 @@
 {% block statement %}
     <div class="row">
         <div class="col-md-12">
-            <h1>{{ file.name }}</h1>
+            <h1>{% if file.name %}{{ file.name }}{% elif file.fileName %}{{ file.fileName }}{% else %}Datei ID {{ file.id }}{% endif %}</h1>
         </div>
     </div>
 {% endblock %}

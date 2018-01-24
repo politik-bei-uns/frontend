@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <p>Möchten Sie das folgende Such-Abo wirklich löschen?</p>
             {% if search_subscription.search_string %}<p>Suchbegriff: {{ search_subscription.search_string }}{% endif %}
-            {% if search_subscription.body %}<p>Körperschaft: {% for body in search_subscription.body %}{{ body.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+            {% if search_subscription.region %}<p>Region: {{ search_subscription.region.name }}</p>{% endif %}
             {% if search_subscription.location %}<p>Ort: {{ search_subscription.location }}</p>{% endif %}
             {% if search_subscription.paperType %}<p>Typ: {% for paper_type in search_subscription.paperType %}{{ paper_type }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
         </div>

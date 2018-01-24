@@ -43,7 +43,7 @@ class Meeting(Document, OParlDocument):
     mirrorId = StringField(vendor_attribute=True)
     georeferenceStatus = StringField(vendor_attribute=True)
     georeferenceGenerated = DateTimeField(datetime_format='datetime', vendor_attribute=True)
-    keyword_usergenerated = EmbeddedDocumentListField('KeywordUsergenerated')
+    keyword_usergenerated = ListField(ReferenceField('KeywordUsergenerated'))
 
     # Felder zur Verarbeitung
     _object_db_name = 'meeting'
