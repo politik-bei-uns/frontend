@@ -1,11 +1,36 @@
 var PaperGeo = function () {
     this.init = function () {
+        this.init_mobile();
         this.init_forms();
         this.init_subscribe_form();
         this.init_map();
         modules.document_search.set_random();
         this.search();
     };
+    this.init_mobile = function () {
+        if ($.browser.mobile) {
+            $('body').addClass('mobile');
+            var map_offset = $('#sd-map').offset();
+            var window_height = $( window ).height();
+            $('#sd-map').css({ height: String(window_height - map_offset.top) + 'px' });
+            $('#content-wrapper').prepend('<p id="mobile-show-results" class="mobile-results-hidden"><i class="fa fa-angle-double-up" aria-hidden="true"></i> Ergebnisse sehen <i class="fa fa-angle-double-up" aria-hidden="true"></i></p>');
+            $('#mobile-show-results').click(function () {
+                var window_height = $( window ).height();
+                var map_offset = $('#sd-map').offset();
+                if ($('#mobile-show-results').hasClass('mobile-results-hidden')) {
+                    $('#content-wrapper').css({'overflow-y': 'scroll' }).animate({height: String(window_height - map_offset.top - 30) + 'px'});
+                    $('#mobile-show-results').removeClass('mobile-results-hidden').addClass('mobile-results-show');
+                    $('#mobile-show-results i').removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+                }
+                else {
+                    $('#content-wrapper').css({'overflow-y': 'hidden' }).animate({height: '40px'});
+                    $('#mobile-show-results').removeClass('mobile-results-show').addClass('mobile-results-hidden');
+                    $('#mobile-show-results i').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+                }
+            });
+        }
+    };
+
     this.init_forms = function () {
         $('#sd-location').val('').live_search({
             url: '/api/search/street',
