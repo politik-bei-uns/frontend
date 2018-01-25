@@ -22,7 +22,7 @@ from .models import User
 
 # Blueprints
 from .frontend import frontend
-from .document_search import document_search
+from .paper_search import paper_search
 from .paper_show import paper_show
 from .meeting_show import meeting_show
 from .user import user
@@ -35,7 +35,7 @@ __all__ = ['launch']
 
 DEFAULT_BLUEPRINTS = [
     frontend,
-    document_search,
+    paper_search,
     paper_show,
     meeting_show,
     user,

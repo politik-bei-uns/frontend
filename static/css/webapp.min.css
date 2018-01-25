@@ -10060,3 +10060,6 @@ a.btn-default {
 
 .agendaItem-content {
   margin-left: 50px; }
+
+.legacy-warning {
+  font-style: italic; }

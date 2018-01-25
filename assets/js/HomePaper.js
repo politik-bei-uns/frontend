@@ -3,7 +3,7 @@ var HomePaper = function () {
     this.init = function () {
         $('#front-search-form').submit(function(evt) {
             evt.preventDefault();
-            window.location.href = '/ratsdokumente/suche?text=' + encodeURI($('#front-search-text').val());
+            window.location.href = '/ratsdokumente/suche?text=' + encodeURIComponent($('#front-search-text').val());
         });
 
         var start = new Date(Date.now() - (7 * 24 * 60 * 60 * 1000));
@@ -39,7 +39,7 @@ var HomePaper = function () {
             html += '<h4><a href="/paper/' + data.data[i].id + '">' + ((data.data[i].name) ? data.data[i].name : 'Namenloses Dokument') + '</a></h4>';
             html += '<p>';
             html += ((data.data[i].paperType) ? data.data[i].paperType : 'Dokument');
-            html += ' vom ' + format_datetime(data.data[i].created, 'date') + ' aus ' + data.data[i].body_name;
+            html += ' vom ' + modules.common.format_datetime(data.data[i].created, 'date') + ' aus ' + data.data[i].body_name;
             html += '</div>';
         }
         $('#home-latest-documents').html(html);

@@ -185,6 +185,8 @@ var PaperSearch = function () {
                 html_fragments.push('Referenz: ' + data[i].reference);
             if (data[i].created)
                 html_fragments.push('Erstellt: ' + modules.common.format_datetime(data[i].created));
+            if (data[i].legacy)
+                html_fragments.push('"Politik bei uns 1"-Dokument')
             html += '<div class="col-md-4">' + html_fragments.join('<br>') + '</div>';
             html += '</div>'
         }

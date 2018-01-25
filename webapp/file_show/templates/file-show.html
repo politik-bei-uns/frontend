@@ -10,6 +10,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>{% if file.name %}{{ file.name }}{% elif file.fileName %}{{ file.fileName }}{% else %}Datei ID {{ file.id }}{% endif %}</h1>
+            {% if file.legacy %}<p class="legacy-warning">Dies ist ein "Politik bei uns 1"-Dokument. Die Dateien dieser Kommunen werden nicht mehr aktualisiert. Um aktuelle Daten zu bekommen, ist eine OParl-Schnittstelle bei der Kommune erforderlich. <a href="/info/mitmachen">Im Bereich "Mitmachen" finden Sie weitere Informationen</a>.</p>{% endif %}
         </div>
     </div>
 {% endblock %}

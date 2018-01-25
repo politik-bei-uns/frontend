@@ -17,25 +17,25 @@ from ..extensions import db, es, csrf, cache
 from ..common.response import json_response
 from ..models import Body, Option
 
-from .DocumentSearchForms import SearchSubscribeForm
-document_search = Blueprint('document_search', __name__, template_folder='templates')
+from .PaperSearchForms import SearchSubscribeForm
+paper_search = Blueprint('paper_search', __name__, template_folder='templates')
 
 
-@document_search.route('/ratsdokumente/suche')
+@paper_search.route('/ratsdokumente/suche')
 def document_search_main():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
     regions = Option.objects(key='region_cache').first()
     return render_template('paper-search.html', bodies=bodies, regions=regions.value, form=form)
 
-@document_search.route('/ratsdokumente/karte')
+@paper_search.route('/ratsdokumente/karte')
 def document_search_map():
     bodies = Body.objects.order_by('name').all()
     form = SearchSubscribeForm()
     regions = Option.objects(key='region_cache').first()
     return render_template('paper-geo.html', bodies=bodies, regions=regions.value, form=form)
 
-@document_search.route('/api/search', methods=['POST'])
+@paper_search.route('/api/search', methods=['POST'])
 @csrf.exempt
 def document_search_api():
     search_string = request.form.get('q', '')
@@ -237,7 +237,7 @@ def generate_fulltext_query_parts(search_string, fulltext_boost_fields, nested=F
     return query_parts_fulltext
 
 
-@document_search.route('/api/search/geo', methods=['POST'])
+@paper_search.route('/api/search/geo', methods=['POST'])
 @csrf.exempt
 def document_geo_search_api():
     search_string = request.form.get('q', '')
@@ -360,7 +360,7 @@ def document_geo_search_api():
     return json_response(result)
 
 
-@document_search.route('/api/search/street', methods=['POST'])
+@paper_search.route('/api/search/street', methods=['POST'])
 @csrf.exempt
 def api_search_street():
     search_string = request.form.get('q', '')
