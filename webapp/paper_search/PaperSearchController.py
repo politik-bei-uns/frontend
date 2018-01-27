@@ -347,6 +347,17 @@ def document_geo_search_api():
                     'geotype': 'MultiLineString'
                 }
             })
+
+        legacy = False
+        if 'legacy' in fq:
+            if int(fq['legacy']):
+                legacy = True
+        if not legacy:
+            query['query']['bool']['filter'].append({
+                'term': {
+                    'legacy': False
+                }
+            })
         result_raw = es.search(
             index='paper-location-latest',
             doc_type='location',

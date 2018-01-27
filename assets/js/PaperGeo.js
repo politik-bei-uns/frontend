@@ -121,6 +121,9 @@ var PaperGeo = function () {
         geo_params = {
             z: 5
         };
+        if ($('#legacy').is(':checked')) {
+            geo_params.fq = JSON.stringify({legacy: 1});
+        }
         $.post('/api/search/geo', geo_params, function (data) {
             deref_data.resolve(data);
         });

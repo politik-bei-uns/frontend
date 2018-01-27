@@ -86,7 +86,8 @@ var HomeMap = function () {
     this.update_map = function () {
         geo_params = {
             z: parseInt($('#map-level').val()),
-            bc: 1 
+            bc: 1,
+            fq: JSON.stringify({legacy: 1})
         };
         $.post('/api/search/geo', geo_params, function (data) {
             modules.home_map.map.getSource('data-source').setData(data.data);
