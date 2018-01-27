@@ -48,7 +48,7 @@ var PaperSearch = function () {
         });
 
         $('#sd-type, #order-by, #legacy').change(function () {
-            $('#sd-form').submit();
+            modules.document_search.paper_request();
         });
         $('#sd-date input').change(function () {
             modules.document_search.send_date_request = true;
@@ -65,6 +65,7 @@ var PaperSearch = function () {
             if ($('#sd-fulltext').val()) {
                 $('#order-by').val('_score');
             }
+
             modules.document_search.paper_request();
         });
 
@@ -72,7 +73,7 @@ var PaperSearch = function () {
             if ($(this).hasClass('active') && !modules.document_search.first_request) {
                 modules.document_search.page_change = true;
                 modules.document_search.page = parseInt($(this).attr('data-page'));
-                $('#sd-form').trigger('submit');
+                modules.document_search.paper_request();
             }
         });
     };
@@ -115,26 +116,43 @@ var PaperSearch = function () {
             o: $('#order-by').val(),
             rs: this.random_seed
         };
+        if (self.first_request) {
+            params.fq = 1;
+        }
 
         if ($('#sd-date-min').val() || $('#sd-date-max').val()) {
             try {
                 min = $('#sd-date-min').val();
-                min = min.substr(6, 4) + '-' + min.substr(3, 2) + '-' + min.substr(0, 2)
+                if (min)
+                    min = min.substr(6, 4) + '-' + min.substr(3, 2) + '-' + min.substr(0, 2)
+                else
+                    min = false;
             }
             catch (e) {
                 min = false;
             }
             try {
                 max = $('#sd-date-max').val();
-                max = max.substr(6, 4) + '-' + max.substr(3, 2) + '-' + max.substr(0, 2)
+                if (max)
+                    max = max.substr(6, 4) + '-' + max.substr(3, 2) + '-' + max.substr(0, 2)
+                else
+                    max = false;
             }
             catch (e) {
                 max = false;
             }
-            params.date = JSON.stringify({
-                min: min,
-                max: max
-            });
+            if (min || max) {
+                params.rq = {
+                    modified: {}
+                };
+                if (min) {
+                    params.rq.modified.gte = min + 'T00:00:00'
+                }
+                if (max) {
+                    params.rq.modified.lte = max + 'T23:59:59'
+                }
+                params.rq = JSON.stringify(params.rq);
+            }
         }
         return params;
     };
@@ -277,6 +295,7 @@ var PaperSearch = function () {
                 }
             }
         }
+        
         if (query_string.order)
             $('#order-by').val(query_string.order);
         else {
