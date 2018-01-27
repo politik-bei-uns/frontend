@@ -38,7 +38,7 @@ var PaperGeo = function () {
             input: '#sd-location',
             live_box: '#sd-location-live',
             submit: '#sd-submit',
-            extend_params: function (instance, params) {
+            extend_params: function (params) {
                 var legacy = $('#legacy').is(':checked');
                 if (legacy) {
                     params.fq = JSON.stringify({legacy: 1});
