@@ -45,7 +45,7 @@ def document_search_api():
         if int(fq['legacy']):
             legacy = True
         del fq['legacy']
-    if legacy:
+    if not legacy:
         elastic_request.set_fq('legacy', False)
     elastic_request.set_fqs(fq)
     elastic_request.set_rqs(rq)

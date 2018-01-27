@@ -13,15 +13,15 @@ var HomePaper = function () {
         for (var i = 0; i < 16; i++) {
             random_seed += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        
         var params = {
             fq: {
                 body: '_all',
                 paperType: '_all'
             },
-            date: JSON.stringify({
-                min: start.toISOString().substr(0, 10),
-                max: end.toISOString().substr(0, 10)
+            rq: JSON.stringify({
+                modified: {
+                    gte: start.toISOString().substr(0, 19)
+                }
             }),
             f: 0,
             s: 5,
