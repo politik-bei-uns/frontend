@@ -10097,7 +10097,7 @@ a.btn-default {
   padding-left: 0;
   padding-right: 0; }
 
-.mobile #paper-geo-form label {
+.mobile #paper-geo-form label[for="sd-location"] {
   display: none; }
 
 .mobile #content-wrapper {

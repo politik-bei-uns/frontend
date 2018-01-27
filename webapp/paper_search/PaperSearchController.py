@@ -244,6 +244,7 @@ def document_geo_search_api():
     zoom = request.form.get('z', 5, type=float)
     bounds = request.form.get('geo', False)
     body_count = request.form.get('bc', -1, type=int)
+    fq = json.loads(request.form.get('fq', '{}'))
     if bounds:
         bounds = bounds.split(';')
         if len(bounds) != 4:
@@ -290,6 +291,17 @@ def document_geo_search_api():
                     'body_count': {
                         'gte': body_count
                     }
+                }
+            })
+
+        legacy = False
+        if 'legacy' in fq:
+            if int(fq['legacy']):
+                legacy = True
+        if not legacy:
+            query['query']['bool']['filter'].append({
+                'term': {
+                    'legacy': False
                 }
             })
 
@@ -366,13 +378,17 @@ def api_search_street():
     search_string = request.form.get('q', '')
     fq = json.loads(request.form.get('fq', '{}'))
     query_parts_must = []
-    if 'body' in fq:
-        if fq['body'] != '_all':
-            query_parts_must.append({
-                'terms': {
-                    'body': fq['body']
-                }
-            })
+
+    legacy = False
+    if 'legacy' in fq:
+        if int(fq['legacy']):
+            legacy = True
+    if not legacy:
+        query_parts_must.append({
+            'term': {
+                'legacy': False
+            }
+        })
 
     query_parts_must.append({
         "match": {

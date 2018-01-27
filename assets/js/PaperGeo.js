@@ -39,6 +39,11 @@ var PaperGeo = function () {
             live_box: '#sd-location-live',
             submit: '#sd-submit',
             modify_params: function (instance, params) {
+
+                var legacy = $('#legacy').is(':checked');
+                if (legacy) {
+                    params.fq = JSON.stringify({legacy: 1});
+                }
                 return params;
             },
             process_result_line: function (result) {
@@ -74,7 +79,7 @@ var PaperGeo = function () {
                 modules.paper_geo.search();
             }
         });
-        $('#order-by').change(function() {
+        $('#order-by, #legacy').change(function() {
             modules.paper_geo.search();
         });
     };
@@ -326,6 +331,12 @@ var PaperGeo = function () {
         else if (this.search_type === 'region') {
             fq.region = this.search_id;
         }
+
+        var legacy = $('#legacy').is(':checked');
+        if (legacy) {
+            fq.legacy = 1;
+        }
+
         return {
             q: '',
             fq: fq,
