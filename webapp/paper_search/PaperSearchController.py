@@ -353,7 +353,7 @@ def document_geo_search_api():
             if int(fq['legacy']):
                 legacy = True
         if not legacy:
-            query['query']['bool']['filter'].append({
+            query['bool']['filter'].append({
                 'term': {
                     'legacy': False
                 }
