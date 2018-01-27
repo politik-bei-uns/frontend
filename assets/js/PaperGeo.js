@@ -38,8 +38,7 @@ var PaperGeo = function () {
             input: '#sd-location',
             live_box: '#sd-location-live',
             submit: '#sd-submit',
-            modify_params: function (instance, params) {
-
+            extend_params: function (instance, params) {
                 var legacy = $('#legacy').is(':checked');
                 if (legacy) {
                     params.fq = JSON.stringify({legacy: 1});
@@ -81,6 +80,9 @@ var PaperGeo = function () {
         });
         $('#order-by, #legacy').change(function() {
             modules.paper_geo.search();
+        });
+        $('#legacy').change(function() {
+            modules.paper_geo.update_map();
         });
     };
 
@@ -279,6 +281,9 @@ var PaperGeo = function () {
                 bounds.getSouth()// - (bounds.getNorth() - bounds.getSouth())
             ].join(';')
         };
+        if ($('#legacy').is(':checked')) {
+            geo_params.fq = JSON.stringify({legacy: 1});
+        }
         $.post('/api/search/geo', geo_params, function (data) {
             modules.paper_geo.map.getSource('data-source').setData(data.data);
         });

@@ -26,7 +26,8 @@ var HomeMap = function () {
         });
         geo_params = {
             z: parseInt($('#map-level').val()),
-            bc: 1
+            bc: 1,
+            fq: JSON.stringify({legacy: 1})
         };
         $('#map-level').change(function() {
             modules.home_map.update_map();
