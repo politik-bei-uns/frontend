@@ -1,0 +1,49 @@
+{% extends "emails/email-layout.html" %}
+
+{% block html_title %}Ihr Such-Abo{% endblock %}
+
+{% block title %}Such-Abo{% endblock %}
+
+{% block subtitle%}Alle von Ihnen gesuchten Dokumente der {% if search_subscription.user.search_subscription_frequency == 'week' %}der letzten Woche{% else %}des letzten Tages{% endif %} auf einem Blick.{% endblock %}
+
+{% block content %}
+    <p>
+        Ihre Suche
+
+        {% if search_subscription.search_string %}
+        nach "{{ search_subscription.search_string }}"
+        {% endif %}
+
+        {% if search_subscription.region %}
+        in der Region "{{ search_subscription.region.name }}"
+        {% endif %}
+
+        hat folgende neue Ergebnisse:
+    </p>
+    {% for item in result %}
+        <h2><a href="{{ config['PROJECT_URL']}}/paper/{{ item['id'] }}">{% if 'name' in item %}{{ item['name'] }}{% else %}Unbenanntes Dokument{% endif %}</a></h2>
+        <p class="result-item">
+            {% if 'created' in item %}
+            Erstellt: {{ item['created']|datetime('short') }} Uhr |
+            {% endif %}
+
+            {% if 'modified' in item %}
+                {% if item['created'] != item['modified'] %}
+                    Verändert: {{ item['modified']|datetime('short') }} Uhr |
+                {% endif %}
+            {% endif %}
+
+            Typ:
+            {% if 'paperType' in item %}
+            {{ item['paperType'] }}
+            {% else %}
+                keine Angabe
+            {% endif %}
+        </p>
+    {% endfor %}
+{% endblock %}
+
+{% block footer %}
+    Auf politik-bei-uns.de können Sie <a href="{{ config['PROJECT_URL']}}/account/search-subscriptions">dieses Such-Abo abbestellen</a> oder <a href="{{ config['PROJECT_URL']}}/account/settings">die Sende-Einstellungen (Frequenz, Format) ändern</a>. Natürlich können Sie auch <a href="{{ config['PROJECT_URL']}}/ratsdokumente/suche">neue Abos hinzufügen</a>.<br><br>
+    {{ super() }}
+{% endblock %}

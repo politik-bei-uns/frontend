@@ -17,7 +17,7 @@ from webapp import config as Config
 from .common import constants as COMMON_CONSTANTS
 from .common.filter import register_global_filters
 from .common.helpers import BSONObjectIdConverter
-from .extensions import db, es, login_manager, csrf, mail, cache
+from .extensions import db, es, login_manager, csrf, mail, cache, cron
 from .models import User
 
 # Blueprints
@@ -30,6 +30,9 @@ from .search_subscription import search_subscription
 from .contact_form import contact_form
 from .file_show import file_show
 from .admin import admin
+
+# Crons
+from .search_subscription.SearchSubscriptionMails import SearchSubscriptionMails
 
 __all__ = ['launch']
 
@@ -45,6 +48,9 @@ DEFAULT_BLUEPRINTS = [
     admin
 ]
 
+CRONS = [
+    SearchSubscriptionMails
+]
 
 def launch(config=None, app_name=None, blueprints=None):
     """Create a Flask app."""
@@ -114,6 +120,9 @@ def configure_extensions(app):
 
     # flask-cache
     cache.init_app(app)
+
+    # flask-cache
+    cron.init_app(app, CRONS)
 
 
 def configure_blueprints(app, blueprints):

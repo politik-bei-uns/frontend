@@ -141,3 +141,33 @@ class PasswordForm(FlaskForm):
         ]
     )
     submit = SubmitField('Passwort speichern')
+
+class SettingsForm(FlaskForm):
+    subscription_frequency = SelectField(
+        'Abo-Frequenz',
+        [
+            validators.DataRequired(
+                message='Bitte geben Sie eine Abo-Frequenz an'
+            )
+        ],
+        choices=[
+            ('day', 'täglich'),
+            ('week', 'wöchentlich'),
+            ('month', 'monatlich')
+        ],
+        default='week'
+    )
+    email_format = SelectField(
+        'E-Mail Format',
+        [
+            validators.DataRequired(
+                message='Bitte geben Sie ein E-Mail Format an'
+            )
+        ],
+        choices=[
+            ('text', 'Text'),
+            ('html', 'HTML')
+        ],
+        default='html'
+    )
+    submit = SubmitField('speichern')

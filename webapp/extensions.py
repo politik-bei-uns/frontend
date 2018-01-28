@@ -30,3 +30,6 @@ mail = Mail()
 
 from flask_cache import Cache
 cache = Cache(config={'CACHE_TYPE': 'memcached'})
+
+from .cron import Cron
+cron = Cron()

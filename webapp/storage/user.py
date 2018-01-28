@@ -33,6 +33,9 @@ class User(Document):
     active = BooleanField()
     type = StringField()
 
+    subscription_frequency = StringField(default='week') #day, week
+    html_emails = BooleanField(default=True)
+
     def is_authenticated(self):
         return True
 

@@ -14,18 +14,20 @@ import pytz
 import math
 import datetime
 from urllib.parse import quote_plus
-
+from dateutil.parser import parse as datetime_parse
 
 
 def register_global_filters(app):
     @app.template_filter('datetime')
     def template_datetime(value, format='medium'):
+        if type(value) == str:
+            value = datetime_parse(value)
         if value.tzname() == 'UTC':
             value = value.astimezone(pytz.timezone('Europe/Berlin'))
         if format == 'full':
             strftime_format = "%A, der %d.%m.%y um %H:%M Uhr"
         elif format == 'medium':
-            strftime_format = "%d.%m.%y %H:%M"
+            strftime_format = "%d.%m.%y, %H:%M"
         elif format == 'short':
             strftime_format = "%d.%m, %H:%M"
         elif format == 'fulldate':

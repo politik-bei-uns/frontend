@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Politik bei uns: {% block html_title %}{% endblock %}</title>
+        <style>
+            body {
+                font-family: Verdana, sans-serif;
+            }
+
+            a, a:visited, a:hover, a:active {
+                color: #6ba532;
+                text-decoration: none;
+            }
+
+            #container {
+                width: 800px;
+                border: 1px solid #1e7e34;
+                border-collapse: collapse;
+            }
+
+            #header, #footer {
+                background-color: #ebf4e3;
+            }
+
+            #header, #content, #footer {
+                padding: 10px;
+            }
+
+            #header {
+                border-bottom: 1px solid #1e7e34;
+            }
+
+            #header h1 span {
+                color: #6ba532;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            h2 {
+                font-weight: normal;
+                font-size: 19px;
+                margin-bottom: 10px;
+            }
+
+            .result-item {
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+
+            #footer {
+                text-align: center;
+                border-top: 1px solid #1e7e34;
+            }
+            {% block styles %}{% endblock %}
+        </style>
+    </head>
+    <body>
+        <table id="container">
+            <tr>
+                <td id="header">
+                    <h1>Politik bei <span>uns</span>: {% block title %}{% endblock %}</h1>
+                    <p>{% block subtitle %}{% endblock %}</p>
+                </td>
+            </tr>
+            <tr>
+                <td id="content">
+                    {% block content %}{% endblock %}
+                </td>
+            </tr>
+            <tr>
+                <td id="footer">
+                    {% block footer %}
+                        Web: <a href="{{ config['PROJECT_URL']}}">politk-bei-uns.de</a> | E-Mail: <a href="mailto:{{ config['MAILS_FROM'] }}">{{ config['MAILS_FROM'] }}</a>
+                    {% endblock %}
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

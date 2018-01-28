@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Passwort ändern | {{ super() }}{% endblock %}
+{% block og_title %}Passwort ändern | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Einstellungen ändern</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="/account/settings">
+        <div class="row row-form">
+            {{ form_field(form.subscription_frequency, 6) }}
+            {{ form_field(form.email_format, 6) }}
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.submit, 12, 'input-submit') }}
+        </div>
+        {{ form.csrf_token }}
+    </form>
+{% endblock %}

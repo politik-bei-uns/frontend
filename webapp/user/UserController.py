@@ -178,3 +178,17 @@ def recover_check():
                         flash('Passwort erfolgreich aktualisiert und erfolgreich eingeloggt.', 'success')
                         return redirect('/')
                     return render_template('recover-password-set.html', form=form, url_id=serialized_data)
+
+@user.route('/account/settings', methods=['GET', 'POST'])
+def account_settings():
+    form = SettingsForm(request.form)
+    if request.method == 'GET':
+        form.subscription_frequency.data = current_user.subscription_frequency
+        form.email_format.data = 'html' if current_user.html_emails else 'text'
+    if form.validate_on_submit():
+        current_user.subscription_frequency = form.subscription_frequency.data
+        current_user.html_emails = form.email_format.data == 'html'
+        current_user.save()
+        flash('Einstellungen erfolgreich gespeichert!', 'success')
+        return redirect('/')
+    return render_template('settings.html', form=form)

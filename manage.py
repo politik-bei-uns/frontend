@@ -13,47 +13,37 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 from flask_script import Manager, Shell, Server
 from flask import current_app
 from webapp import launch
-from webapp.extensions import db, celery
+from webapp.extensions import db, cron as cron_run
 import webapp.models as Models
 from webapp.config import DefaultConfig
-from flask_migrate import Migrate, MigrateCommand
 import os
 
 app = launch()
-
 manager = Manager(app)
-migrate = Migrate(app, db)
-
-manager.add_command('db', MigrateCommand)
 
 @manager.shell
 def make_shell_context():
-  return dict(app=current_app, db=db, models=Models)
+    return dict(app=current_app, db=db, models=Models)
 
 @manager.command
 def initdb():
-  #db.drop_all(bind=None)
-  #db.create_all(bind=None)
+    # db.drop_all(bind=None)
+    # db.create_all(bind=None)
 
-  
-  user = Models.User()
-  user.user_name = 'a-ruge'
-  user.password = 'passwort'
-  user.type = 'admin'
-  user.active = True
-  
-  db.session.add(user)
-  db.session.commit()
-  
-  
+    user = Models.User()
+    user.user_name = 'a-ruge'
+    user.password = 'passwort'
+    user.type = 'admin'
+    user.active = True
+
+    db.session.add(user)
+    db.session.commit()
+
 
 @manager.command
-def background():
-  background_buchung()
+def cron():
+    cron_run.run()
 
-@manager.command
-def reset_and_insert_data():
-  manage_reset_and_insert_data()
 
 """
 @manager.command
@@ -64,4 +54,4 @@ def celery_worker():
 """
 
 if __name__ == "__main__":
-  manager.run()
+    manager.run()

@@ -12,8 +12,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 from ..extensions import es
 
-
-
 class ElasticRequest():
 
     def __init__(self, index, document):
@@ -170,7 +168,6 @@ class ElasticRequest():
 
     def query(self):
         query = self.generate_query()
-        print(query)
         self.result_raw = es.search(
             index=self.index,
             doc_type=self.document,

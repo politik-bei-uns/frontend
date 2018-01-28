@@ -66,6 +66,8 @@
                                 {% if current_user.is_authenticated %}
                                     <a class="dropdown-item" href="/account/search-subscriptions">Such-Abos</a>{% endif %}
                                 {% if current_user.is_authenticated %}
+                                    <a class="dropdown-item" href="/account/settings">Einstellungen</a>{% endif %}
+                                {% if current_user.is_authenticated %}
                                     <a class="dropdown-item" href="/account/password">Passwort ändern</a>{% endif %}
                                 {% if current_user.is_authenticated %}
                                     <a class="dropdown-item" href="/logout">Logout</a>{% endif %}

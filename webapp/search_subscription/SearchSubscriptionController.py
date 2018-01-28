@@ -19,10 +19,12 @@ from flask_login import login_required, login_user, current_user, logout_user, c
 from ..models import SearchSubscription, Body, Location, Region
 from ..common.response import json_response
 from .SearchSubscriptionForms import SearchSubscribeDeleteForm
+from .SearchSubscriptionMails import SearchSubscriptionMails
 
 search_subscription = Blueprint('search_subscription', __name__, template_folder='templates')
 
 @search_subscription.route('/account/search-subscriptions')
+@login_required
 def search_subscription_main():
     search_subscriptions = SearchSubscription.objects(user=current_user.id).all()
     return render_template('search-subscriptions.html', search_subscriptions=search_subscriptions)
@@ -80,3 +82,10 @@ def search_subscription_delete(search_subscription_id):
         flash('Such-Abo erfolgreich gelöscht', 'success')
         return redirect('/account/search-subscriptions')
     return render_template('search-subscription-delete.html', search_subscription=search_subscription, form=form)
+
+@search_subscription.route('/account/search-subscription/test')
+def search_subscription_test():
+    search_subscription = SearchSubscription.objects(user=current_user.id).all()[1]
+    obj = SearchSubscriptionMails()
+
+    return obj.send_subscription(search_subscription)

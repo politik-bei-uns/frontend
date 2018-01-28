@@ -1,0 +1,21 @@
+{% extends "emails/email-layout.txt" %}
+
+{% block html_title %}Ihr Such-Abo{% endblock %}
+
+{% block title %}Such-Abo{% endblock %}
+
+{% block subtitle%}Alle von Ihnen gesuchten Dokumente der {% if search_subscription.user.search_subscription_frequency == 'week' %}der letzten Woche{% else %}des letzten Tages{% endif %} auf einem Blick.{% endblock %}
+
+{% block content %}
+Ihre Suche{% if search_subscription.search_string %} nach "{{ search_subscription.search_string }}"{% endif %}{% if search_subscription.region %} in der Region "{{ search_subscription.region.name }}"{% endif %} hat folgende neue Ergebnisse:
+
+{% for item in result %}
+== {% if 'name' in item %}{{ item['name'] }}{% else %}Unbenanntes Dokument{% endif %} ==
+Link: {{ config['PROJECT_URL']}}/paper/{{ item['id'] }} |{% if 'created' in item %} Erstellt: {{ item['created']|datetime('short') }} Uhr |{% endif %}{% if 'modified' in item %}{% if item['created'] != item['modified'] %} Verändert: {{ item['modified']|datetime('short') }} Uhr |{% endif %}{% endif %} Typ: {% if 'paperType' in item %}{{ item['paperType'] }}{% else %}keine Angabe{% endif %}
+
+
+
+Auf politik-bei-uns.de können Sie dieses Such-Abo abbestellen: {{ config['PROJECT_URL']}}/account/search-subscriptions oder die Sende-Einstellungen (Frequenz, Format) ändern: {{ config['PROJECT_URL']}}/account/settings. Natürlich können Sie auch neue Abos hinzufügen: {{ config['PROJECT_URL']}}/ratsdokumente/suche .
+
+{% endfor %}
+{% endblock %}
