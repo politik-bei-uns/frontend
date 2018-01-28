@@ -56,7 +56,7 @@ class SearchSubscriptionMails():
         if search_subscription.user.subscription_frequency == 'month':
             start = today - relativedelta(months=1)
         elif search_subscription.user.subscription_frequency == 'week':
-            start = today - relativedelta(days=21)
+            start = today - relativedelta(days=7)
         else:
             start = today - datetime.timedelta(days=1)
 
