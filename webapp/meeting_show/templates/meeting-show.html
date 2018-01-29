@@ -129,7 +129,7 @@
                 {% else %}
                     <a href="/login?redirect_to=/meeting/{{ meeting.id }}">Neues Stichwort (login erforderlich)</a>
                 {% endif %}
-                {{ social_media_buttons(config['PROJECT_URL'] + '/file/' + file.id|string, file.name, 'Datei') }}
+                {{ social_media_buttons(config['PROJECT_URL'] + '/meeting/' + meeting.id|string, meeting.name, 'Sitzung') }}
             </div>
         </div>
     </div>
