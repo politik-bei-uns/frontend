@@ -48,6 +48,16 @@
                         <div class="col-md-6">{{ paper.modified|datetime }}</div>
                     </div>
                 {% endif %}
+                {% if current_user.type == 'admin' %}
+                    <div class="row">
+                        <div class="col-md-6">Original-ID</div>
+                        <div class="col-md-6">{{ paper.originalId }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Mirror-ID</div>
+                        <div class="col-md-6">{{ paper.mirrorId }}</div>
+                    </div>
+                {% endif %}
             </div>
             {% if paper.consultation %}
                 <h3>Damit verbundene Sitzungen</h3>

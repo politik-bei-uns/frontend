@@ -93,6 +93,16 @@
                         <div class="col-md-6">{{ meeting.modified|datetime }}</div>
                     </div>
                 {% endif %}
+                {% if current_user.type == 'admin' %}
+                    <div class="row">
+                        <div class="col-md-6">Original-ID</div>
+                        <div class="col-md-6">{{ meeting.originalId }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">Mirror-ID</div>
+                        <div class="col-md-6">{{ meeting.mirrorId }}</div>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6">
