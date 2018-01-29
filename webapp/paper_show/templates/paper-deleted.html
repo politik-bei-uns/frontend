@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% from "macros.html" import thumbnail_show with context %}
+
+{% block title %}Gelöschte Dokument aus {{ paper.body.name }} | {{ super() }}{% endblock %}
+{% block og_title %}Gelöschte Dokument aus {{ paper.body.name }} | {{ super() }}{% endblock %}
+
+{% block bodyclass %}paper-single{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Gelöschtes Dokument</h1>
+            <p>Dieses Dokument wurde von der Kommune gelöscht und ist daher nicht mehr abrufbar.</p>
+        </div>
+    </div>
+{% endblock %}

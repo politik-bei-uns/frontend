@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% from "macros.html" import thumbnail_show with context %}
+
+{% block title %}Gelöschte Datei aus {{ file.body.name }} | {{ super() }}{% endblock %}
+{% block og_title %}Gelöschte Datei aus {{ file.body.name }} | {{ super() }}{% endblock %}
+
+{% block bodyclass %}file-single{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Gelöschte Datei</h1>
+            <p>Diese Datei wurde von der Kommune gelöscht und ist daher nicht mehr abrufbar.</p>
+        </div>
+    </div>
+{% endblock %}

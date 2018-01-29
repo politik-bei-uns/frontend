@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% from "macros.html" import thumbnail_show with context %}
+
+{% block title %}Gelöschte Sitzung aus {{ meeting.body.name }} | {{ super() }}{% endblock %}
+{% block og_title %}Gelöschte Sitzung aus {{ meeting.body.name }} | {{ super() }}{% endblock %}
+
+{% block bodyclass %}meeting-single{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Gelöschte Sitzung</h1>
+            <p>Diese Sitzung wurde von der Kommune gelöscht und ist daher nicht mehr abrufbar.</p>
+        </div>
+    </div>
+{% endblock %}

@@ -28,6 +28,8 @@ def file_show_main(file_id):
     file = File.objects(id=file_id).first()
     if not file:
         abort(404)
+    if file.deleted:
+        return render_template('file-deleted.html')
     form = KeywordForm()
     if form.validate_on_submit():
         if not current_user.is_authenticated:

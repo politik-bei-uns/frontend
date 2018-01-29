@@ -51,11 +51,11 @@
                 {% if current_user.type == 'admin' %}
                     <div class="row">
                         <div class="col-md-6">Original-ID</div>
-                        <div class="col-md-6">{{ paper.originalId }}</div>
+                        <div class="col-md-6"><a href="{{ paper.originalId }}">{{ paper.originalId }}</a></div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">Mirror-ID</div>
-                        <div class="col-md-6">{{ paper.mirrorId }}</div>
+                        <div class="col-md-6"><a href="{{ paper.mirrorId }}">{{ paper.mirrorId }}</a></div>
                     </div>
                 {% endif %}
             </div>
