@@ -26,7 +26,7 @@ def meeting_show_main(meeting_id):
     if not meeting:
         abort(404)
     if meeting.deleted:
-        return render_template('meeting-deleted.html')
+        return render_template('meeting-deleted.html', meeting=meeting)
     form = KeywordForm()
     if form.validate_on_submit():
         if not current_user.is_authenticated:

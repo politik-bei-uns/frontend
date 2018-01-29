@@ -26,7 +26,7 @@ def document_show_main(document_id):
     if not paper:
         abort(404)
     if paper.deleted:
-        return render_template('paper-deleted.html')
+        return render_template('paper-deleted.html', paper=paper)
     generated_geojson = []
     for location in paper.location:
         if location.geojson:
