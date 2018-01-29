@@ -45,3 +45,18 @@
         </p>
     {% endif %}
 {%- endmacro %}
+
+{% macro social_media_buttons(url, title, type) %}
+<div id="share">
+    <a class="facebook"
+       href="https://www.facebook.com/share.php?u={{ url }}&title={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type }}{% endif %}"
+       target="blank"><i class="fa fa-facebook"></i></a>
+    <a class="twitter"
+       href="https://twitter.com/intent/tweet?status={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type }}{% endif %}+{{ url }}"
+       target="blank"><i class="fa fa-twitter"></i></a>
+    <a class="googleplus" href="https://plus.google.com/share?url={{ url }}" target="blank"><i class="fa fa-google-plus"></i></a>
+    <a class="linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type }}{% endif %}&source=Politik%20bei%20uns"
+       target="blank"><i class="fa fa-linkedin"></i></a>
+</div>
+{%- endmacro %}

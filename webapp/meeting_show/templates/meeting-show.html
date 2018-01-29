@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% from "macros.html" import thumbnail_show with context %}
+{% from "macros.html" import social_media_buttons with context %}
 
 {% block title %}Sitzung aus {{ meeting.body.name }}: {{ meeting.name }} | {{ super() }}{% endblock %}
 {% block og_title %}Sitzung aus {{ meeting.body.name }}: {{ meeting.name }} | {{ super() }}{% endblock %}
@@ -128,6 +129,7 @@
                 {% else %}
                     <a href="/login?redirect_to=/meeting/{{ meeting.id }}">Neues Stichwort (login erforderlich)</a>
                 {% endif %}
+                {{ social_media_buttons(config['PROJECT_URL'] + '/file/' + file.id|string, file.name, 'Datei') }}
             </div>
         </div>
     </div>

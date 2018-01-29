@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% from "macros.html" import thumbnail_show with context %}
+{% from "macros.html" import social_media_buttons with context %}
 
 {% block title %}Dokument aus {{ paper.body.name }}: {{ paper.name }} | {{ super() }}{% endblock %}
 {% block og_title %}Dokument aus {{ paper.body.name }}: {{ paper.name }} | {{ super() }}{% endblock %}
@@ -101,6 +102,7 @@
                     <a href="/login?redirect_to=/paper/{{ paper.id }}">Neues Stichwort (login erforderlich)</a>
                 {% endif %}
             </div>
+            {{ social_media_buttons(config['PROJECT_URL'] + '/paper/' + paper.id|string, paper.name, 'Dokument') }}
             {% if paper.location|length %}
             <h3>Orte</h3>
             <div id="paper-map"></div>
