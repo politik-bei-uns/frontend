@@ -67,3 +67,7 @@ def impressum():
 @frontend.route('/datenschutz')
 def datenschutz():
     return render_template('datenschutz.html')
+
+@frontend.route('/robots.txt')
+def robots_txt():
+    return render_template('robots.txt')

@@ -1,0 +1,5 @@
+Sitemap: {{ config['PROJECT_URL'] }}/static/sitemap/sitemap.xml
+
+User-agent: *
+Disallow: /ratsdokumente
+Disallow: /admin

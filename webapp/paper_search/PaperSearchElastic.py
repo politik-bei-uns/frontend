@@ -155,8 +155,9 @@ class ElasticRequest():
                     'function_score': {
                         'query': query['query'],
                         'random_score': {
-                            'seed': self.random_seed
-                        }
+                            'seed': self.random_seed,
+                        },
+                        'boost_mode': 'sum'
                     }
                 }
             }
