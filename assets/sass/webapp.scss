@@ -577,3 +577,24 @@ a.btn-default {
 .pinterest {
   background: #cb2027;
 }
+
+#overview-map-legend {
+  padding-top: 15px;
+  text-align: center;
+}
+
+.map-oparl, .map-legacy {
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+}
+
+.map-oparl {
+  background-color: rgba(66, 130, 56, 0.5);
+  border: 1px solid #428238;
+}
+
+.map-legacy {
+  background-color: rgba(220, 196, 0, 0.5);
+  border: 1px solid #dcc400;
+}

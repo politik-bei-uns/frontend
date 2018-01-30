@@ -39,7 +39,15 @@ var HomePaper = function () {
             html += '<h4><a href="/paper/' + data.data[i].id + '">' + ((data.data[i].name) ? data.data[i].name : 'Namenloses Dokument') + '</a></h4>';
             html += '<p>';
             html += ((data.data[i].paperType) ? data.data[i].paperType : 'Dokument');
-            html += ' vom ' + modules.common.format_datetime(data.data[i].created, 'date') + ' aus ' + data.data[i].body_name;
+            if (data.data[i].created && data.data[i].modified) {
+                if (data.data[i].created !== data.data[i].modified) {
+                    html += ' verändert am ' + modules.common.format_datetime(data.data[i].modified, 'date');
+                }
+                else {
+                    html += ' vom ' + modules.common.format_datetime(data.data[i].created, 'date');
+                }
+            }
+            html += ' aus ' + data.data[i].body_name;
             html += '</div>';
         }
         $('#home-latest-documents').html(html);
