@@ -22,6 +22,8 @@ def register_global_filters(app):
     def template_datetime(value, format='medium'):
         if type(value) == str:
             value = datetime_parse(value)
+        if value.tzinfo == None:
+            value = value.replace(tzinfo=pytz.utc)
         if value.tzname() == 'UTC':
             value = value.astimezone(pytz.timezone('Europe/Berlin'))
         if format == 'full':
@@ -32,6 +34,8 @@ def register_global_filters(app):
             strftime_format = "%d.%m, %H:%M"
         elif format == 'fulldate':
             strftime_format = "%d.%m.%Y"
+        else:
+            strftime_format = ''
         value = value.strftime(strftime_format)
         return value
 

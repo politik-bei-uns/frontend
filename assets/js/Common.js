@@ -8,8 +8,13 @@ var Common = function () {
 
 
     this.format_datetime = function(datetime, format) {
+        date = new Date(datetime + 'Z');
+        date.setHours(date.getHours() - parseInt(date.getTimezoneOffset() / 60));
+        datetime = date.toISOString();
+
         if (!format)
             format = 'full';
+
         year = datetime.substr(0, 4);
         month = datetime.substr(5, 2);
         day = datetime.substr(8, 2);
