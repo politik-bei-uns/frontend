@@ -46,17 +46,19 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro social_media_buttons(url, title, type) %}
+{% macro social_media_buttons(type, id, url, title, type_str) %}
 <div id="share">
     <a class="facebook"
-       href="https://www.facebook.com/share.php?u={{ url }}&title={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type }}{% endif %}"
+       href="https://www.facebook.com/share.php?u={{ url }}&title={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type_str }}{% endif %}"
        target="blank"><i class="fa fa-facebook"></i></a>
     <a class="twitter"
-       href="https://twitter.com/intent/tweet?status={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type }}{% endif %}+{{ url }}"
+       href="https://twitter.com/intent/tweet?status={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type_str }}{% endif %}+{{ url }}"
        target="blank"><i class="fa fa-twitter"></i></a>
     <a class="googleplus" href="https://plus.google.com/share?url={{ url }}" target="blank"><i class="fa fa-google-plus"></i></a>
     <a class="linkedin"
-       href="https://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type }}{% endif %}&source=Politik%20bei%20uns"
+       href="https://www.linkedin.com/shareArticle?mini=true&url={{ url }}&title={% if title %}{{ title|urlencode }}{% else %}Namenloses%20{{ type_str }}{% endif %}&source=Politik%20bei%20uns"
        target="blank"><i class="fa fa-linkedin"></i></a>
+    <a href="#" class="wordpress" data-toggle="popover" data-html="true" title="In WordPress anzeigen" data-content='Wenn Sie das Politik bei uns WordPress Plugin einsetzen, können Sie diese {{ type_str }} mit folgendem Shortcode einbinden:<br><code>[politik-bei-uns type="{{ type }}" id="{{ id }}"]</code>'><i class="fa fa-wordpress"></i></a>
+
 </div>
 {%- endmacro %}

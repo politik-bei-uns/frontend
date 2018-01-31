@@ -1,5 +1,9 @@
 var Common = function () {
     this.init = function () {
+        $('[data-toggle="popover"]').popover();
+        $('#share a.wordpress').click(function (evt) {
+            evt.preventDefault();
+        });
         $(document).on('click', '[data-toggle="lightbox"]', function (e) {
             e.preventDefault();
             $(this).ekkoLightbox();

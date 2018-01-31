@@ -81,7 +81,7 @@
                     <a href="/login?redirect_to=/file/{{ file.id }}">Neues Stichwort (login erforderlich)</a>
                 {% endif %}
             </div>
-            {{ social_media_buttons(config['PROJECT_URL'] + '/file/' + file.id|string, file.name, 'Datei') }}
+            {{ social_media_buttons('file', file.id, config['PROJECT_URL'] + '/file/' + file.id|string, file.name, 'Datei') }}
         </div>
     </div>
     <div class="row gap-before">
