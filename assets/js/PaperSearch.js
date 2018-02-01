@@ -54,7 +54,7 @@ var PaperSearch = function () {
             modules.document_search.send_date_request = true;
             setTimeout(function () {
                 if (modules.document_search.send_date_request) {
-                    $('#sd-form').submit();
+                    modules.document_search.paper_request();
                 }
                 modules.document_search.send_date_request = false;
             }, 50);
@@ -73,6 +73,15 @@ var PaperSearch = function () {
             if ($(this).hasClass('active') && !modules.document_search.first_request) {
                 modules.document_search.page_change = true;
                 modules.document_search.page = parseInt($(this).attr('data-page'));
+                modules.document_search.paper_request();
+            }
+        });
+
+        $("#sd-fulltext").keypress(function (e) {
+            if(e.which === 13) {
+                if ($('#sd-fulltext').val()) {
+                    $('#order-by').val('_score');
+                }
                 modules.document_search.paper_request();
             }
         });
