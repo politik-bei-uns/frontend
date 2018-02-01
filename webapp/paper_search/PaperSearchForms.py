@@ -16,5 +16,5 @@ from wtforms import (StringField, BooleanField, HiddenField, PasswordField, Subm
 
 
 class SearchSubscribeForm(FlaskForm):
-    submit = SubmitField('Diese Suche abbonnieren')
+    submit = SubmitField('Diese Suche abonnieren')
 

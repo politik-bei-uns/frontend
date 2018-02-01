@@ -9,8 +9,8 @@ var HomeMap = function () {
         this.map = new mapboxgl.Map({
             container: 'overview-map',
             style: 'mapbox://styles/politik-bei-uns/cj7u916u61yey2rmwwl1wh1ik',
-            center: [7.66, 51.3],
-            zoom: 7
+            center: [10.447633, 52.2],
+            zoom: 6
         });
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
