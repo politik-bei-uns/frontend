@@ -54,7 +54,7 @@ def register_global_filters(app):
             return str(int(value/1000)) + ' kB'
         if value > 1000:
             return str(round(value / 1000, 1)).replace('.', ',') + ' kB'
-        return value + ' Byte'
+        return str(value) + ' Byte'
 
     @app.template_filter('timedelta')
     def template_timedelta(value, format='medium'):
