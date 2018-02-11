@@ -37,9 +37,9 @@ def meeting_show_main(meeting_id):
         keyword.meeting = meeting
         keyword.save()
 
-        if not meeting.keyword_usergenerated:
-            meeting.keyword_usergenerated = []
-        meeting.keyword_usergenerated.append(keyword)
+        if not meeting.keywordUsergenerated:
+            meeting.keywordUsergenerated = []
+        meeting.keywordUsergenerated.append(keyword)
         meeting.save()
 
         flash('Stichwort erfolgreich gespeichert!', 'success')

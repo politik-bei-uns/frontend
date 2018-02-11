@@ -26,4 +26,13 @@ class KeywordForm(FlaskForm):
     )
     submit = SubmitField('speichern')
 
-
+class LocationForm(FlaskForm):
+    location = StringField(
+        'Neuer Ort',
+        [
+            validators.DataRequired(
+                message='Bitte geben ein Ort an.'
+            )
+        ]
+    )
+    location_submit = SubmitField('speichern')

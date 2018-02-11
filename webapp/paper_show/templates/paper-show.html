@@ -81,32 +81,52 @@
         <div class="col-md-6">
             <h3>Stichworte</h3>
             <div id="paper-keywords" class="gap-after">
-                {% if paper.keyword or paper.keyword_usergenerated %}
+                {% if paper.keyword or paper.keywordUsergenerated %}
                     <div class="gap-after">
                         {% if paper.keyword %}
                             {% for keyword in paper.keyword %}
                                 {{ keyword }}{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         {% endif %}
-                        {% if paper.keyword and paper.keyword_usergenerated %}, {% endif %}
-                        {% if paper.keyword_usergenerated %}
-                            {% for keyword in paper.keyword_usergenerated %}
+                        {% if paper.keyword and paper.keywordUsergenerated %}, {% endif %}
+                        {% if paper.keywordUsergenerated %}
+                            {% for keyword in paper.keywordUsergenerated %}
                                 {{ keyword.keyword }}{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         {% endif %}
                     </div>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                    <form id="keyword-form" action="/paper/{{ paper.id }}" method="POST">{{ form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ form.submit(class_='btn') }}{{ form.csrf_token }}</form>
+                    <form id="keyword-form" action="/paper/{{ paper.id }}" method="POST">{{ keyword_form.keyword(autocomplete="off", placeholder="Neues Stichwort") }}{{ keyword_form.submit(class_='btn') }}{{ keyword_form.csrf_token }}</form>
                 {% else %}
                     <a href="/login?redirect_to=/paper/{{ paper.id }}">Neues Stichwort (login erforderlich)</a>
                 {% endif %}
             </div>
             {{ social_media_buttons('paper', paper.id, config['PROJECT_URL'] + '/paper/' + paper.id|string, paper.name, 'Dokument') }}
-            {% if paper.location|length %}
-            <h3>Orte</h3>
-            <div id="paper-map"></div>
-            {% endif %}
+            <div id="paper-location">
+                <div id="paper-map-box"{% if not paper.location|length %} class="no-location"{% endif %}>
+                    <h3>Orte</h3>
+                    <div id="paper-map"></div>
+                    <h4>Orte als Liste</h4>
+                    <ul>
+                        {% for location in paper.location %}
+                            <li>
+                                {% if location.streetAddress %}{{ location.streetAddress }}{% endif %}{% if location.streetAddress and (location.postalCode or location.locality) %},{% endif %}
+                                {% if location.postalCode %}{{ location.postalCode }}{% endif %}
+                                {% if location.locality %}{{ location.locality }}{% endif %}
+                            </li>
+                        {% else %}
+                            <li class="location-list-empty">Keine Orte festgelegt</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <h3>Ort hinzufügen</h3>
+                {% if current_user.is_authenticated %}
+                    <form id="location-form" action="/paper/{{ paper.id }}">{{ location_form.location(autocomplete="off", placeholder="Neuer Ort") }}{{ location_form.location_submit(class_='btn') }}</form>
+                {% else %}
+                    <a href="/login?redirect_to=/paper/{{ paper.id }}">Neuer Ort (login erforderlich)</a>
+                {% endif %}
+            </div>
         </div>
     </div>
     {% if paper.mainFile %}

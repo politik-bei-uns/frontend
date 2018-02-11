@@ -27,4 +27,5 @@ from .region import Region
 from .user import User
 from .search_subscription import SearchSubscription
 from .keyword_usergenerated import KeywordUsergenerated
+from .location_origin import LocationOrigin
 from .option import Option

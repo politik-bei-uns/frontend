@@ -15,9 +15,11 @@ from mongoengine import Document, BooleanField, ReferenceField, StringField, Lis
 
 class Street(Document):
     body = ReferenceField('Body', dbref=False, internal_output=False)
+    region = ReferenceField('Region', deref_street=False)
     streetName = StringField(fulltext=True)
     streetNumber = ListField(ReferenceField('StreetNumber', dbref=False, internal_output=True), default=[])
     postalCode = ListField(StringField(fulltext=True))
     subLocality = ListField(StringField(fulltext=True))
     locality = ListField(StringField(fulltext=True))
     geojson = DictField()
+    location = ReferenceField('Location', deref_street=True)

@@ -324,11 +324,11 @@ a.btn-default {
   overflow-x: scroll;
 }
 
-#keyword-form .btn {
+#keyword-form .btn, #location-form .btn {
   padding: 0.125rem 0.75rem;
 }
 
-#front-search-form, #keyword-form {
+#front-search-form, #keyword-form, #location-form {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
@@ -338,14 +338,37 @@ a.btn-default {
   margin-bottom: 1rem;
 }
 
-#front-search-text, #keyword-form #keyword {
+#front-search-text, #keyword-form #keyword, #location-form #location {
   border: none;
   width: 100%;
 }
 
-#front-search-submit, #keyword-form #submit  {
+#front-search-submit, #keyword-form #submit, #location-form #keyword  {
   width: 100px;
   cursor: pointer;
+}
+
+#paper-map-box.no-location {
+  display: none;
+}
+
+#paper-map-box h4 {
+  margin-top: 1rem;
+}
+
+#location-form > div {
+  width: 100%;
+}
+
+#location-form #location-live {
+  top: 32px;
+  left: -15px;
+  border-color: rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+}
+
+#location-form .live-search-list li {
+  padding: 4px 16px;
 }
 
 .file-actions .btn {

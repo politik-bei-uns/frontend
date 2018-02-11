@@ -46,7 +46,8 @@ class Paper(Document, OParlDocument):
     mirrorId = StringField(vendor_attribute=True)
     georeferenceStatus = StringField(vendor_attribute=True)
     georeferenceGenerated = DateTimeField(datetime_format='datetime', vendor_attribute=True)
-    keyword_usergenerated = ListField(ReferenceField('KeywordUsergenerated'))
+    keywordUsergenerated = ListField(ReferenceField('KeywordUsergenerated'), vendor_attribute=True)
+    locationOrigin = ListField(ReferenceField('LocationOrigin'), vendor_attribute=True)
 
     # Felder zur Verarbeitung
     _object_db_name = 'paper'

@@ -4,7 +4,7 @@ var PaperGeo = function () {
         this.init_forms();
         this.init_subscribe_form();
         this.init_map();
-        modules.document_search.set_random();
+        modules.paper_search.set_random();
         this.search();
     };
     this.init_mobile = function () {
@@ -72,9 +72,9 @@ var PaperGeo = function () {
             }
         });
         $('.pagination-page').click(function (e) {
-            if ($(this).hasClass('active') && !modules.document_search.first_request) {
-                modules.document_search.page_change = true;
-                modules.document_search.page = parseInt($(this).attr('data-page'));
+            if ($(this).hasClass('active') && !modules.paper_search.first_request) {
+                modules.paper_search.page_change = true;
+                modules.paper_search.page = parseInt($(this).attr('data-page'));
                 modules.paper_geo.search();
             }
         });
@@ -348,9 +348,9 @@ var PaperGeo = function () {
         return {
             q: '',
             fq: fq,
-            f: (modules.document_search.page * 10) - 10,
+            f: (modules.paper_search.page * 10) - 10,
             o: $('#order-by').val(),
-            rs: modules.document_search.random_seed
+            rs: modules.paper_search.random_seed
         };
     };
 
@@ -358,7 +358,7 @@ var PaperGeo = function () {
         params = this.generate_params();
         params.fq = JSON.stringify(params.fq);
         $.post('/api/search', params, function (data) {
-            modules.document_search.process_results(data);
+            modules.paper_search.process_results(data);
         });
     };
 };

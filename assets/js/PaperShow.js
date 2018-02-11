@@ -1,19 +1,94 @@
-var DocumentShow = function () {
+var PaperShow = function () {
 
     this.init = function () {
+        this.map = null;
+        this.init_forms();
         this.geo_common = new GeoCommon();
         mapboxgl.accessToken = config.mapbox_token;
-        this.geo_min_max = this.geo_common.get_multi_minmax(config.geojson);
+        if (config.geojson.features.length) {
+            this.init_map();
+        }
+    };
+
+    this.init_forms = function () {
+        $('#location-form').submit(function () {
+            //console.log('weee');
+        });
+
+        $('#location').focus(function() {
+            if (!modules.paper_show.map) {
+                $('#paper-map-box').slideDown(function () {
+                    modules.paper_show.init_map();
+                });
+            }
+        }).live_search({
+            url: '/api/search/street',
+            form: '#location-form',
+            input: '#location',
+            live_box: '#location-live',
+            submit: '#location_submit',
+            extend_params: function (params) {
+                return params;
+            },
+            process_result_line: function (result) {
+                return '<li data-q="' + result.id + '" data-q-descr="' + result.address + '">' + result.address + '</li>';
+            },
+            after_submit: function () {
+                var params = {
+                    street: $('#location').attr('data-q'),
+                    csrf_token: $('#csrf_token').val()
+                };
+                $.post($('#location-form').attr('action') + '/add-location', params, function(data) {
+                    modules.paper_show.new_location_added(data);
+                });
+            },
+            select_data: function (data) {
+                return data.data;
+            },
+            reset_data: function() {
+                jQuery('#sd-location').attr('data-q', '').attr('data-q-descr', '');
+                modules.paper_show.map.getSource('data-source').setData(config.geojson);
+            }
+        });
+    };
+
+    this.new_location_added = function (data) {
+        $('#location').removeAttr('data-q').val('');
+        if (data.location) {
+            var html = '';
+            if (data.location.streetAddress)
+                html += data.location.streetAddress;
+            if (data.location.streetAddress && (data.location.postalCode || data.location.locality))
+                html += ', ';
+            if (data.location.postalCode)
+                html += data.location.postalCode;
+            if (data.location.postalCode && data.location.locality)
+                html += ' ';
+            if (data.location.postalCode)
+                html += data.location.locality;
+            $('#paper-map-box ul').append('<li>' + html + '</li>');
+            config.geojson.features.push(data.location.geojson);
+            modules.paper_show.map.getSource('data-source').setData(config.geojson);
+        }
+    };
+
+
+    this.init_map = function() {
+        var center = [10.447683333333, 51.163375];
+        if (config.geojson.features.length) {
+            this.geo_min_max = this.geo_common.get_multi_minmax(config.geojson);
+            center = this.geo_common.get_minmax_center();
+        }
         this.map = new mapboxgl.Map({
             container: 'paper-map',
             style: 'mapbox://styles/politik-bei-uns/cj7u916u61yey2rmwwl1wh1ik',
-            center: this.geo_common.get_minmax_center(),
-            zoom: 6
+            center: center,
+            zoom: 5
         });
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
         this.map.on('load', function () {
-            modules.document_show.init_map_data();
+            modules.paper_show.init_map_data();
         });
     };
 
@@ -67,14 +142,16 @@ var DocumentShow = function () {
                 'text-color': '#8DAA0B'
             }
         }, 200);
-        this.map.fitBounds([[
-            this.geo_common.geo_min_max.lon.min,
-            this.geo_common.geo_min_max.lat.min
-        ], [
-            this.geo_common.geo_min_max.lon.max,
-            this.geo_common.geo_min_max.lat.max
-        ]], {
-            padding: {top: 10, bottom: 30, left: 30, right: 30}
-        });
+        if (config.geojson.features.length) {
+            this.map.fitBounds([[
+                this.geo_common.geo_min_max.lon.min,
+                this.geo_common.geo_min_max.lat.min
+            ], [
+                this.geo_common.geo_min_max.lon.max,
+                this.geo_common.geo_min_max.lat.max
+            ]], {
+                padding: {top: 10, bottom: 30, left: 30, right: 30}
+            });
+        }
     }
 };
