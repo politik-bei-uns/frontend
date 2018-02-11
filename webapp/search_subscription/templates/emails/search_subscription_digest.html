@@ -4,7 +4,7 @@
 
 {% block title %}Such-Abo{% endblock %}
 
-{% block subtitle%}Alle von Ihnen gesuchten Dokumente der {% if search_subscription.user.search_subscription_frequency == 'week' %}der letzten Woche{% else %}des letzten Tages{% endif %} auf einem Blick.{% endblock %}
+{% block subtitle%}Alle von Ihnen gesuchten Dokumente der {% if search_subscription.user.search_subscription_frequency == 'week' %}der letzten Woche{% else %}der letzten beiden Tages{% endif %} auf einem Blick.{% endblock %}
 
 {% block content %}
     <p>

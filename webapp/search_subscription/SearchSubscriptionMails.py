@@ -58,14 +58,14 @@ class SearchSubscriptionMails():
         elif search_subscription.user.subscription_frequency == 'week':
             start = today - relativedelta(days=7)
         else:
-            start = today - datetime.timedelta(days=1)
+            start = today - datetime.timedelta(days=2)
 
         elastic_request = ElasticRequest(
             'paper-latest',
             'paper'
         )
 
-        if search_subscription.search_string and 0:
+        if search_subscription.search_string:
             elastic_request.set_q_ext(
                 search_subscription.search_string,
                 [
