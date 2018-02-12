@@ -116,6 +116,7 @@
                     <ul>
                         {% for location in paper.location %}
                             <li>
+                                {% if location.description %}{{ location.description }}{% if location.streetAddress or location.postalCode or location.locality %}, {% endif %}{% endif %}
                                 {% if location.streetAddress %}{{ location.streetAddress }}{% endif %}{% if location.streetAddress and (location.postalCode or location.locality) %},{% endif %}
                                 {% if location.postalCode %}{{ location.postalCode }}{% endif %}
                                 {% if location.locality %}{{ location.locality }}{% endif %}

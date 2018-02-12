@@ -95,7 +95,6 @@ var PaperShow = function () {
             zoom: 5
         });
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
-
         if (config.geojson.features.length) {
             this.map.fitBounds([[
                 this.geo_common.geo_min_max.lon.min,
@@ -104,8 +103,9 @@ var PaperShow = function () {
                 this.geo_common.geo_min_max.lon.max,
                 this.geo_common.geo_min_max.lat.max
             ]], {
-               padding: {top: 40, bottom: 80, left: 80, right: 80},
-                duration: 0
+                padding: {top: 40, bottom: 80, left: 80, right: 80},
+                duration: 0,
+                maxZoom: 14
             });
         }
 
@@ -113,7 +113,7 @@ var PaperShow = function () {
             modules.paper_show.init_map_data();
         });
     };
-
+    
     this.init_map_data = function () {
         this.map.addSource('data-source', {
             type: 'geojson',
@@ -164,16 +164,5 @@ var PaperShow = function () {
                 'text-color': '#8DAA0B'
             }
         }, 200);
-        /*if (config.geojson.features.length) {
-            this.map.fitBounds([[
-                this.geo_common.geo_min_max.lon.min,
-                this.geo_common.geo_min_max.lat.min
-            ], [
-                this.geo_common.geo_min_max.lon.max,
-                this.geo_common.geo_min_max.lat.max
-            ]], {
-                padding: {top: 10, bottom: 30, left: 30, right: 30}
-            });
-        }*/
     }
 };
