@@ -11,10 +11,6 @@ var PaperShow = function () {
     };
 
     this.init_forms = function () {
-        $('#location-form').submit(function () {
-            //console.log('weee');
-        });
-
         $('#location').focus(function() {
             if (!modules.paper_show.map) {
                 $('#paper-map-box').slideDown(function () {
@@ -54,6 +50,7 @@ var PaperShow = function () {
 
     this.new_location_added = function (data) {
         $('#location').removeAttr('data-q').val('');
+        $('#paper-map-box .location-list-empty').hide();
         if (data.location) {
             var html = '';
             if (data.location.streetAddress)
@@ -64,11 +61,22 @@ var PaperShow = function () {
                 html += data.location.postalCode;
             if (data.location.postalCode && data.location.locality)
                 html += ' ';
-            if (data.location.postalCode)
+            if (data.location.locality)
                 html += data.location.locality;
             $('#paper-map-box ul').append('<li>' + html + '</li>');
             config.geojson.features.push(data.location.geojson);
             modules.paper_show.map.getSource('data-source').setData(config.geojson);
+            this.geo_min_max = this.geo_common.get_multi_minmax(config.geojson);
+
+            this.map.fitBounds([[
+                this.geo_common.geo_min_max.lon.min,
+                this.geo_common.geo_min_max.lat.min
+            ], [
+                this.geo_common.geo_min_max.lon.max,
+                this.geo_common.geo_min_max.lat.max
+            ]], {
+                padding: {top: 40, bottom: 80, left: 80, right: 80}
+            });
         }
     };
 
@@ -79,6 +87,7 @@ var PaperShow = function () {
             this.geo_min_max = this.geo_common.get_multi_minmax(config.geojson);
             center = this.geo_common.get_minmax_center();
         }
+
         this.map = new mapboxgl.Map({
             container: 'paper-map',
             style: 'mapbox://styles/politik-bei-uns/cj7u916u61yey2rmwwl1wh1ik',
@@ -86,6 +95,19 @@ var PaperShow = function () {
             zoom: 5
         });
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+        if (config.geojson.features.length) {
+            this.map.fitBounds([[
+                this.geo_common.geo_min_max.lon.min,
+                this.geo_common.geo_min_max.lat.min
+            ], [
+                this.geo_common.geo_min_max.lon.max,
+                this.geo_common.geo_min_max.lat.max
+            ]], {
+               padding: {top: 40, bottom: 80, left: 80, right: 80},
+                duration: 0
+            });
+        }
 
         this.map.on('load', function () {
             modules.paper_show.init_map_data();
@@ -142,7 +164,7 @@ var PaperShow = function () {
                 'text-color': '#8DAA0B'
             }
         }, 200);
-        if (config.geojson.features.length) {
+        /*if (config.geojson.features.length) {
             this.map.fitBounds([[
                 this.geo_common.geo_min_max.lon.min,
                 this.geo_common.geo_min_max.lat.min
@@ -152,6 +174,6 @@ var PaperShow = function () {
             ]], {
                 padding: {top: 10, bottom: 30, left: 30, right: 30}
             });
-        }
+        }*/
     }
 };

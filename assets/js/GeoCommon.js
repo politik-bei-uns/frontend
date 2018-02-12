@@ -29,12 +29,23 @@ var GeoCommon = function () {
         }
     };
 
+
     this.get_minmax = function(geojson) {
         if (geojson.geometry.type === 'Polygon' || geojson.geometry.type === 'MultiLineString') {
             this.iterate_geo(geojson.geometry.coordinates, 2);
         }
         else if (geojson.geometry.type === 'MultiPolygon') {
             this.iterate_geo(geojson.geometry.coordinates, 3);
+        }
+        else if (geojson.geometry.type === 'Point') {
+            if (this.geo_first) {
+                this.geo_first = false;
+                this.geo_min_max.lon.min = this.geo_min_max.lon.max = geojson.geometry.coordinates[0];
+                this.geo_min_max.lat.min = this.geo_min_max.lat.max = geojson.geometry.coordinates[1];
+            }
+            else {
+                this.save_geo_min_max(geojson.geometry.coordinates)
+            }
         }
         return this.geo_min_max;
     };

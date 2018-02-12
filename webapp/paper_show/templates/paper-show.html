@@ -63,18 +63,23 @@
             {% if paper.consultation %}
                 <h3>Damit verbundene Sitzungen</h3>
                 {% for consultation in paper.consultation %}
-                    {% if consultation.meeting and consultation.agendaItem %}
-                        <h4>
-                            <a href="/meeting/{{ consultation.meeting.id }}#agendaItem-{{ consultation.agendaItem.id }}">
-                                {% if consultation.meeting.name %}{{ consultation.meeting.name }}{% else %}Ohne Name{% endif %}
-                            </a>
-                        </h4>
+                    {% if consultation.meeting %}
+                        <div class="paper-single-meetings">
+                            <h4>
+                                <a href="/meeting/{{ consultation.meeting.id }}">
+                                    {% if consultation.meeting.name %}{{ consultation.meeting.name }}{% else %}Ohne Name{% endif %}
+                                </a>
+                            </h4>
+                            {% if consultation.agendaItem %}
+                                <p>
+                                    Tagesordnungspunkt:
+                                    <a href="/meeting/{{ consultation.meeting.id }}#agendaItem-{{ consultation.agendaItem.id }}">{% if consultation.agendaItem.name %}{{ consultation.agendaItem.name }}{% else %}ohne Name{% endif %}</a>
+                                </p>
+                            {% endif %}
+                            {% if consultation.meeting.start %}<p>Datum &amp; Uhrzeit: {{ consultation.meeting.start|datetime }}</p>{% endif %}
+                            {% if consultation.agendaItem.result %}Ergebnis{% if consultation.role %} der {{ consultation.role }}{% endif %}: {{ consultation.agendaItem.result }}{% endif %}
+                        </div>
                     {% endif %}
-                    <p>{% if consultation.agendaItem %}
-                        Tagesordnungspunkt: {% if consultation.agendaItem.name %}{{ consultation.agendaItem.name }}{% else %}ohne Name{% endif %}</p>
-                    {% endif %}
-                    {% if consultation.meeting.start %}<p>Datum &amp; Uhrzeit: {{ consultation.meeting.start|datetime }}</p>{% endif %}
-                    {% if consultation.agendaItem.result %}Ergebnis{% if consultation.role %} der {{ consultation.role }}{% endif %}: {{ consultation.agendaItem.result }}{% endif %}
                 {% endfor %}
             {% endif %}
         </div>
