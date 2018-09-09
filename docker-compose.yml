@@ -1,0 +1,34 @@
+version: '3'
+services:
+  politik-bei-uns-frontend-flask:
+    container_name: politik-bei-uns-frontend-flask
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.flask
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+    entrypoint: ["python3", "runserver.py"]
+    networks:
+      shared_politk-bei-uns:
+        aliases:
+          - frontend-flask
+
+  politik-bei-uns-frontend-gulp:
+    build:
+      context: .
+      dockerfile: Dockerfile.gulp
+    container_name: politik-bei-uns-frontend-gulp
+    volumes:
+      - .:/app
+      - politik_bei_uns_node_modules:/app/node_modules
+    entrypoint: ["gulp", 'watch']
+
+networks:
+  shared_politk-bei-uns:
+    external: true
+
+volumes:
+  politik_bei_uns_node_modules:

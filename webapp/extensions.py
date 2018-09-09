@@ -28,7 +28,7 @@ csrf = CSRFProtect()
 from flask_mail import Mail
 mail = Mail()
 
-from flask_cache import Cache
+from flask_caching import Cache
 cache = Cache(config={'CACHE_TYPE': 'memcached'})
 
 from .cron import Cron

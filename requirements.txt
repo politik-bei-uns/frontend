@@ -5,7 +5,8 @@ Flask-mongoengine
 Flask-Login
 Flask-Mail
 Flask-WTF
-Flask-Cache
+Flask-Caching
+Flask-Failsafe
 pytz
 gunicorn
 passlib

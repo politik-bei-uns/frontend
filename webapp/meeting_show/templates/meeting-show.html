@@ -16,41 +16,7 @@
 {% endblock %}
 
 {% block content %}
-    {% if meeting.invitation %}
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Einladung: {{ meeting.invitation.name }}</h3>
-                {{ thumbnail_show(meeting.invitation) }}
-            </div>
-        </div>
-    {% endif %}
-    {% if meeting.resultsProtocol %}
-        <div class="row gap-before">
-            <div class="col-md-12">
-                <h3>Ergebnisprotokoll: {{ meeting.resultsProtocol.name }}</h3>
-                {{ thumbnail_show(meeting.resultsProtocol) }}
-            </div>
-        </div>
-    {% endif %}
-    {% if meeting.verbatimProtocol %}
-        <div class="row gap-before">
-            <div class="col-md-12">
-                <h3>Gesamtprotokoll: {{ meeting.verbatimProtocol.name }}</h3>
-                {{ thumbnail_show(meeting.verbatimProtocol) }}
-            </div>
-        </div>
-    {% endif %}
-    {% if meeting.auxiliaryFile %}
-        {% for auxiliaryFile in meeting.auxiliaryFile %}
-            <div class="row gap-before">
-                <div class="col-md-12">
-                    <h3>Weitere Datei: {{ auxiliaryFile.name }}</h3>
-                    {{ thumbnail_show(auxiliaryFile) }}
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
-    <div class="row gap-before gap-after">
+    <div class="row gap-after">
         <div class="col-md-6">
             <h3>Daten</h3>
             <div class="container nogutter">
@@ -97,11 +63,11 @@
                 {% if current_user.type == 'admin' %}
                     <div class="row">
                         <div class="col-md-6">Original-ID</div>
-                        <div class="col-md-6">{{ meeting.originalId }}</div>
+                        <div class="col-md-6"><a href="{{ meeting.originalId }}">{{ meeting.originalId }}</a></div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">Mirror-ID</div>
-                        <div class="col-md-6">{{ meeting.mirrorId }}</div>
+                        <div class="col-md-6"><a href="{{ meeting.mirrorId }}">{{ meeting.mirrorId }}</a></div>
                     </div>
                 {% endif %}
             </div>
@@ -133,9 +99,45 @@
             </div>
         </div>
     </div>
+    {% if meeting.invitation %}
+        <div class="row gap-before">
+            <div class="col-md-12">
+                <h3>Einladung: {{ meeting.invitation.name }}</h3>
+                {{ thumbnail_show(meeting.invitation) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if meeting.resultsProtocol %}
+        <div class="row gap-before">
+            <div class="col-md-12">
+                <h3>Ergebnisprotokoll: {{ meeting.resultsProtocol.name }}</h3>
+                {{ thumbnail_show(meeting.resultsProtocol) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if meeting.verbatimProtocol %}
+        <div class="row gap-before">
+            <div class="col-md-12">
+                <h3>Gesamtprotokoll: {{ meeting.verbatimProtocol.name }}</h3>
+                {{ thumbnail_show(meeting.verbatimProtocol) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if meeting.auxiliaryFile %}
+        {% for auxiliaryFile in meeting.auxiliaryFile %}
+            <div class="row gap-before">
+                <div class="col-md-12">
+                    <h3>Weitere Datei: {{ auxiliaryFile.name }}</h3>
+                    {{ thumbnail_show(auxiliaryFile) }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="row">
         <div class="col-md-12">
+            {% if meeting.agendaItem|length %}
             <h3>Tagesordnungspunkte</h3>
+            {% endif %}
             {% for agenda_item in meeting.agendaItem %}
                 <div id="agendaItem-{{ agenda_item.id }}">
                     {% if agenda_item.number %}<div class="agendaItem-number">{{ agenda_item.number }}</div>{% endif %}

@@ -1,10 +1,11 @@
 # encoding: utf-8
 
-import os
+from flask_failsafe import failsafe
 
-from webapp import launch
-
-app = launch()
+@failsafe
+def create_app():
+    from webapp import launch
+    return launch()
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    create_app().run(debug=True, host='0.0.0.0')

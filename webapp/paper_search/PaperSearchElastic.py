@@ -80,7 +80,6 @@ class ElasticRequest():
                 }
             })
         else:
-
             self.query_parts_filter.append({
                 'term': {
                     key: value

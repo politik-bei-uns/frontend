@@ -19,7 +19,7 @@ from ..models import Body, Option
 from .PaperSearchForms import SearchSubscribeForm
 
 paper_search = Blueprint('paper_search', __name__, template_folder='templates')
-from .PaperSeachApi import *
+from .PaperSearchApi import *
 
 @paper_search.route('/ratsdokumente/suche')
 def document_search_main():
