@@ -19,13 +19,12 @@ from hashlib import sha256
 from flask_login import login_user
 from ..extensions import mail
 from flask import current_app, render_template
-from mongoengine import Document, BooleanField, ReferenceField, DateTimeField, StringField, ListField, \
-    DecimalField, EmailField, IntField, GeoJsonBaseField
+from mongoengine import Document, BooleanField, DateTimeField, StringField
 
 
 class User(Document):
-    created = DateTimeField(default=datetime.utcnow())
-    modified = DateTimeField(default=datetime.utcnow())
+    created = DateTimeField(default=datetime.utcnow)
+    modified = DateTimeField(default=datetime.utcnow)
     last_login = DateTimeField()
 
     email = StringField()
@@ -84,7 +83,6 @@ class User(Document):
             authenticated = False
         return user, authenticated
 
-
     @classmethod
     def email_exists(self, email):
         user = User.objects(email=email)
@@ -119,7 +117,6 @@ class User(Document):
             body=render_template('emails/recover-email.txt', user=self, validation_url=validation_url)
         )
         mail.send(msg)
-
 
     def __init__(self, *args, **kwargs):
         super(Document, self).__init__(*args, **kwargs)

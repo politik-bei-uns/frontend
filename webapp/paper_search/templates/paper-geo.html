@@ -6,66 +6,43 @@
 
 {% block bodyclass %}default wide-statement{% endblock %}
 
+{% block outer_form_begin %}
+<form id="paper-geo-form" method="post">
+{% endblock %}
+
+{% block outer_form_end %}
+</form>
+{% endblock %}
+
+
 {% block statement %}
-    <form id="paper-geo-form" method="post">
-        <div class="row">
-            <div class="col-md-12">
-                <label for="sd-location">Ort</label>
-                <input id="sd-location" name="sd-location" class="form-control" autocomplete="off">
+    <div class="row row-form">
+        {{ form_field(form.location, 12) }}
+    </div>
+    <div class="row row-form">
+        {{ form_field(form.legacy, 12, 'input-checkbox') }}
+
+    </div>
+    <div class="row row-form">
+        <div class="col-md-12">
+            <div id="sd-map"></div>
+            <div id="overview-map-legend">
+                <span class="map-oparl"></span> OParl-Kommunen
+                | <span class="map-legacy"></span> "Politik bei uns 1"-Kommunen
+                | <a href="/info/daten">Mehr Informationen</a>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <label for="legacy"><input type="checkbox" id="legacy" name="legacy"> "Politik bei Uns 1"-Kommunen ebenfalls durchsuchen</label>
-            </div>
-        </div>
-        <div class="row row-form">
-            <div class="col-md-12">
-                <div id="sd-map"></div>
-                <div id="overview-map-legend"><span class="map-oparl"></span> OParl-Kommunen | <span class="map-legacy"></span> "Politik bei uns 1"-Kommunen | <a href="/info/daten">Mehr Informationen</a></div>
-            </div>
-        </div>
-        <input type="submit" style="display: none;">
-    </form>
+    </div>
+    {{ form.csrf_token }}
+    <input type="submit" style="display: none;">
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-8">
-            <h2 id="sd-results-summary">
-                <span id="sd-results-summary-count"></span>
-                Ergebnisse sortiert nach
-                <select id="order-by" name="order-by" class="form-control">
-                    <option value="random">Zufall</option>
-                    <option value="name.sort:asc">Name ▼ (a-z)</option>
-                    <option value="name.sort:desc">Name ▲ (z-a)</option>
-                    <option value="created:asc">Älteste Zuerst</option>
-                    <option value="created:desc">Neuste Zuerst</option>
-                </select>
-            </h2>
-        </div>
-        <div class="col-md-4">
-            <div id="pagination">
-                <div id="pagination-ll" class="pagination-page position-left inactive" data-page="1"><i class="fa fa-angle-double-left" aria-hidden="true"></i></div>
-                <div id="pagination-sl" class="pagination-page position-left inactive"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
-                <div id="pagination-rr" class="pagination-page position-right inactive"><i class="fa fa-angle-double-right" aria-hidden="true"></i></div>
-                <div id="pagination-sr" class="pagination-page position-right inactive"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
-                <div id="pagination-c" class="pagination-center-box"></div>
-            </div>
-        </div>
-    </div>
     <div class="row no-gutters">
         <div class="col-md-12">
-            <div id="sd-results" class="container"></div>
+            <div id="paper-geo-results" class="container"></div>
         </div>
     </div>
-
-    <form id="sd-search-subscribe" method="post">
-        <div class="row">
-            {{ form_field(form.submit, 12, 'input-submit', extra_classes=['btn', 'btn-success']) }}
-        </div>
-    {{ form.csrf_token }}
-    </form>
 {% endblock %}
 
 {% block scripts %}

@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 from flask_wtf import FlaskForm
 from wtforms import validators
-from wtforms import (StringField, BooleanField, HiddenField, PasswordField, SubmitField, SelectField, TextAreaField)
+from wtforms import StringField, SubmitField, SelectField, TextAreaField
 
 
 class KeywordForm(FlaskForm):
@@ -26,8 +26,6 @@ class KeywordForm(FlaskForm):
     )
     submit = SubmitField('speichern')
 
-
-# encoding: utf-8
 
 class FileReportForm(FlaskForm):
     name = StringField(
@@ -45,6 +43,12 @@ class FileReportForm(FlaskForm):
                 message='Bitte geben Sie eine E-Mail an.'
             )
         ]
+    )
+    website = StringField(
+        label='Ihre Website'
+    )
+    hash = StringField(
+        label='Hash'
     )
     reason = SelectField(
         'Grund für die Meldung',

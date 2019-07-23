@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="/file/{{ file.id }}/report">
+    <form method="POST" action="/file/{{ file.id }}/report" data-hash="{{ session['contact-hash'] }}" id="file-report-form">
         <div class="row">
             <div class="col-md-12">
                 <p>In Einzelfällen kann es vorkommen, dass in der öffentlichen Dokumentation einer Stadt Dokumente zu finden sind, die dort nichts zu suchen haben. Klassisches Beispiel ist urheberrechtlich geschütztes Material oder personenbezogene Daten.</p>
@@ -31,6 +31,10 @@
                 Zu meldende Datei<br>
                 <a href="/file/{{ file.id }}">{% if file.name %}{{ file.name }}{% elif file.fileName %}{{ file.fileName }}{% else %}{{ file.id }}{% endif %} aus {{ file.body.name }}</a>
             </div>
+        </div>
+        <div class="row row-form">
+            {{ form_field(form.website, 6) }}
+            {{ form_field(form.hash, 6) }}
         </div>
         <div class="row row-form">
             {{ form_field(form.reason, 12) }}

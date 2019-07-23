@@ -2,7 +2,6 @@ version: '3'
 services:
   politik-bei-uns-frontend-flask:
     container_name: politik-bei-uns-frontend-flask
-    restart: always
     build:
       context: .
       dockerfile: Dockerfile.flask
@@ -12,9 +11,22 @@ services:
       - .:/app
     entrypoint: ["python3", "runserver.py"]
     networks:
-      shared_politk-bei-uns:
+      shared_politik-bei-uns:
         aliases:
           - frontend-flask
+
+  politik-bei-uns-frontend-worker:
+    container_name: politik-bei-uns-frontend-worker
+    build:
+      context: .
+      dockerfile: Dockerfile.flask
+    volumes:
+      - .:/app
+    entrypoint: ["celery", "-A", "webapp.celery_entry_point", "worker"]
+    networks:
+      shared_politik-bei-uns:
+        aliases:
+          - frontend-worker
 
   politik-bei-uns-frontend-gulp:
     build:
@@ -24,10 +36,15 @@ services:
     volumes:
       - .:/app
       - politik_bei_uns_node_modules:/app/node_modules
+    #entrypoint: ['sleep', '600000']
     entrypoint: ["gulp", 'watch']
+    networks:
+      shared_politik-bei-uns:
+        aliases:
+        - frontend-gulp
 
 networks:
-  shared_politk-bei-uns:
+  shared_politik-bei-uns:
     external: true
 
 volumes:

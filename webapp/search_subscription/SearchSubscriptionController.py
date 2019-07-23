@@ -11,10 +11,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 import json
-from dateutil import parser as dateutil_parser
-
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
+from flask import Blueprint, render_template, request, flash, redirect, abort
+from flask_login import login_required, current_user
 
 from ..models import SearchSubscription, Body, Location, Region
 from ..common.response import json_response
@@ -23,11 +21,13 @@ from .SearchSubscriptionMails import SearchSubscriptionMails
 
 search_subscription = Blueprint('search_subscription', __name__, template_folder='templates')
 
+
 @search_subscription.route('/account/search-subscriptions')
 @login_required
 def search_subscription_main():
     search_subscriptions = SearchSubscription.objects(user=current_user.id).all()
     return render_template('search-subscriptions.html', search_subscriptions=search_subscriptions)
+
 
 @search_subscription.route('/account/search-subscribe', methods=['POST'])
 def search_subscription_subscribe():
@@ -71,6 +71,7 @@ def search_subscription_subscribe():
         'redirect': '/account/search-subscriptions'
     })
 
+
 @search_subscription.route('/account/search-subscription/<search_subscription_id>/delete', methods=['GET', 'POST'])
 def search_subscription_delete(search_subscription_id):
     search_subscription = SearchSubscription.objects(user=current_user.id).first()
@@ -82,6 +83,7 @@ def search_subscription_delete(search_subscription_id):
         flash('Such-Abo erfolgreich gelöscht', 'success')
         return redirect('/account/search-subscriptions')
     return render_template('search-subscription-delete.html', search_subscription=search_subscription, form=form)
+
 
 @search_subscription.route('/account/search-subscription/test')
 def search_subscription_test():

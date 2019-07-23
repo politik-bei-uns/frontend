@@ -10,9 +10,28 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import json
+from decimal import Decimal
 
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from ..extensions import db, es, csrf, cache
-from ..common.response import json_response
-from ..models import Body, Option
+
+def whitespace_filter(value):
+    if not value:
+        return value
+    return value.replace(' ', '')
+
+
+def upper_filter(value):
+    if not value:
+        return value
+    return value.upper()
+
+
+def page_filter(data):
+    if not data:
+        return 1
+    return data
+
+
+def decimal_filter(data):
+    if not data:
+        return
+    return Decimal(data)

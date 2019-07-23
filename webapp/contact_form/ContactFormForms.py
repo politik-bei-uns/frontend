@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 from flask_wtf import FlaskForm
 from wtforms import validators
-from wtforms import (StringField, BooleanField, HiddenField, PasswordField, SubmitField, SelectField, TextAreaField)
+from wtforms import StringField, SubmitField, TextAreaField
 
 
 class ContactForm(FlaskForm):
@@ -39,6 +39,12 @@ class ContactForm(FlaskForm):
                 message='Bitte geben Sie einen Nachricht ein.'
             )
         ]
+    )
+    hash = StringField(
+        label='Hash'
+    )
+    website = StringField(
+        label='Website'
     )
     submit = SubmitField('absenden')
 

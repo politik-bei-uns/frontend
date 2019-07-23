@@ -11,17 +11,76 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 import json
-
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from ..extensions import db, es, csrf, cache
+from datetime import datetime, timedelta
+from flask import current_app, request
+from ..extensions import es, csrf
 from ..common.response import json_response
-from ..models import Body, Option
-from .PaperSearchController import paper_search
+from .PaperSearchForms import PaperSearchForm
 from .PaperSearchElastic import ElasticRequest
 
-@paper_search.route('/api/search', methods=['POST'])
+from .PaperSearchController import paper_search
+
+
+@paper_search.route('/api/search/paper', methods=['POST'])
 @csrf.exempt
 def document_search_api():
+    form = PaperSearchForm()
+    if not form.validate():
+        return json_response({
+            'status': -1,
+            'errors': form.errors
+        })
+
+    elastic_request = ElasticRequest(
+        'paper-latest',
+        'paper'
+    )
+    elastic_request.set_q_ext(
+        form.text.data,
+        [
+            ['name', 50],
+            ['reference', 45],
+            ['keyword', 40]
+        ]
+    )
+    elastic_request.set_q_ext(
+        form.text.data,
+        [
+            ['name', 40],
+            ['keyword', 35],
+            ['text', 30]
+        ],
+        'mainFile'
+    )
+    elastic_request.set_q_ext(
+        form.text.data,
+        [
+            ['name', 35],
+            ['keyword', 30],
+            ['text', 25]
+        ],
+        'auxiliaryFile'
+    )
+    if form.daterange.data:
+        begin, end = form.daterange.data.split(' - ')
+        begin = datetime.strptime(begin, '%d.%m.%Y')
+        elastic_request.set_range_limit('date', 'gte', begin.strftime('%Y-%m-%d'))
+        end = datetime.strptime(end, '%d.%m.%Y') + timedelta(days=1)
+        elastic_request.set_range_limit('date', 'lt', end.strftime('%Y-%m-%d'))
+    if form.region.data != 'root' and form.region.data:
+        elastic_request.set_fq('region', form.region.data)
+    if form.location.data:
+        elastic_request.set_fq('location', form.location.data)
+    if form.random_seed.data:
+        elastic_request.set_random_seed(form.random_seed.data)
+
+    items_per_page = current_app.config['ITEMS_PER_PAGE']
+    elastic_request.set_skip((form.page.data - 1) * items_per_page)
+    elastic_request.set_sort_field(form.sort_field.data)
+    elastic_request.set_sort_order(form.sort_order.data)
+    elastic_request.set_limit(items_per_page)
+
+    """
     search_string = request.form.get('q', '')
     order_by = request.form.get('o', 'random')
     fq = json.loads(request.form.get('fq', '{}'))
@@ -36,10 +95,7 @@ def document_search_api():
     if not random_seed and order_by == 'random':
         abort(403)
 
-    elastic_request = ElasticRequest(
-        'paper-latest',
-        'paper'
-    )
+    
     legacy = False
     if 'legacy' in fq:
         if int(fq['legacy']):
@@ -49,39 +105,15 @@ def document_search_api():
         elastic_request.set_fq('legacy', False)
     elastic_request.set_fqs(fq)
     elastic_request.set_rqs(rq)
-
-    elastic_request.set_skip(start)
-    elastic_request.set_limit(size)
+    
     elastic_request.set_order_by(order_by)
     elastic_request.set_random_seed(random_seed)
-    elastic_request.set_q_ext(
-        search_string,
-        [
-            ['name', 50],
-            ['reference', 45],
-            ['keyword', 40]
-        ]
-    )
-    elastic_request.set_q_ext(
-        search_string, [
-            ['name', 40],
-            ['keyword', 35],
-            ['text', 30]
-        ],
-        'mainFile'
-    )
-    elastic_request.set_q_ext(
-        search_string, [
-            ['name', 35],
-            ['keyword', 30],
-            ['text', 25]
-        ],
-        'auxiliaryFile'
-    )
+    
 
     elastic_request.set_agg('paperType')
     elastic_request.set_agg('body')
-
+    """
+    elastic_request.set_agg('paperType')
     elastic_request.query()
 
     result = {
@@ -90,6 +122,7 @@ def document_search_api():
         'status': 0,
         'aggs': elastic_request.get_aggs(),
     }
+    """
     if full_aggs:
         elastic_request_aggs_full = ElasticRequest(
             'paper-latest',
@@ -98,7 +131,7 @@ def document_search_api():
         elastic_request_aggs_full.set_agg('paperType')
         elastic_request_aggs_full.query()
         result['aggs_full'] = elastic_request_aggs_full.get_aggs()
-
+    """
     return json_response(result)
 
 
@@ -172,7 +205,6 @@ def document_geo_search_api():
 
         result_raw = es.search(
             index='region-latest',
-            doc_type='region',
             body=query,
             _source='geojson',
             size=10000
@@ -225,7 +257,6 @@ def document_geo_search_api():
             })
         result_raw = es.search(
             index='paper-location-latest',
-            doc_type='location',
             body={
                 'query': query
             },
@@ -275,7 +306,6 @@ def api_search_street():
         }})
     result_raw = es.search(
         index='street-latest',
-        doc_type='street',
         body={
             'query': {
                 'bool': {

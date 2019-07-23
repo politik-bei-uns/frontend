@@ -1,0 +1,17 @@
+
+.search-list h5, .search-list p {
+  margin-bottom: 0;
+}
+
+.search-list i {
+  width: 1.6rem;
+}
+
+.search-list .row {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.search-list .row:nth-child(2n) {
+  background-color: #ebf4e3;
+}

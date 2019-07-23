@@ -11,8 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 from flask_wtf import FlaskForm
-from wtforms import validators
-from wtforms import (StringField, BooleanField, HiddenField, PasswordField, SubmitField, SelectField)
+from wtforms import SubmitField
 
 
 class SearchSubscribeDeleteForm(FlaskForm):

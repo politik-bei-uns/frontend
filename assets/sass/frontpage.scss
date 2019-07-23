@@ -1,0 +1,36 @@
+
+#front-search-form, #keyword-form, #location-form {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  background-color: #fff;
+  display: flex;
+  padding: 5px 5px 5px 15px;
+  margin-bottom: 1rem;
+}
+
+#front-search-text, #keyword-form #keyword, #location-form #location {
+  border: none;
+  width: 100%;
+}
+
+#front-search-submit, #keyword-form #submit, #location-form #keyword  {
+  width: 100px;
+  cursor: pointer;
+}
+
+#paper-map {
+  height: 540px;
+}
+
+@media only screen and (max-width : 1200px) {
+  #paper-map {
+    height: 480px;
+  }
+}
+
+@media only screen and (max-width : 992px) {
+  #paper-map {
+    height: 360px;
+  }
+}

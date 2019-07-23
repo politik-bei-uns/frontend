@@ -1,4 +1,4 @@
-FROM node:9
+FROM node:10
 LABEL maintainer "Ernesto Ruge <mail@ernestoruge.de>"
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG en_US.utf8
@@ -13,17 +13,17 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean
 
-RUN groupadd -g 1001 webdev
-RUN useradd -u 1001 -g webdev -m -d /home/webdev -s /bin/bash webdev
+RUN groupadd -g 1002 webdev
+RUN useradd -u 1002 -g webdev -m -d /home/webdev -s /bin/bash webdev
 
 ENV HOME /home/webdev
+RUN rm -rf /app/node_modules
 
 RUN mkdir /app && chown webdev:webdev /app
 WORKDIR /app
 COPY --chown=webdev:webdev . /app
 
 RUN ln -s /app/node_modules/gulp/bin/gulp.js /usr/bin/gulp
+RUN ln -s /app/node_modules/webpack/bin/webpack.js /usr/bin/webpack
 
 USER webdev
-RUN npm install
-RUN gulp copy-assets

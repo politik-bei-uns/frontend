@@ -19,8 +19,10 @@
     {% endblock %}
 
     {% block styles %}
-        <link rel="stylesheet" href="/static/css/webapp.min.css?v={{ config['PROJECT_VERSION'] }}">
+        <link rel="stylesheet" href="/static/css/webapp{% if not config.DEBUG %}.min{% endif %}.css?v={{ config['PROJECT_VERSION'] }}">
     {% endblock %}
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body class="{% block bodyclass %}default{% endblock %}">
 <div id="header-wrapper" class="main-wrapper">
@@ -60,28 +62,42 @@
                             <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
                             <div class="dropdown-menu" aria-labelledby="account-dropdown">
                                 {% if not current_user.is_authenticated %}
-                                    <a class="dropdown-item" href="/login">Login</a>{% endif %}
+                                    <a class="dropdown-item" href="/login">Login</a>
+                                {% endif %}
                                 {% if not current_user.is_authenticated %}
-                                    <a class="dropdown-item" href="/register">Registrieren</a>{% endif %}
+                                    <a class="dropdown-item" href="/register">Registrieren</a>
+                                {% endif %}
                                 {% if current_user.is_authenticated %}
-                                    <a class="dropdown-item" href="/account/search-subscriptions">Such-Abos</a>{% endif %}
+                                    <a class="dropdown-item" href="/account/search-subscriptions">Such-Abos</a>
+                                {% endif %}
                                 {% if current_user.is_authenticated %}
-                                    <a class="dropdown-item" href="/account/settings">Einstellungen</a>{% endif %}
+                                    <a class="dropdown-item" href="/account/settings">Einstellungen</a>
+                                {% endif %}
                                 {% if current_user.is_authenticated %}
-                                    <a class="dropdown-item" href="/account/password">Passwort ändern</a>{% endif %}
+                                    <a class="dropdown-item" href="/account/password">Passwort ändern</a>
+                                {% endif %}
                                 {% if current_user.is_authenticated %}
-                                    <a class="dropdown-item" href="/logout">Logout</a>{% endif %}
-                                {% if current_user.type == 'admin' %}
-                                    <a class="dropdown-item" href="/admin">Admin-Bereich</a>
+                                    <a class="dropdown-item" href="/logout">Logout</a>
                                 {% endif %}
                             </div>
                         </li>
+                        {% if current_user.type == 'admin' %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                <div class="dropdown-menu" aria-labelledby="account-dropdown">
+                                    <a class="dropdown-item" href="/admin/users">Nutzer</a>
+                                    <a class="dropdown-item" href="/admin/keywords">Stichworte</a>
+                                    <a class="dropdown-item" href="/admin/files">Dateien</a>
+                                </div>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
         </div>
     {% endblock %}
 </div>
+{% block outer_form_begin %}{% endblock %}
 <div id="statement-wrapper" class="main-wrapper">
     <div id="statement" class="container">
         {% block statement %}
@@ -95,6 +111,7 @@
         {% endblock %}
     </div>
 </div>
+{% block outer_form_end %}{% endblock %}
 <div id="footer-wrapper" class="main-wrapper">
     {% block footer %}
         <div id="footer" class="container">
@@ -127,7 +144,7 @@
     {% endblock %}
 </div>
 {% block scripts %}
-    <script type="text/javascript" src="/static/js/webapp.min.js?v={{ config['PROJECT_VERSION'] }}"></script>
+    <script type="text/javascript" src="/static/js/webapp{% if not config.DEBUG %}.min{% endif %}.js?v={{ config['PROJECT_VERSION'] }}"></script>
 {% endblock %}
 {% if config.PIWIK_HOST and config.PIWIK_ID %}
     <!-- Piwik -->

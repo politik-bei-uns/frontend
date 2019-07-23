@@ -11,60 +11,50 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 import os
-from .common.constants import INSTANCE_FOLDER_PATH
+from .common.constants import BaseConfig
 
 
-class DefaultConfig(object):
-    PROJECT_NAME = "politik-bei-uns-frontend"
-    PROJECT_URL = ''
-    PROJECT_CDN_URL = ''
-    PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-    PROJECT_VERSION = '0.0.1'
-    LOG_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir, 'logs'))
+class DefaultConfig(BaseConfig):
+    PROJECT_URL = 'http://srv:5000'
+    PROJECT_CDN_URL = 'http://srv:9000'
 
     DEBUG = True
     TESTING = True
+    MAIL_DEBUG = True
 
-    SECRET_KEY = ''
-    SECURITY_PASSWORD_SALT = ''
+    SECRET_KEY = ''  # TO SET
+    SECURITY_PASSWORD_SALT = ''  # TO SET
 
-    ADMINS = []
-    MAILS_FROM = ''
+    ADMINS = ['dev@politik-bei-uns.de']
+    MAIL_FROM = 'dev@politik-bei-uns.de'
 
-    MONGODB_HOST = 'localhost'
+    MONGODB_HOST = 'mongodb'
     MONGODB_PORT = 27017
-    MONGODB_DB = ''
+    MONGODB_DB = 'politik-bei-uns'
 
-    ELASTICSEARCH_HOST = ''
+    ELASTICSEARCH_HOST = 'elasticsearch'
 
-    S3_ENDPOINT = '127.0.0.1:9000'
-    S3_ACCESS_KEY = ''
-    S3_SECRET_KEY = ''
-    S3_SECURE = False
-    S3_BUCKET = ''
-    S3_LOCATION = 'us-east-1'
+    S3_ENDPOINT = 'minio:9000'
+    S3_ACCESS_KEY = 'DEVELOPMENT'
+    S3_SECRET_KEY = 'DEVELOPMENT'
 
-    MAPBOX_TOKEN = ''
+    MAPBOX_TOKEN = 'pk.eyJ1IjoicG9saXRpay1iZWktdW5zIiwiYSI6ImNpeGVvN2s3dTAwNTkydHBpcmMyOGFkd2UifQ.hBfikcNF8agOOXQrVfFCVQ'
 
     MAIL_SERVER = ''
-    MAIL_PORT = 465
-    MAIL_USE_SSL = True
     MAIL_USERNAME = ''
     MAIL_PASSWORD = ''
-    MAIL_DEBUG = True
-    MAIL_SUPPRESS_SEND = False
 
 
 class DevelopmentConfig(DefaultConfig):
-    pass
+    MODE = 'DEVELOPMENT'
 
 
 class StagingConfig(DefaultConfig):
-    pass
+    MODE = 'STAGING'
 
 
 class ProductionConfig(DefaultConfig):
-    pass
+    MODE = 'PRODUCTION'
 
 
 def get_config(MODE):

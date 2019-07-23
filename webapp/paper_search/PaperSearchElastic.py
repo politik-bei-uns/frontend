@@ -12,14 +12,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 from ..extensions import es
 
-class ElasticRequest():
 
+class ElasticRequest():
     def __init__(self, index, document):
         self.index = index
         self.document = document
         self.limit = 10
         self.skip = 0
-        self.order_by = '_score'
+        self.sort_field = '_score'
+        self.sort_order = 'asc'
         self.source = []
         self.random_seed = False
 
@@ -106,8 +107,11 @@ class ElasticRequest():
             return
         self.skip = skip
 
-    def set_order_by(self, order_by):
-        self.order_by = order_by
+    def set_sort_field(self, sort_field):
+        self.sort_field = sort_field
+
+    def set_sort_order(self, sort_order):
+        self.sort_order = sort_order
 
     def set_random_seed(self, random_seed):
         self.random_seed = random_seed
@@ -148,7 +152,7 @@ class ElasticRequest():
         if len(self.query_parts_filter):
             query['query']['bool']['filter'] = self.query_parts_filter
 
-        if self.order_by == 'random' and self.random_seed:
+        if self.sort_field == 'random' and self.random_seed:
             query = {
                 'query': {
                     'function_score': {
@@ -160,7 +164,7 @@ class ElasticRequest():
                     }
                 }
             }
-            self.order_by = '_score'
+            self.sort_field = '_score'
 
         if self.aggs:
             query['aggs'] = self.aggs
@@ -170,9 +174,8 @@ class ElasticRequest():
         query = self.generate_query()
         self.result_raw = es.search(
             index=self.index,
-            doc_type=self.document,
             body=query,
-            sort=self.order_by,
+            sort='%s:%s' % (self.sort_field, self.sort_order),
             _source=','.join(self.source),
             size=self.limit,
             from_=self.skip
@@ -189,7 +192,7 @@ class ElasticRequest():
     def get_result_count(self):
         if not self.result_raw:
             return False
-        return self.result_raw['hits']['total']
+        return self.result_raw['hits']['total']['value']
 
     def get_aggs(self):
         result = {}

@@ -7,9 +7,11 @@ Flask-Mail
 Flask-WTF
 Flask-Caching
 Flask-Failsafe
+Flask-Celery-Helper
 pytz
 gunicorn
 passlib
 python-dateutil
 bcrypt
 python-memcached
+redis

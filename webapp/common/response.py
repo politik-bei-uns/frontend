@@ -15,7 +15,7 @@ import os
 import json
 import datetime
 import traceback
-from flask import make_response, jsonify, abort, current_app
+from flask import make_response, jsonify, current_app
 from werkzeug.http import HTTP_STATUS_CODES
 
 

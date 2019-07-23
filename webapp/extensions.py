@@ -31,5 +31,12 @@ mail = Mail()
 from flask_caching import Cache
 cache = Cache(config={'CACHE_TYPE': 'memcached'})
 
+# Celery
+from .common.celery import LogErrorsCelery
+celery = LogErrorsCelery()
+
+from .common.logger import Logger
+logger = Logger()
+
 from .cron import Cron
 cron = Cron()

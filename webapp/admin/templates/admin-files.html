@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Such-Abos | {{ super() }}{% endblock %}
+{% block og_title %}Such-Abos | {{ super() }}{% endblock %}
+{% block og_description %}Ihre abbonierten Themen, zu denen sie bei neuen Dokumenten informiert werden möchten.{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Geblockte Dateien</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <td>Datei</td>
+                    <td>Aktionen</td>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <td>Datei</td>
+                    <td>Aktionen</td>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for file in files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td><a href="/admin/user/{{ user.id }}/delete" class="btn btn-danger">löschen</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

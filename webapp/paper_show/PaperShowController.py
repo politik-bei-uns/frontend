@@ -10,11 +10,9 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import json
-
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
-from ..models import Paper, KeywordUsergenerated, Street, StreetNumber, Location, LocationOrigin
+from flask import Blueprint, render_template, request, flash, redirect, abort
+from flask_login import login_required, current_user
+from ..models import Paper, KeywordUsergenerated, Street, Location, LocationOrigin
 from .PaperShowForms import KeywordForm, LocationForm
 from ..common.response import json_response
 
@@ -56,12 +54,13 @@ def document_show_main(document_id):
         return redirect('/paper/%s' % document_id)
     return render_template('paper-show.html', paper=paper, generated_geojson=generated_geojson, keyword_form=keyword_form, location_form=location_form)
 
+
 @paper_show.route('/paper/<ObjectId:paper_id>/add-location', methods=['POST'])
 @login_required
 def paper_add_location(paper_id):
     paper = Paper.objects(id=paper_id).first()
     street = Street.objects(id=request.form.get('street', '')).first()
-    if (not paper or not street):
+    if not paper or not street:
         return json_response({
             'status': -1
         })
@@ -102,7 +101,6 @@ def paper_add_location(paper_id):
     if paper not in location.paper:
         location.paper.append(paper)
         location.save()
-
 
     return json_response({
         'location': location.to_dict(),

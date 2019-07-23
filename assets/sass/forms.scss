@@ -1,0 +1,19 @@
+
+.multiselect-container.dropdown-menu {
+  right: 0;
+  z-index: 3000;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.multiselect-container.dropdown-menu li {
+  margin: 7px 0;
+}
+
+.multiselect-container.dropdown-menu label {
+  padding-left: 15px;
+}
+
+.multiselect-container.dropdown-menu label input {
+  margin-right: 10px;
+}

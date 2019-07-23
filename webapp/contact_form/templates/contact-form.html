@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="/contact">
+    <form method="POST" action="/contact" id="contact-form" data-hash="{{ session['contact-hash'] }}">
         <div class="row">
             <div class="col-md-12">
                 <p>Wir freuen uns über Anregungen, Verbesserungsvorschläge, Hinweise auf weitere Kommunen mit OParl-Schnittstelle und mehr! Statt dem Kontaktformular können Sie uns auch eine E-Mail an <a href="mailto:kontakt@politik-bei-uns.de">kontakt@politik-bei-uns.de</a> senden.</p>
@@ -21,14 +21,18 @@
                 <p>Name und E-Mail sind lediglich für Rückfragen da und werden nicht veröffentlicht.</p>
             </div>
         </div>
-        <div class="row row-form">
+        <div class="row row-form row-line-1">
             {{ form_field(form.name, 6) }}
             {{ form_field(form.email, 6) }}
         </div>
-        <div class="row row-form">
+        <div class="row row-form row-line-2">
             {{ form_field(form.message, 12) }}
         </div>
-        <div class="row row-form">
+        <div class="row row-form row-line-3">
+            {{ form_field(form.website, 6) }}
+            {{ form_field(form.hash, 6) }}
+        </div>
+        <div class="row row-form row-line-4">
             {{ form_field(form.submit, 12, 'input-submit') }}
         </div>
         {{ form.csrf_token }}

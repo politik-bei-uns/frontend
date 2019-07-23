@@ -1,0 +1,59 @@
+
+#share {
+  margin: 0.5rem auto;
+}
+
+#share a {
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  margin: 8px;
+  border-radius: 50%;
+  font-size: 24px;
+  color: #fff;
+  opacity: 0.8;
+  transition: opacity 0.15s linear;
+  line-height: 1rem;
+}
+
+#share a:hover {
+  opacity: 1;
+}
+
+#share a:hover, #share a:visited, #share a:active {
+  color: #fff;
+}
+
+
+#share i {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* colors */
+
+.facebook {
+  background: #3b5998;
+}
+
+.twitter {
+  background: #55acee;
+}
+
+.googleplus {
+  background: #dd4b39;
+}
+
+.linkedin {
+  background: #0077b5;
+}
+
+.pinterest {
+  background: #cb2027;
+}
+
+.wordpress {
+  background: #21759b;
+}

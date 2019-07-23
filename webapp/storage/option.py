@@ -11,8 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 from datetime import datetime
-from mongoengine import Document, BooleanField, ReferenceField, DateTimeField, StringField, ListField, \
-    DecimalField, EmailField, IntField, GeoJsonBaseField
+from mongoengine import Document, DateTimeField, StringField
 
 
 class Option(Document):

@@ -15,43 +15,33 @@ from flask import current_app
 from webapp import launch
 from webapp.extensions import db, cron as cron_run
 import webapp.models as Models
+from webapp.models import User
 from webapp.config import DefaultConfig
 import os
 
 app = launch()
 manager = Manager(app)
 
+
 @manager.shell
 def make_shell_context():
     return dict(app=current_app, db=db, models=Models)
 
-@manager.command
-def initdb():
-    # db.drop_all(bind=None)
-    # db.create_all(bind=None)
 
-    user = Models.User()
-    user.user_name = 'a-ruge'
-    user.password = 'passwort'
+@manager.command
+def create_admin(email, password):
+    user = User()
+    user.email = email
+    user.password = password
     user.type = 'admin'
     user.active = True
-
-    db.session.add(user)
-    db.session.commit()
+    user.save()
 
 
 @manager.command
 def cron():
     cron_run.run()
 
-
-"""
-@manager.command
-def celery_worker():
-  celery_args = ['celery', 'worker', '-n', 'worker', '-C', '--autoscale=10,1', '--without-gossip']
-  with app.app_context():
-    return celery(celery_args)
-"""
 
 if __name__ == "__main__":
     manager.run()

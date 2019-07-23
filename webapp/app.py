@@ -11,13 +11,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 import os
-from flask import Flask, request, render_template
+import traceback
+from flask import Flask, render_template
+from flask_wtf.csrf import CSRFError
 
 from webapp import config as Config
-from .common import constants as COMMON_CONSTANTS
+from .common.constants import BaseConfig
 from .common.filter import register_global_filters
 from .common.helpers import BSONObjectIdConverter
-from .extensions import db, es, login_manager, csrf, mail, cache, cron
+from .extensions import db, es, login_manager, csrf, mail, cache, cron, celery
 from .models import User
 
 # Blueprints
@@ -52,6 +54,7 @@ CRONS = [
     SearchSubscriptionMails
 ]
 
+
 def launch(config=None, app_name=None, blueprints=None):
     """Create a Flask app."""
 
@@ -62,9 +65,10 @@ def launch(config=None, app_name=None, blueprints=None):
 
     app = Flask(
         app_name,
-        instance_path=COMMON_CONSTANTS.INSTANCE_FOLDER_PATH,
+        instance_path=BaseConfig.INSTANCE_FOLDER_PATH,
         instance_relative_config=True,
-        template_folder='webapp/templates')
+        template_folder=os.path.join(BaseConfig.PROJECT_ROOT, 'templates')
+    )
     configure_app(app, config)
     configure_hook(app)
     configure_blueprints(app, blueprints)
@@ -124,6 +128,9 @@ def configure_extensions(app):
     # flask-cache
     cron.init_app(app, CRONS)
 
+    # celery
+    celery.init_app(app)
+
 
 def configure_blueprints(app, blueprints):
     for blueprint in blueprints:
@@ -168,4 +175,27 @@ def configure_hook(app):
 
 
 def configure_error_handlers(app):
-    pass
+    @app.errorhandler(403)
+    def error_403(error):
+        return render_template('403.html'), 403
+
+    @app.errorhandler(404)
+    def error_404(error):
+        return render_template('404.html'), 404
+
+    @app.errorhandler(500)
+    def error_500(error):
+        from .extensions import logger
+        logger.critical('app', str(error), traceback.format_exc())
+        return render_template('500.html'), 500
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return render_template('csrf-error.html', reason=e.description), 400
+
+    if not app.config['DEBUG']:
+        @app.errorhandler(Exception)
+        def internal_server_error(error):
+            from .extensions import logger
+            logger.critical('app', str(error), traceback.format_exc())
+            return render_template('500.html'), 500

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% from "macros.html" import form_field with context %}
+
+{% block title %}Passwort zurücksetzen fehlgeschlagen | {{ super() }}{% endblock %}
+{% block og_title %}Passwort zurücksetzen fehlgeschlagen | {{ super() }}{% endblock %}
+
+{% block statement %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Passwort zurücksetzen fehlgeschlagen</h1>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <p>Bitte stellen Sie sicher, dass Sie den vollständigen Link aufgerufen haben.</p>
+        </div>
+    </div>
+{% endblock %}

@@ -7,6 +7,7 @@ var PaperGeo = function () {
         modules.paper_search.set_random();
         this.search();
     };
+
     this.init_mobile = function () {
         if ($.browser.mobile) {
             $('body').addClass('mobile');
@@ -147,7 +148,7 @@ var PaperGeo = function () {
                 "line-width": 5,
                 "line-opacity": 0.5
             }
-        }, 200);
+        });
         this.map.addLayer({
             id: 'data-layer-polygon',
             type: 'fill',
@@ -158,7 +159,7 @@ var PaperGeo = function () {
                 'fill-opacity': 0.5,
                 'fill-outline-color': '#428238'
             }
-        }, 200);
+        });
         this.map.addLayer({
             id: 'data-layer-polygon-legacy',
             type: 'fill',
@@ -169,7 +170,7 @@ var PaperGeo = function () {
                 'fill-opacity': 0.5,
                 'fill-outline-color': '#dcc400'
             }
-        }, 200);
+        });
         this.map.addLayer({
             id: 'data-layer-point',
             type: 'circle',
@@ -179,7 +180,7 @@ var PaperGeo = function () {
                 'circle-radius': 7,
                 'circle-color': '#428238'
             }
-        }, 200);
+        });
 
         this.map.addSource('search-source', {
             type: 'geojson',
@@ -199,7 +200,7 @@ var PaperGeo = function () {
                 "line-width": 5,
                 "line-opacity": 0.5
             }
-        }, 200);
+        });
         this.map.addLayer({
             id: 'search-layer-polygon',
             type: 'fill',
@@ -210,7 +211,7 @@ var PaperGeo = function () {
                 'fill-opacity': 0.5,
                 'fill-outline-color': '#A94739'
             }
-        }, 200);
+        });
         this.map.addLayer({
             id: 'search-layer-point',
             type: 'circle',
@@ -220,7 +221,7 @@ var PaperGeo = function () {
                 'circle-radius': 7,
                 'circle-color': '#A94739'
             }
-        }, 200);
+        });
 
         this.map.on('mouseenter', 'data-layer-line-string', function () {
             modules.paper_geo.map.getCanvasContainer().style.cursor = 'pointer';
@@ -284,7 +285,7 @@ var PaperGeo = function () {
         if ($('#legacy').is(':checked')) {
             geo_params.fq = JSON.stringify({legacy: 1});
         }
-        $.post('/api/search/geo', geo_params, function (data) {
+        $.post('/api/search/geo', geo_params, (data) => {
             modules.paper_geo.map.getSource('data-source').setData(data.data);
         });
     };

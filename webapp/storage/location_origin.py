@@ -11,8 +11,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """
 
 import datetime
-from mongoengine import Document, BooleanField, ReferenceField, DateTimeField, StringField, ListField, DecimalField, \
-    EmbeddedDocument
+from mongoengine import Document, ReferenceField, DateTimeField, StringField
+
 
 class LocationOrigin(Document):
     origin = StringField() # ris, auto, user

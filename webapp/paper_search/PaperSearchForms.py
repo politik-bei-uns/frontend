@@ -10,11 +10,54 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-from flask_wtf import FlaskForm
 from wtforms import validators
-from wtforms import (StringField, BooleanField, HiddenField, PasswordField, SubmitField, SelectField)
+from wtforms import StringField, BooleanField, HiddenField, PasswordField, SubmitField, SelectField, IntegerField
+from ..common.form_validator import ValidateDateRange
+from ..common.form import SearchBaseForm
 
 
-class SearchSubscribeForm(FlaskForm):
-    submit = SubmitField('Diese Suche abonnieren')
+class PaperSearchForm(SearchBaseForm):
+    class Meta:
+        csrf = False
 
+    text = StringField(
+        'Volltext-Suche'
+    )
+    region = StringField(
+        'Regionen'
+    )
+    location = StringField(
+        'Ort'
+    )
+    daterange = StringField(
+        label='Datumsbereich',
+        validators=[
+            ValidateDateRange(),
+            validators.Optional()
+        ]
+    )
+    type = StringField(
+        label='Typ'
+    )
+    legacy = BooleanField(
+        label='"Politik bei Uns 1"-Kommunen ebenfalls durchsuchen'
+    )
+    sort_field = SelectField(
+        label='Sortier-Feld',
+        choices=[
+            ('unit_uid', 'Ladepunkt'),
+            ('created', 'Erstellung'),
+            ('name', 'Name'),
+            ('random', 'Zufall'),
+            ('score', 'Priorität')
+        ]
+    )
+    random_seed = StringField()
+    submit = SubmitField('suchen')
+    subscribe = SubmitField('Diese Suche abonnieren')
+
+
+class PaperSearchGeoForm(SearchBaseForm):
+    text = StringField(
+        'Volltext-Suche'
+    )

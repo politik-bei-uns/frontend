@@ -19,8 +19,8 @@ from ..models import SearchSubscription, Option
 from ..paper_search.PaperSearchElastic import ElasticRequest
 from flask_mail import Message
 
-class SearchSubscriptionMails():
 
+class SearchSubscriptionMails():
     def __init__(self):
         pass
 
@@ -42,7 +42,6 @@ class SearchSubscriptionMails():
             last_sync_option.key = 'search_subscription_cron_last_run'
         last_sync_option.value = today.isoformat()
         last_sync_option.save()
-
 
     def send_subscription(self, search_subscription):
         today = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -103,17 +102,16 @@ class SearchSubscriptionMails():
         elastic_request.set_range_limit('modified', 'gt', start.isoformat())
 
         elastic_request.set_limit(100)
-        elastic_request.set_order_by('modified')
+        elastic_request.set_sort_field('modified')
         elastic_request.query()
         result = elastic_request.get_results()
         if not len(result):
             return
 
-
         message = Message(
-            sender = current_app.config['MAILS_FROM'],
-            recipients = [search_subscription.user.email],
-            body = render_template('emails/search_subscription_digest.txt', search_subscription=search_subscription, result=result)
+            sender=current_app.config['MAILS_FROM'],
+            recipients=[search_subscription.user.email],
+            body=render_template('emails/search_subscription_digest.txt', search_subscription=search_subscription, result=result)
         )
         if search_subscription.user.subscription_frequency == 'week':
             message.subject = 'Politik bei uns: Ihre wöchentliche Übersicht'

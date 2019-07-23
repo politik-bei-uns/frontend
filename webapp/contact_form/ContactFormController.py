@@ -10,11 +10,11 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import json
-
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
+from uuid import uuid4
+from hashlib import sha256
+from flask import Blueprint, render_template, current_app, flash, redirect, session
 from .ContactFormForms import ContactForm
-from ..extensions import mail
+from ..extensions import mail, celery
 from flask_mail import Message
 
 
@@ -25,14 +25,37 @@ contact_form = Blueprint('contact_form', __name__, template_folder='templates')
 def contact_form_main():
     form = ContactForm()
     if form.validate_on_submit():
-        msg = Message(
-            "Eine Anfrage von %s" % form.name.data,
-            sender=current_app.config['MAILS_FROM'],
-            recipients=current_app.config['ADMINS'],
-            reply_to=form.email.data,
-            body=render_template('emails/contact-form.txt', name=form.name.data, email=form.email.data, message=form.message.data)
-        )
-        mail.send(msg)
-        flash('Ihre Nachricht wurde erfolgreich gesendet!', 'success')
+        if form.website.data:
+            flash('Das Senden der Nachricht ist fehlgeschlagen.', 'danger')
+            return render_template('contact-form.html', form=form)
+        m = sha256()
+        m.update(session['contact-hash'].encode())
+        if m.hexdigest() != form.hash.data:
+            flash('Das Senden der Nachricht ist fehlgeschlagen.', 'danger')
+            return render_template('contact-form.html', form=form)
+
+        del session['contact-hash']
+        send_contact_mail.delay(form.name.data, form.email.data, form.message.data)
+
+        flash('Ihre Nachricht wurde erfolgreich gesendet.', 'success')
         return redirect('/contact')
+    if 'contact-hash' not in session:
+        session['contact-hash'] = str(uuid4())
     return render_template('contact-form.html', form=form)
+
+
+@celery.task
+def send_contact_mail(name, email, message):
+    msg = Message(
+        "Eine Anfrage von %s" % name,
+        sender=current_app.config['MAILS_FROM'],
+        recipients=current_app.config['ADMINS'],
+        reply_to=email,
+        body=render_template(
+            'emails/contact-form.txt',
+            name=name,
+            email=email,
+            message=message
+        )
+    )
+    mail.send(msg)

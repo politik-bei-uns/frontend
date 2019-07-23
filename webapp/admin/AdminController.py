@@ -10,21 +10,12 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import json
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
-from ..extensions import db, es, csrf
-from ..common.response import json_response
-from ..models import User, KeywordUsergenerated
+from flask import  Blueprint, render_template, abort
+from flask_login import login_required, current_user
+from ..models import User, KeywordUsergenerated, File
 
 admin = Blueprint('admin', __name__, template_folder='templates')
 
-@admin.route('/admin')
-@login_required
-def admin_overview():
-    if current_user.type != 'admin':
-        abort(403)
-    return render_template('dashboard.html')
 
 @admin.route('/admin/keywords')
 @login_required
@@ -34,11 +25,20 @@ def admin_keywords():
     keywords = KeywordUsergenerated.objects.order_by('created', 'desc').all()
     return render_template('keywords.html', keywords=keywords)
 
+
 @admin.route('/admin/users')
-def document_search_main():
+def admin_users():
     if current_user.type != 'admin':
         abort(403)
     users = User.objects.order_by('email').all()
-    return render_template('users.html', users=users)
+    return render_template('admin-users.html', users=users)
+
+
+@admin.route('/admin/files')
+def admin_files():
+    if current_user.type != 'admin':
+        abort(403)
+    files = File.objects(blocked=True).all()
+    return render_template('admin-files.html', files=files)
 
 

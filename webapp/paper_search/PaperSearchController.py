@@ -10,27 +10,26 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import json
-
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, redirect, abort)
-from ..extensions import db, es, csrf, cache
-from ..common.response import json_response
+from flask import Blueprint, render_template
 from ..models import Body, Option
-from .PaperSearchForms import SearchSubscribeForm
+from .PaperSearchForms import PaperSearchForm
 
 paper_search = Blueprint('paper_search', __name__, template_folder='templates')
-from .PaperSearchApi import *
+
+from . import PaperSearchApi
+
 
 @paper_search.route('/ratsdokumente/suche')
 def document_search_main():
     bodies = Body.objects.order_by('name').all()
-    form = SearchSubscribeForm()
+    form = PaperSearchForm()
     regions = Option.objects(key='region_cache').first()
     return render_template('paper-search.html', bodies=bodies, regions=regions.value, form=form)
+
 
 @paper_search.route('/ratsdokumente/karte')
 def document_search_map():
     bodies = Body.objects.order_by('name').all()
-    form = SearchSubscribeForm()
+    form = PaperSearchForm()
     regions = Option.objects(key='region_cache').first()
     return render_template('paper-geo.html', bodies=bodies, regions=regions.value, form=form)

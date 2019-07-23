@@ -3,7 +3,7 @@
         {% if form_type == 'input-text' %}
             {{ field.label }}
             {% if unit %}
-                <span class="unit unit-{{ unit }}">{% endif %}{{ field(class="form-control" + (' ' + ' '.join(extra_classes) if extra_classes else '')) }}
+                <span class="unit unit-{{ unit }}">{% endif %}{{ field(class="form-control" + (' ' + ' '.join(extra_classes) if extra_classes else ''), autocomplete="off") }}
         {% if unit %}</span>{% endif %}
         {% elif form_type == 'input-checkbox' %}
             <label>{{ field(class="") }} {{ field.label.text }}</label>

@@ -13,10 +13,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import datetime
 from hashlib import sha256
 from itsdangerous import URLSafeTimedSerializer
-from flask import (Flask, Blueprint, render_template, current_app, request, flash, url_for, redirect, session, abort,
-                   jsonify, send_from_directory)
-from flask_login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
-from .UserForms import *
+from flask import Blueprint, render_template, current_app, request, flash, redirect, session, abort
+from flask_login import login_required, login_user, current_user, logout_user
+from .UserForms import LoginForm, RecoverForm, RecoverSetForm, RegisterForm, PasswordForm, SettingsForm
 from ..models import User
 
 user = Blueprint('user', __name__, template_folder='templates')
@@ -47,6 +46,7 @@ def login_main():
         flash('Zugangsdaten nicht korrekt', 'danger')
     return render_template('login.html', form=form, redirect_to=redirect_to)
 
+
 @user.route('/logout')
 def logout():
     session.pop('login', None)
@@ -54,15 +54,14 @@ def logout():
     flash('Sie haben sich erfolgreich ausgeloggt.', 'success')
     return redirect('/')
 
+
 @user.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect('/')
     form = RegisterForm()
     if form.validate_on_submit():
-        error_found = False
         if User.email_exists(form.email.data):
-            error_found = True
             form.email.errors.append('E-Mail-Adresse ist schon registriert.')
         else:
             user = User()
@@ -87,25 +86,21 @@ def validate_email():
             max_age=60 * 60 * 24 * 7
         )
     except:
-        data = False
-    if data == False:
         return render_template('activation-fail.html')
-    else:
-        if not len(data) == 2:
-            return render_template('activation-fail.html')
-        else:
-            user = User.objects(id=data[0])
-            if user.count() != 1:
-                return render_template('activation-fail.html')
-            else:
-                user = user.first()
-                if sha256(str.encode(user.password)).hexdigest() != data[1]:
-                    return render_template('activation-fail.html')
-                else:
-                    user.active = True
-                    user.save()
-                    flash('Aktivierung erfolgreich.', 'success')
-                    return redirect('/login')
+
+    if not len(data) == 2:
+        return render_template('activation-fail.html')
+    user = User.objects(id=data[0])
+    if user.count() != 1:
+        return render_template('activation-fail.html')
+    user = user.first()
+    if sha256(str.encode(user.password)).hexdigest() != data[1]:
+        return render_template('activation-fail.html')
+    user.active = True
+    user.save()
+    flash('Aktivierung erfolgreich.', 'success')
+    return redirect('/login')
+
 
 @user.route('/account/password', methods=['GET', 'POST'])
 @login_required
@@ -150,34 +145,28 @@ def recover_check():
             max_age=30 * 60 * 60 * 24 * 14
         )
     except:
-        data = False
-    if data == False:
         return render_template('recover-fail.html')
-    else:
-        print(data)
-        if not len(data) == 2:
-            return render_template('recover-fail.html')
-        else:
-            user = User.objects(id=data[0])
-            if user.count() != 1:
-                return render_template('recover-fail.html')
-            else:
-                user = user.first()
-                if sha256(str.encode(user.password)).hexdigest() != data[1]:
-                    return render_template('recover-fail.html')
-                else:
-                    form = RecoverSetForm()
-                    if form.validate_on_submit():
-                        user.password = form.password.data
-                        user.active = True
-                        user.modified = datetime.datetime.utcnow()
-                        user.save()
-                        login_user(user, remember=form.remember_me.data)
-                        current_app.logger.info(
-                            '%s got access to his / her account after registration / recovery' % (current_user.email))
-                        flash('Passwort erfolgreich aktualisiert und erfolgreich eingeloggt.', 'success')
-                        return redirect('/')
-                    return render_template('recover-password-set.html', form=form, url_id=serialized_data)
+    if not len(data) == 2:
+        return render_template('recover-fail.html')
+    user = User.objects(id=data[0])
+    if user.count() != 1:
+        return render_template('recover-fail.html')
+    user = user.first()
+    if sha256(str.encode(user.password)).hexdigest() != data[1]:
+        return render_template('recover-fail.html')
+    form = RecoverSetForm()
+    if form.validate_on_submit():
+        user.password = form.password.data
+        user.active = True
+        user.modified = datetime.datetime.utcnow()
+        user.save()
+        login_user(user, remember=form.remember_me.data)
+        current_app.logger.info(
+            '%s got access to his / her account after registration / recovery' % (current_user.email))
+        flash('Passwort erfolgreich aktualisiert und erfolgreich eingeloggt.', 'success')
+        return redirect('/')
+    return render_template('recover-password-set.html', form=form, url_id=serialized_data)
+
 
 @user.route('/account/settings', methods=['GET', 'POST'])
 def account_settings():
