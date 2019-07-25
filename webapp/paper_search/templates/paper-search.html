@@ -38,8 +38,10 @@
     <div class="row row-form">
         {{ form_field(form.legacy, 12, 'input-checkbox') }}
     </div>
+    <div class="row row-form">
+        {{ form_field(form.submit, 12, 'input-submit') }}
+    </div>
     {{ form.csrf_token }}
-    <input type="submit" style="display: none;">
 {% endblock %}
 
 {% block content %}

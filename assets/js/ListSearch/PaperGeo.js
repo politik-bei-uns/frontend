@@ -2,6 +2,7 @@ import mapboxgl from 'mapbox-gl'
 import React from "react";
 import ReactDOM from "react-dom";
 import ListSearch from './ListSearch'
+import MapMarkerPaperFragment from '../Fragment/MapMarkerPaperFragment';
 
 export default class PaperGeo extends ListSearch {
     state = {
@@ -259,41 +260,13 @@ export default class PaperGeo extends ListSearch {
 
     showMapPopup (e) {
         let container = document.createElement('div');
-        ReactDOM.render(this.renderMapPopup(e.features[0].properties), container);
+        ReactDOM.render(<MapMarkerPaperFragment properties={e.features[0].properties}/>, container);
         this.popup = new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setDOMContent(container)
             .addTo(this.map);
     }
 
-    renderMapPopup(properties) {
-        return (
-            <div>
-                <h4>
-                    {properties.name}
-                    {properties.number &&
-                        <span> {properties.number}</span>
-                    }
-                    {properties.locality &&
-                        <span>, {properties.locality.replace('["', '').replace('"]', '')}</span>
-                    }
-                </h4>
-                <p className="sd-map-popup-descr">
-                    {properties.rgs &&
-                    <span><i className="fa fa-spinner fa-pulse fa-fw"></i> Dokumente gefunden</span>
-                    }
-                </p>
-                <p className="sd-map-popup-button">
-                    <span
-                        className="btn form-control"
-                        onClick={this.selectMapItem.bind(this, (properties.rgs) ? 'region' : 'location', properties.id)}
-                    >
-                        An diesem Ort suchen
-                    </span>
-                </p>
-            </div>
-        );
-    }
 
     selectMapItem(type, id) {
         this.params[type] = id;

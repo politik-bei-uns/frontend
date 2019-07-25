@@ -17,6 +17,7 @@ from flask import Blueprint, render_template, current_app, request, flash, redir
 from flask_login import login_required, login_user, current_user, logout_user
 from .UserForms import LoginForm, RecoverForm, RecoverSetForm, RegisterForm, PasswordForm, SettingsForm
 from ..models import User
+from .UserHelper import send_validation_mail, send_recover_mail
 
 user = Blueprint('user', __name__, template_folder='templates')
 
@@ -69,7 +70,7 @@ def register():
             user.password = form.password.data
             user.save()
 
-            user.send_validation_email()
+            send_validation_mail.delay(user.id)
 
             return render_template('register-success.html')
     return render_template('register.html', form=form)
@@ -128,7 +129,7 @@ def recover():
             flash('Diesen Account gibt es nicht.', 'danger')
         else:
             recover_user = recover_user.first()
-            recover_user.send_recover_email()
+            send_recover_mail.delay(recover_user.id)
             current_app.logger.info('%s sent an recovery request' % (form.email.data.lower()))
             return render_template('recover-mail-sent.html')
     return render_template('recover.html', form=form)

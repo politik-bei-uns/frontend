@@ -3,6 +3,7 @@ const { Component } = React;
 
 export default class RegionSelect extends Component {
     box_id = 'region-select-box';
+    update_region = false;
 
     state = {
         selectOpen: false,
@@ -11,17 +12,27 @@ export default class RegionSelect extends Component {
 
     constructor() {
         super();
-        this.regions = $('#' + this.box_id).data('regions');
+        this.state.regions = $('#' + this.box_id).data('regions');
+        window.addEventListener('click', () => {
+            if (this.state.selectOpen) {
+                this.setState({
+                    selectOpen: false
+                });
+            }
+        });
     }
 
     componentDidUpdate() {
-        window.paperSearch.page = 1;
-        window.paperSearch.updateParams();
-        window.paperSearch.updateData();
+        if (this.update_region) {
+            this.update_region = false;
+            window.paperSearch.page = 1;
+            window.paperSearch.updateParams();
+            window.paperSearch.updateData();
+        }
     }
 
     render() {
-        let region_data = this.getRegionData(this.regions, this.state.currentRegion, 0);
+        let region_data = this.getRegionData(this.state.regions, this.state.currentRegion, 0);
         let result = [
             <div id="region-current" onClick={this.toggleSelectOpen.bind(this)}>
                 {region_data.name}
@@ -36,6 +47,9 @@ export default class RegionSelect extends Component {
                         <div className="region-child"
                              onClick={this.selectRegion.bind(this, region_data.children[i].id)}>
                             {region_data.children[i].name}
+                            {parseInt(region_data.children[i].count) === region_data.children[i].count &&
+                                <span> ({region_data.children[i].count})</span>
+                            }
                         </div>
                     )
                 }
@@ -46,7 +60,9 @@ export default class RegionSelect extends Component {
                     <div id="region-parent"
                          className={(region_data.id === 'root') ? 'region-inactive' : ''}
                          onClick={this.selectRegion.bind(this, (region_data.parent) ? region_data.parent.id : 'root')}>
-                        Eine Ebene hoch
+                        {region_data.parent && <span>{region_data.parent.name}</span>}
+                        {region_data.id !== 'root' && !region_data.parent && <span>Weltweit</span>}
+                        {region_data.id === 'root' && <span>Eine Ebene hoch</span>}
                     </div>
                     <div id="region-children">
                         {children}
@@ -57,46 +73,20 @@ export default class RegionSelect extends Component {
         return (result)
     }
 
-    toggleSelectOpen() {
+    toggleSelectOpen(evt) {
         this.setState({
             selectOpen: !this.state.selectOpen
         });
+        evt.stopPropagation();
     }
 
-    selectRegion(region_id) {
-
+    selectRegion(region_id, evt) {
+        this.update_region = true;
         this.setState({
             currentRegion: region_id
-        })
+        });
+        evt.stopPropagation();
     }
-
-
-    select_region(region_id) {
-        let region = this.get_region_data(config.regions, region_id, 0);
-        $('#region-current').text(region.name).data('id', region.id);
-        if (region.level === 0) {
-            $('#region-parent').addClass('region-inactive').text('Eine Ebene hoch');
-        }
-        else {
-            $('#region-parent').removeClass('region-inactive');
-            if (region.level === 1) {
-                $('#region-parent').text('Weltweit').data('id', 'root');
-            }
-            else if (region.parent) {
-                $('#region-parent').data('id', region.parent.id).html(region.parent.name + ' (<span>0</span>)');
-            }
-        }
-        $('#region-children').html('');
-        if (region.children) {
-            for (let i = 0; i < region.children.length; i++) {
-                $('#region-children').append('<div class="region-child" data-id="' + region.children[i].id + '">' + region.children[i].name + ' (<span>0</span>)</div>');
-            }
-            $('.region-child').click(() => {
-                this.select_region($(this).data('id'));
-            });
-        }
-        $('#sd-form').submit();
-    };
 
     getRegionData(regions, region_id, level) {
         if (region_id === 'root') {
@@ -104,7 +94,7 @@ export default class RegionSelect extends Component {
                 name: 'Weltweit',
                 id: 'root',
                 level: 0,
-                children: this.regions
+                children: this.state.regions
             };
         }
         else {
@@ -145,27 +135,55 @@ export default class RegionSelect extends Component {
     };
 
     updateRegionListCount(bodies) {
-        $('.region-child, #region-parent').each(() => {
-            let region = this.get_region_data(config.regions, $(this).data('id'), 0);
+        let bodies_dict = {};
+        for (let i = 0; i < bodies.length; i++) {
+            bodies_dict[bodies[i].key] = bodies[i].doc_count;
+        }
+        let regions = [];
+        for (let i = 0; i < this.state.regions.length; i++) {
+            regions.push(this.updateSubRegionListCount(this.state.regions[i], bodies_dict));
+        }
+        this.setState({
+            regions: regions
+        })
+    }
 
-            let children = [];
-            if (region.children) {
-                 children = children.concat(this.get_children_bodies(region.children));
-            }
-            if (region.id !== 'root' && region.body) {
-                children = children.concat(region.body);
-            }
-            var count = 0;
-            for (var i = 0; i < children.length; i++) {
-                for (var j = 0; j < bodies.length; j++) {
-                    if (children[i] === bodies[j].key) {
-                        count += bodies[j].doc_count;
-                    }
+    updateSubRegionListCount(region, bodies) {
+        let count = 0;
+        if (region.children) {
+            for (let i = 0; i < region.children.length; i++) {
+                region.children[i] = this.updateSubRegionListCount(region.children[i], bodies);
+                if (region.children[i].count) {
+                    count += region.children[i].count;
                 }
             }
-            $(this).find('span').text(count);
-        });
-    };
+        }
+        if (region.body) {
+            for (let i = 0; i < region.body.length; i++) {
+                if (bodies[region.body[i]]) {
+                    count += bodies[region.body[i]];
+                }
+            }
+        }
+        region.count = count;
+        return region;
+    }
+    /*
+        let sum = 0;
+        for (let i = 0; i < regions.length; i++) {
+            let count = 0;
+            if (regions[i].children) {
+                let result = this.updateSubRegionListCount(regions[i].children, bodies);
+                regions[i] = result[0];
+                count += result[1];
+            }
+            if (regions[i].body && bodies[regions[i].body]) {
+                count += bodies[regions[i].body];
+                regions[i].count = count;
+                sum += count;
+            }
 
-
+        }
+        return([regions, sum]);
+    }*/
 }

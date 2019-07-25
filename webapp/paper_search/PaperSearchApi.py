@@ -111,8 +111,8 @@ def document_search_api():
     
 
     elastic_request.set_agg('paperType')
-    elastic_request.set_agg('body')
     """
+    elastic_request.set_agg('body')
     elastic_request.set_agg('paperType')
     elastic_request.query()
 
@@ -123,7 +123,7 @@ def document_search_api():
         'aggs': elastic_request.get_aggs(),
     }
     """
-    if full_aggs:
+    if 1:
         elastic_request_aggs_full = ElasticRequest(
             'paper-latest',
             'paper'

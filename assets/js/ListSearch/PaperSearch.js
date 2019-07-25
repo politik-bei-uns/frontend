@@ -61,7 +61,8 @@ export default class PaperSearch extends ListSearch {
         window.paperTypeSelect.setState({
             data: data.aggs.paperType,
             initialized: true
-        })
+        });
+        window.regionSelect.updateRegionListCount(data.aggs.body);
     }
 
     renderListItem(row) {

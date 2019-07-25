@@ -12,6 +12,7 @@ venv
 migrations
 log/*
 .idea
+logs
 
 # Node, Bower, SASS
 .sass-cache
