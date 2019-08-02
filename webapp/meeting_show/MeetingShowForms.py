@@ -12,7 +12,45 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 from flask_wtf import FlaskForm
 from wtforms import validators
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, BooleanField, SelectField
+from ..common.form_validator import ValidateDateRange
+from ..common.form import SearchBaseForm
+
+
+class MeetingSearchForm(SearchBaseForm):
+    class Meta:
+        csrf = False
+
+    text = StringField(
+        'Volltext-Suche'
+    )
+    id = StringField(
+        'ID'
+    )
+    region = StringField(
+        'Regionen'
+    )
+    location = StringField(
+        'Ort'
+    )
+    daterange = StringField(
+        label='Datumsbereich',
+        validators=[
+            ValidateDateRange(),
+            validators.Optional()
+        ]
+    )
+    sort_field = SelectField(
+        label='Sortier-Feld',
+        choices=[
+            ('created', 'Erstellung'),
+            ('name', 'Name'),
+            ('random', 'Zufall'),
+            ('score', 'Priorität')
+        ]
+    )
+    random_seed = StringField()
+    submit = SubmitField('suchen')
 
 
 class KeywordForm(FlaskForm):

@@ -16,7 +16,7 @@ from flask import current_app, request
 from ..extensions import es, csrf
 from ..common.response import json_response
 from .PaperSearchForms import PaperSearchForm
-from .PaperSearchElastic import ElasticRequest
+from ..common.elastic_request import ElasticRequest
 
 from .PaperSearchController import paper_search
 
@@ -61,6 +61,8 @@ def document_search_api():
         ],
         'auxiliaryFile'
     )
+    if form.id.data:
+        elastic_request.set_fq('id', form.id.data)
     if form.daterange.data:
         begin, end = form.daterange.data.split(' - ')
         begin = datetime.strptime(begin, '%d.%m.%Y')
@@ -80,38 +82,6 @@ def document_search_api():
     elastic_request.set_sort_order(form.sort_order.data)
     elastic_request.set_limit(items_per_page)
 
-    """
-    search_string = request.form.get('q', '')
-    order_by = request.form.get('o', 'random')
-    fq = json.loads(request.form.get('fq', '{}'))
-    start = request.form.get('f', 0, type=int)
-    size = request.form.get('s', 10, type=int)
-    rq = json.loads(request.form.get('rq', '{}'))
-    random_seed = request.form.get('rs', False)
-    full_aggs = request.form.get('fa', 0)
-
-    if order_by not in ['random', '_score', 'name.sort:asc', 'name.sort:desc', 'created:asc', 'created:desc']:
-        abort(403)
-    if not random_seed and order_by == 'random':
-        abort(403)
-
-    
-    legacy = False
-    if 'legacy' in fq:
-        if int(fq['legacy']):
-            legacy = True
-        del fq['legacy']
-    if not legacy:
-        elastic_request.set_fq('legacy', False)
-    elastic_request.set_fqs(fq)
-    elastic_request.set_rqs(rq)
-    
-    elastic_request.set_order_by(order_by)
-    elastic_request.set_random_seed(random_seed)
-    
-
-    elastic_request.set_agg('paperType')
-    """
     elastic_request.set_agg('body')
     elastic_request.set_agg('paperType')
     elastic_request.query()
@@ -122,16 +92,7 @@ def document_search_api():
         'status': 0,
         'aggs': elastic_request.get_aggs(),
     }
-    """
-    if 1:
-        elastic_request_aggs_full = ElasticRequest(
-            'paper-latest',
-            'paper'
-        )
-        elastic_request_aggs_full.set_agg('paperType')
-        elastic_request_aggs_full.query()
-        result['aggs_full'] = elastic_request_aggs_full.get_aggs()
-    """
+
     return json_response(result)
 
 

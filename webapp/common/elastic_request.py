@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 from ..extensions import es
 
 
-class ElasticRequest():
+class ElasticRequest:
     def __init__(self, index, document):
         self.index = index
         self.document = document

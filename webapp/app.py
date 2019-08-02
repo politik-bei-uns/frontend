@@ -32,6 +32,7 @@ from .search_subscription import search_subscription
 from .contact_form import contact_form
 from .file_show import file_show
 from .admin import admin
+from .search_api import search_api
 
 # Crons
 from .search_subscription.SearchSubscriptionMails import SearchSubscriptionMails
@@ -47,7 +48,8 @@ DEFAULT_BLUEPRINTS = [
     search_subscription,
     contact_form,
     file_show,
-    admin
+    admin,
+    search_api
 ]
 
 CRONS = [

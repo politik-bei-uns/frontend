@@ -16,7 +16,7 @@ from dateutil.relativedelta import relativedelta
 from flask import (render_template, current_app)
 from ..extensions import cron, mail
 from ..models import SearchSubscription, Option
-from ..paper_search.PaperSearchElastic import ElasticRequest
+from ..common.elastic_request import ElasticRequest
 from flask_mail import Message
 
 

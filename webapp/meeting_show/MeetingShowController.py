@@ -17,6 +17,7 @@ from .MeetingShowForms import KeywordForm
 
 meeting_show = Blueprint('meeting_show', __name__, template_folder='templates')
 
+from . import MeetingSearchApi
 
 @meeting_show.route('/meeting/<ObjectId:meeting_id>', methods=['GET', 'POST'])
 def meeting_show_main(meeting_id):
