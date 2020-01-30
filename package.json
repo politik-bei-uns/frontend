@@ -52,7 +52,7 @@
     "react-dom": "^16.8",
     "run-sequence": "^2.2",
     "system": "^2.0",
-    "tinymce": "~4.7",
+    "tinymce": "~4.9",
     "vinyl-source-stream": "^2.0",
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.2",
