@@ -43,7 +43,7 @@
     "gulp-sass": "^4.0",
     "gulp-sourcemaps": "^2.6",
     "isotope-layout": "~3.0",
-    "jquery": "^3.4",
+    "jquery": "^3.5",
     "jquery-bridget": "^2.0",
     "moment": "^2.24",
     "normalize.css": "^8.0",
