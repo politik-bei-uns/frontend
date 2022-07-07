@@ -45,7 +45,7 @@
     "isotope-layout": "~3.0",
     "jquery": "^3.4",
     "jquery-bridget": "^2.0",
-    "moment": "^2.24",
+    "moment": "^2.29",
     "normalize.css": "^8.0",
     "popper.js": "^1.14",
     "react": "^16.8",
